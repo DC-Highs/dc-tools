@@ -25,8 +25,8 @@
     },
     "dependencies": {
         "@base-ui/react": "^1.1.0",
-        "@dchighs/dc-assets": "^0.3.0",
-        "@dchighs/dc-core": "^0.1.0",
+        "@dchighs/dc-assets": "^0.4.0",
+        "@dchighs/dc-core": "^0.2.0",
         "@fontsource-variable/outfit": "^5.2.8",
         "@hookform/resolvers": "^5.2.2",
         "@tailwindcss/vite": "^4.1.18",

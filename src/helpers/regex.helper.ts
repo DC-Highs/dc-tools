@@ -4,4 +4,5 @@ export const regexHelper = {
     buildingImageName: /^\d+_[A-Za-z0-9_]+$/,
     dragonSkin: /^_skin\d+$/,
     chestImageName: /^\d+_[A-Za-z0-9_]+$/,
+    habitatImageName: /^\d+_[A-Za-z0-9_]+$/,
 }

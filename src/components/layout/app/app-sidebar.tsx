@@ -1,4 +1,4 @@
-import { LuUser, LuChevronUp, LuChevronDown, LuImage, LuMusic, LuSettings, LuFolder } from "react-icons/lu"
+import { LuUser, LuChevronUp, LuChevronDown, LuImage, LuMusic, LuSettings, LuFolder, LuPackage } from "react-icons/lu"
 import { MdAnimation, MdOutlineTranslate } from "react-icons/md"
 import { FaDragon } from "react-icons/fa"
 import { Link } from "react-router-dom"
@@ -62,19 +62,24 @@ const assetItems = [
         icon: LuImage,
     },
     {
+        title: "Habitat Sprite",
+        url: "/assets/habitats/sprite",
+        icon: LuImage,
+    },
+    {
+        title: "Habitat Thumbnail",
+        url: "/assets/habitats/thumbnail",
+        icon: LuImage,
+    },
+    {
         title: "Chest Sprite",
         url: "/assets/chests/sprite",
         icon: LuImage,
     },
     {
-        title: "Chest Thumbnail",
-        url: "/assets/chests/thumbnail",
-        icon: LuImage,
-    },
-    {
         title: "Island Package",
         url: "/assets/islands/package",
-        icon: LuImage,
+        icon: LuPackage,
     },
     {
         title: "Music",

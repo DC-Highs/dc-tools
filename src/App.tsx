@@ -4,9 +4,11 @@ import DragonSpineAnimationPage from "./pages/assets/dragon-spine-animation"
 import DragonFlashAnimationPage from "./pages/assets/dragon-flash-animation"
 import DecorationThumbnailPage from "./pages/assets/decoration-thumbnail"
 import BuildingThumbnailPage from "./pages/assets/building-thumbnail"
+import HabitatThumbnailPage from "./pages/assets/habitat-thumbnail"
 import DecorationSpritePage from "./pages/assets/decoration-sprite"
 import DragonThumbnailPage from "./pages/assets/dragon-thumbnail"
 import BuildingSpritePage from "./pages/assets/building-sprite"
+import HabitatSpritePage from "./pages/assets/habitat-sprite"
 import AppSidebar from "./components/layout/app/app-sidebar"
 import DragonSpritePage from "./pages/assets/dragon-sprite"
 import ChestSpritePage from "./pages/assets/chest-sprite"
@@ -38,6 +40,8 @@ function App() {
                         <Route path="/assets/decorations/sprite" element={<DecorationSpritePage />} />
                         <Route path="/assets/decorations/thumbnail" element={<DecorationThumbnailPage />} />
                         <Route path="/assets/chests/sprite" element={<ChestSpritePage />} />
+                        <Route path="/assets/habitats/sprite" element={<HabitatSpritePage />} />
+                        <Route path="/assets/habitats/thumbnail" element={<HabitatThumbnailPage />} />
                     </Routes>
                 </div>
             </main>
