@@ -14,6 +14,7 @@ import AppSidebar from "./components/layout/app/app-sidebar"
 import DragonSpritePage from "./pages/assets/dragon-sprite"
 import ChestSpritePage from "./pages/assets/chest-sprite"
 import { SidebarTrigger } from "./components/ui/sidebar"
+import SoundMusicPage from "./pages/assets/sound-music"
 import { Toaster } from "./components/ui/sonner"
 import HomePage from "./pages/home"
 import Providers from "./providers"
@@ -44,6 +45,7 @@ function App() {
                         <Route path="/assets/habitats/sprite" element={<HabitatSpritePage />} />
                         <Route path="/assets/habitats/thumbnail" element={<HabitatThumbnailPage />} />
                         <Route path="/assets/islands/package" element={<IslandPackagePage />} />
+                        <Route path="/assets/sounds/music" element={<SoundMusicPage />} />
                     </Routes>
                 </div>
             </main>
