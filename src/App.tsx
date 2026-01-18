@@ -1,5 +1,6 @@
 import { Routes, Route } from "react-router-dom"
 
+import DragonSpineAnimationPage from "./pages/assets/dragon-spine-animation"
 import DragonFlashAnimationPage from "./pages/assets/dragon-flash-animation"
 import DragonThumbnailPage from "./pages/assets/dragon-thumbnail"
 import AppSidebar from "./components/layout/app/app-sidebar"
@@ -8,7 +9,6 @@ import { SidebarTrigger } from "./components/ui/sidebar"
 import { Toaster } from "./components/ui/sonner"
 import HomePage from "./pages/home"
 import Providers from "./providers"
-import DragonSpineAnimationPage from "./pages/assets/dragon-spine-animation"
 
 function App() {
     return (

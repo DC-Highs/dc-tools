@@ -1,11 +1,15 @@
 import { DragonPhase, StaticFileUrlPlatformPrefix, TextureCompressionFormat } from "@dchighs/dc-core"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Controller, useForm } from "react-hook-form"
-import { LuDownload } from "react-icons/lu"
+import { LuDownload, LuPackage } from "react-icons/lu"
 import dcAssets from "@dchighs/dc-assets"
 import { useState, type FC } from "react"
 import { toast } from "sonner"
 
+import {
+    dragonSpineAnimationDownloaderFormSchema,
+    type DragonSpineAnimationDownloaderFormValues,
+} from "@/schemas/dragon-spine-animation-downloader-form.schema"
 import {
     Select,
     SelectContent,
@@ -15,15 +19,14 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import { dragonSpineAnimationDownloaderFormSchema, type DragonSpineAnimationDownloaderFormValues } from "@/schemas/dragon-spine-animation-downloader-form.schema"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Field, FieldGroup, FieldLabel, FieldError } from "@/components/ui/field"
 import { Typography } from "@/components/ui/typography"
 import { Separator } from "@/components/ui/separator"
+import { Checkbox } from "@/components/ui/checkbox"
 import { Spinner } from "@/components/ui/spinner"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Checkbox } from "@/components/ui/checkbox"
 
 const DragonSpineAnimationPage: FC = () => {
     const [isDownloading, setIsDownloading] = useState(false)
@@ -90,7 +93,7 @@ const DragonSpineAnimationPage: FC = () => {
                                                 <SelectGroup>
                                                     <SelectLabel>Platform prefixes</SelectLabel>
                                                     {Object.entries(StaticFileUrlPlatformPrefix)
-                                                        .slice(Object.values(StaticFileUrlPlatformPrefix).length / 2)
+                                                        .filter(([name]) => name !== "Default")
                                                         .map(([name, prefix]) => (
                                                             <SelectItem
                                                                 key={`prefix-${prefix.toString()}`}
@@ -119,13 +122,10 @@ const DragonSpineAnimationPage: FC = () => {
                                             <SelectContent>
                                                 <SelectGroup>
                                                     <SelectLabel>Texture compression formats</SelectLabel>
-                                                    {Object.entries(TextureCompressionFormat)
-                                                        .slice(Object.values(TextureCompressionFormat).length / 2)
+                                                    {Object
+                                                        .entries(TextureCompressionFormat)
                                                         .map(([name, format]) => (
-                                                            <SelectItem
-                                                                key={`format-${format.toString()}`}
-                                                                value={format.toString()}
-                                                            >
+                                                            <SelectItem key={format} value={format}>
                                                                 {name}
                                                             </SelectItem>
                                                         ))}
@@ -165,7 +165,7 @@ const DragonSpineAnimationPage: FC = () => {
                                                 <SelectGroup>
                                                     <SelectLabel>Phases</SelectLabel>
                                                     {Object.entries(DragonPhase)
-                                                        .slice(Object.values(DragonPhase).length / 2)
+                                                        .filter(([key]) => isNaN(Number(key)))
                                                         .map(([name, phase]) => (
                                                             <SelectItem
                                                                 key={`phase-${phase.toString()}`}
@@ -231,7 +231,9 @@ const DragonSpineAnimationPage: FC = () => {
                 </CardHeader>
                 <CardContent>
                     <div className="flex flex-col items-center gap-4 p-6">
-                        {/* <FlashPreview src={downloadUrl} /> */}
+                        <div className="flex items-center gap-2 font-semibold text-lg text-primary/80">
+                            <LuPackage/> {(downloadUrl).split("/").pop()}
+                        </div>
                     </div>
                 </CardContent>
                 <Separator />

@@ -7,6 +7,10 @@ import { useState, type FC } from "react"
 import { toast } from "sonner"
 
 import {
+    dragonFlashAnimationDownloaderFormSchema,
+    type DragonFlashAnimationDownloaderFormValues,
+} from "../../schemas/dragon-flash-animation-downloader-form.schema"
+import {
     Select,
     SelectContent,
     SelectGroup,
@@ -15,7 +19,6 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import { dragonFlashAnimationDownloaderFormSchema, type DragonFlashAnimationDownloaderFormValues } from "../../schemas/dragon-flash-animation-downloader-form.schema"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Field, FieldGroup, FieldLabel, FieldError } from "@/components/ui/field"
 import FlashPreview from "../../components/features/flash-preview"
@@ -88,7 +91,7 @@ const DragonFlashAnimationPage: FC = () => {
                                                 <SelectGroup>
                                                     <SelectLabel>Platform prefixes</SelectLabel>
                                                     {Object.entries(StaticFileUrlPlatformPrefix)
-                                                        .slice(Object.values(StaticFileUrlPlatformPrefix).length / 2)
+                                                        .filter(([name]) => name !== "Default")
                                                         .map(([name, prefix]) => (
                                                             <SelectItem
                                                                 key={`prefix-${prefix.toString()}`}
@@ -133,7 +136,7 @@ const DragonFlashAnimationPage: FC = () => {
                                                 <SelectGroup>
                                                     <SelectLabel>Phases</SelectLabel>
                                                     {Object.entries(DragonPhase)
-                                                        .slice(Object.values(DragonPhase).length / 2)
+                                                        .filter(([key]) => isNaN(Number(key)))
                                                         .map(([name, phase]) => (
                                                             <SelectItem
                                                                 key={`phase-${phase.toString()}`}

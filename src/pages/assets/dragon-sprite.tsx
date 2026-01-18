@@ -92,7 +92,7 @@ const DragonSpritePage: FC = () => {
                                                 <SelectGroup>
                                                     <SelectLabel>Platform prefixes</SelectLabel>
                                                     {Object.entries(StaticFileUrlPlatformPrefix)
-                                                        .slice(Object.values(StaticFileUrlPlatformPrefix).length / 2)
+                                                        .filter(([name]) => name !== "Default")
                                                         .map(([name, prefix]) => (
                                                             <SelectItem
                                                                 key={`prefix-${prefix.toString()}`}
@@ -137,7 +137,7 @@ const DragonSpritePage: FC = () => {
                                                 <SelectGroup>
                                                     <SelectLabel>Phases</SelectLabel>
                                                     {Object.entries(DragonPhase)
-                                                        .slice(Object.values(DragonPhase).length / 2)
+                                                        .filter(([key]) => isNaN(Number(key)))
                                                         .map(([name, phase]) => (
                                                             <SelectItem
                                                                 key={`phase-${phase.toString()}`}
@@ -167,7 +167,7 @@ const DragonSpritePage: FC = () => {
                                                 <SelectGroup>
                                                     <SelectLabel>Sprite qualities</SelectLabel>
                                                     {Object.entries(DragonSpriteQuality)
-                                                        .slice(Object.values(DragonSpriteQuality).length / 2)
+                                                        .filter(([key]) => key !== "Default")
                                                         .map(([name, quality]) => (
                                                             <SelectItem
                                                                 key={`quality-${quality.toString()}`}

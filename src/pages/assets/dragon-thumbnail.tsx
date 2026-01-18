@@ -90,7 +90,7 @@ const DragonThumbnailPage: FC = () => {
                                                 <SelectGroup>
                                                     <SelectLabel>Platform prefixes</SelectLabel>
                                                     {Object.entries(StaticFileUrlPlatformPrefix)
-                                                        .slice(Object.values(StaticFileUrlPlatformPrefix).length / 2)
+                                                        .filter(([name]) => name !== "Default")
                                                         .map(([name, prefix]) => (
                                                             <SelectItem
                                                                 key={`prefix-${prefix.toString()}`}
@@ -135,7 +135,7 @@ const DragonThumbnailPage: FC = () => {
                                                 <SelectGroup>
                                                     <SelectLabel>Phases</SelectLabel>
                                                     {Object.entries(DragonPhase)
-                                                        .slice(Object.values(DragonPhase).length / 2)
+                                                        .filter(([key]) => isNaN(Number(key)))
                                                         .map(([name, phase]) => (
                                                             <SelectItem
                                                                 key={`phase-${phase.toString()}`}

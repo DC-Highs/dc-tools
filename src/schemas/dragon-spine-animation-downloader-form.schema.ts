@@ -1,5 +1,5 @@
-import type { DragonSpineAnimationDownloaderOptions } from "@dchighs/dc-assets"
 import { DragonPhase, StaticFileUrlPlatformPrefix, TextureCompressionFormat } from "@dchighs/dc-core"
+import type { DragonSpineAnimationDownloaderOptions } from "@dchighs/dc-assets"
 
 import { z } from "zod"
 
