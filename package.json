@@ -3,7 +3,7 @@
     "private": true,
     "version": "0.8.0",
     "type": "commonjs",
-    "main": "./dist/electron/main.js",
+    "main": "./electron/dist/main.js",
     "scripts": {
         "dev": "vite",
         "build": "vite build",
@@ -17,7 +17,7 @@
         "productName": "DC Tools",
         "files": [
             "dist/**/*",
-            "electron/**/*"
+            "electron/dist/**/*"
         ],
         "directories": {
             "buildResources": "assets"

@@ -1,12 +1,9 @@
-import { app, BrowserWindow, session } from "electron"
-
-import { registerAssetHandlers } from "./assets.handler"
-import "./http-reqest.handler"
-import "./downloader.handler"
+import { app, BrowserWindow } from "electron"
 import path from "node:path"
 
-// Register IPC handlers
-registerAssetHandlers()
+import "./http-reqest.handler"
+import "./downloader.handler"
+
 
 function createWindow() {
     const win = new BrowserWindow({
