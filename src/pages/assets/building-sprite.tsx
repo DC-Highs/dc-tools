@@ -1,15 +1,11 @@
-import { DragonPhase, StaticFileUrlPlatformPrefix, TextureCompressionFormat } from "@dchighs/dc-core"
-import { LuDownload, LuPackage } from "react-icons/lu"
+import { BuildingSpriteQuality, StaticFileUrlPlatformPrefix } from "@dchighs/dc-core"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Controller, useForm } from "react-hook-form"
+import { LuDownload } from "react-icons/lu"
 import dcAssets from "@dchighs/dc-assets"
 import { useState, type FC } from "react"
 import { toast } from "sonner"
 
-import {
-    dragonSpineAnimationDownloaderFormSchema,
-    type DragonSpineAnimationDownloaderFormValues,
-} from "@/schemas/dragon-spine-animation-downloader-form.schema"
 import {
     Select,
     SelectContent,
@@ -19,37 +15,39 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
+import {
+    buildingSpriteDownloaderFormSchema,
+    type BuildingSpriteDownloaderFormValues,
+} from "@/schemas/building-sprite-downloader-form.schema"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Field, FieldGroup, FieldLabel, FieldError } from "@/components/ui/field"
 import { Typography } from "@/components/ui/typography"
+import { emptyKey } from "@/helpers/constants.helper"
 import { Separator } from "@/components/ui/separator"
-import { Checkbox } from "@/components/ui/checkbox"
 import { Spinner } from "@/components/ui/spinner"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
-const DragonSpineAnimationPage: FC = () => {
+const BuildingSpritePage: FC = () => {
     const [isDownloading, setIsDownloading] = useState(false)
 
     const form = useForm({
-        resolver: zodResolver(dragonSpineAnimationDownloaderFormSchema),
+        resolver: zodResolver(buildingSpriteDownloaderFormSchema),
         defaultValues: {
-            imageName: "1000_dragon_nature",
-            phase: DragonPhase.Baby.toString(),
+            imageName: "10552_hatchery6reskinart_building",
+            imageQuality: emptyKey,
             platformPrefix: StaticFileUrlPlatformPrefix.iOS,
-            textureCompressionFormat: TextureCompressionFormat.DXT5,
-            useNewUrlFormat: true,
         },
         mode: "onChange",
     })
 
     const currentData = form.watch()
-    const currentDownloader = dcAssets.dragons.animations.spine(currentData as any)
-    const downloadUrl = currentDownloader.url
+    const currentDownloader = dcAssets.buildings.sprite(currentData as any)
+    const downloadUrl = currentDownloader.url.replace(emptyKey, "")
 
-    const onSubmit = async (data: DragonSpineAnimationDownloaderFormValues) => {
-        const currentDownloader = dcAssets.dragons.animations.spine(data as any)
-        const downloadUrl = currentDownloader.url
+    const onSubmit = async (data: BuildingSpriteDownloaderFormValues) => {
+        const currentDownloader = dcAssets.buildings.sprite(data as any)
+        const downloadUrl = currentDownloader.url.replace(emptyKey, "")
 
         try {
             setIsDownloading(true)
@@ -74,7 +72,7 @@ const DragonSpineAnimationPage: FC = () => {
         <div className="space-y-2">
             <Card>
                 <CardHeader>
-                    <CardTitle>Dragon Spine Animation Downloader</CardTitle>
+                    <CardTitle>Building Sprite Downloader</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <form id="form-rhf-demo" onSubmit={form.handleSubmit(onSubmit)}>
@@ -110,31 +108,6 @@ const DragonSpineAnimationPage: FC = () => {
                                 )}
                             />
                             <Controller
-                                name="textureCompressionFormat"
-                                control={form.control}
-                                render={({ field, fieldState }) => (
-                                    <Field data-invalid={fieldState.invalid}>
-                                        <FieldLabel>Texture Compression Format</FieldLabel>
-                                        <Select onValueChange={field.onChange} value={field.value}>
-                                            <SelectTrigger className="w-full">
-                                                <SelectValue placeholder="Select a texture compression format" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectGroup>
-                                                    <SelectLabel>Texture compression formats</SelectLabel>
-                                                    {Object.entries(TextureCompressionFormat).map(([name, format]) => (
-                                                        <SelectItem key={format} value={format}>
-                                                            {name}
-                                                        </SelectItem>
-                                                    ))}
-                                                </SelectGroup>
-                                            </SelectContent>
-                                        </Select>
-                                        {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                                    </Field>
-                                )}
-                            />
-                            <Controller
                                 name="imageName"
                                 control={form.control}
                                 render={({ field, fieldState }) => (
@@ -143,31 +116,31 @@ const DragonSpineAnimationPage: FC = () => {
                                         <Input
                                             {...field}
                                             aria-invalid={fieldState.invalid}
-                                            placeholder="e.g. 1000_dragon_nature"
+                                            placeholder="e.g. 1000_building_nature"
                                         />
                                         {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                                     </Field>
                                 )}
                             />
                             <Controller
-                                name="phase"
+                                name="imageQuality"
                                 control={form.control}
                                 render={({ field, fieldState }) => (
                                     <Field data-invalid={fieldState.invalid}>
-                                        <FieldLabel>Dragon Phase</FieldLabel>
-                                        <Select onValueChange={field.onChange} value={field.value}>
+                                        <FieldLabel>Sprite Quality</FieldLabel>
+                                        <Select onValueChange={field.onChange} value={field.value as string}>
                                             <SelectTrigger className="w-full">
-                                                <SelectValue placeholder="Select a dragon phase" />
+                                                <SelectValue placeholder="Select a sprite quality" />
                                             </SelectTrigger>
                                             <SelectContent>
                                                 <SelectGroup>
-                                                    <SelectLabel>Phases</SelectLabel>
-                                                    {Object.entries(DragonPhase)
-                                                        .filter(([key]) => isNaN(Number(key)))
-                                                        .map(([name, phase]) => (
+                                                    <SelectLabel>Sprite qualities</SelectLabel>
+                                                    {Object.entries(BuildingSpriteQuality)
+                                                        .filter(([key]) => key !== "Default")
+                                                        .map(([name, quality]) => (
                                                             <SelectItem
-                                                                key={`phase-${phase.toString()}`}
-                                                                value={phase.toString()}
+                                                                key={`quality-${quality.toString()}`}
+                                                                value={quality.toString() || emptyKey}
                                                             >
                                                                 {name}
                                                             </SelectItem>
@@ -175,34 +148,6 @@ const DragonSpineAnimationPage: FC = () => {
                                                 </SelectGroup>
                                             </SelectContent>
                                         </Select>
-                                        {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                                    </Field>
-                                )}
-                            />
-                            <Controller
-                                name="skin"
-                                control={form.control}
-                                render={({ field, fieldState }) => (
-                                    <Field data-invalid={fieldState.invalid}>
-                                        <FieldLabel>Skin Key</FieldLabel>
-                                        <Input
-                                            {...(field as any)}
-                                            aria-invalid={fieldState.invalid}
-                                            placeholder="e.g. _skin1"
-                                        />
-                                        {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                                    </Field>
-                                )}
-                            />
-                            <Controller
-                                name="useNewUrlFormat"
-                                control={form.control}
-                                render={({ field, fieldState }) => (
-                                    <Field data-invalid={fieldState.invalid}>
-                                        <div className="flex items-center gap-3">
-                                            <Checkbox checked={field.value} onCheckedChange={field.onChange} />
-                                            <FieldLabel>Use New URL Format</FieldLabel>
-                                        </div>
                                         {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                                     </Field>
                                 )}
@@ -229,9 +174,7 @@ const DragonSpineAnimationPage: FC = () => {
                 </CardHeader>
                 <CardContent>
                     <div className="flex flex-col items-center gap-4 p-6">
-                        <div className="flex items-center gap-2 font-semibold text-lg text-primary/80">
-                            <LuPackage /> {downloadUrl.split("/").pop()}
-                        </div>
+                        <img src={downloadUrl} alt="Preview" />
                     </div>
                 </CardContent>
                 <Separator />
@@ -243,4 +186,4 @@ const DragonSpineAnimationPage: FC = () => {
     )
 }
 
-export default DragonSpineAnimationPage
+export default BuildingSpritePage
