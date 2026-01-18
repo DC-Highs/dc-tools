@@ -11,6 +11,7 @@ import { SidebarTrigger } from "./components/ui/sidebar"
 import { Toaster } from "./components/ui/sonner"
 import HomePage from "./pages/home"
 import Providers from "./providers"
+import DecorationSpritePage from "./pages/assets/decoration-sprite"
 
 function App() {
     return (
@@ -32,6 +33,7 @@ function App() {
                         <Route path="/assets/dragons/animations/spine" element={<DragonSpineAnimationPage />} />
                         <Route path="/assets/buildings/sprite" element={<BuildingSpritePage />} />
                         <Route path="/assets/buildings/thumbnail" element={<BuildingThumbnailPage />} />
+                        <Route path="/assets/decorations/sprite" element={<DecorationSpritePage />} />
                     </Routes>
                 </div>
             </main>
