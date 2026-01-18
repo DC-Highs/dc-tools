@@ -9,6 +9,7 @@ import DragonThumbnailPage from "./pages/assets/dragon-thumbnail"
 import BuildingSpritePage from "./pages/assets/building-sprite"
 import AppSidebar from "./components/layout/app/app-sidebar"
 import DragonSpritePage from "./pages/assets/dragon-sprite"
+import ChestSpritePage from "./pages/assets/chest-sprite"
 import { SidebarTrigger } from "./components/ui/sidebar"
 import { Toaster } from "./components/ui/sonner"
 import HomePage from "./pages/home"
@@ -36,6 +37,7 @@ function App() {
                         <Route path="/assets/buildings/thumbnail" element={<BuildingThumbnailPage />} />
                         <Route path="/assets/decorations/sprite" element={<DecorationSpritePage />} />
                         <Route path="/assets/decorations/thumbnail" element={<DecorationThumbnailPage />} />
+                        <Route path="/assets/chests/sprite" element={<ChestSpritePage />} />
                     </Routes>
                 </div>
             </main>
