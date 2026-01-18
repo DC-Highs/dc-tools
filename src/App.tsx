@@ -2,7 +2,9 @@ import { Routes, Route } from "react-router-dom"
 
 import DragonSpineAnimationPage from "./pages/assets/dragon-spine-animation"
 import DragonFlashAnimationPage from "./pages/assets/dragon-flash-animation"
+import DecorationThumbnailPage from "./pages/assets/decoration-thumbnail"
 import BuildingThumbnailPage from "./pages/assets/building-thumbnail"
+import DecorationSpritePage from "./pages/assets/decoration-sprite"
 import DragonThumbnailPage from "./pages/assets/dragon-thumbnail"
 import BuildingSpritePage from "./pages/assets/building-sprite"
 import AppSidebar from "./components/layout/app/app-sidebar"
@@ -11,7 +13,6 @@ import { SidebarTrigger } from "./components/ui/sidebar"
 import { Toaster } from "./components/ui/sonner"
 import HomePage from "./pages/home"
 import Providers from "./providers"
-import DecorationSpritePage from "./pages/assets/decoration-sprite"
 
 function App() {
     return (
@@ -34,6 +35,7 @@ function App() {
                         <Route path="/assets/buildings/sprite" element={<BuildingSpritePage />} />
                         <Route path="/assets/buildings/thumbnail" element={<BuildingThumbnailPage />} />
                         <Route path="/assets/decorations/sprite" element={<DecorationSpritePage />} />
+                        <Route path="/assets/decorations/thumbnail" element={<DecorationThumbnailPage />} />
                     </Routes>
                 </div>
             </main>

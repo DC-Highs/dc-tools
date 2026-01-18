@@ -6,7 +6,7 @@ import { z } from "zod"
 import { regexHelper } from "@/helpers/regex.helper"
 
 export const decorationThumbnailDownloaderFormSchema = z.object({
-    imageName: z.string().regex(regexHelper.buildingImageName),
+    imageName: z.string().regex(regexHelper.decorationImageName),
     platformPrefix: z.enum(StaticFileUrlPlatformPrefix),
 } satisfies Record<keyof DecorationThumbnailDownloaderOptions, any>)
 
