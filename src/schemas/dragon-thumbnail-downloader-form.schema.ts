@@ -1,3 +1,4 @@
+import type { DragonThumbnailDownloaderOptions } from "@dchighs/dc-assets/dist/dragon-thumbnail-downloader"
 import { DragonPhase, StaticFileUrlPlatformPrefix } from "@dchighs/dc-core"
 
 import { z } from "zod"
@@ -12,7 +13,7 @@ export const dragonThumbnailDownloaderFormSchema = z.object({
         z.string().regex(regexHelper.dragonSkin).optional(),
     ),
     platformPrefix: z.enum(StaticFileUrlPlatformPrefix),
-})
+} satisfies Record<keyof DragonThumbnailDownloaderOptions, any>)
 
 export type DragonThumbnailDownloaderFormValues = z.infer<typeof dragonThumbnailDownloaderFormSchema> & {
     skin?: string

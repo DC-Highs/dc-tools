@@ -2,6 +2,7 @@ import { Routes, Route } from "react-router-dom"
 
 import DragonSpineAnimationPage from "./pages/assets/dragon-spine-animation"
 import DragonFlashAnimationPage from "./pages/assets/dragon-flash-animation"
+import BuildingThumbnailPage from "./pages/assets/building-thumbnail"
 import DragonThumbnailPage from "./pages/assets/dragon-thumbnail"
 import BuildingSpritePage from "./pages/assets/building-sprite"
 import AppSidebar from "./components/layout/app/app-sidebar"
@@ -30,6 +31,7 @@ function App() {
                         <Route path="/assets/dragons/animations/flash" element={<DragonFlashAnimationPage />} />
                         <Route path="/assets/dragons/animations/spine" element={<DragonSpineAnimationPage />} />
                         <Route path="/assets/buildings/sprite" element={<BuildingSpritePage />} />
+                        <Route path="/assets/buildings/thumbnail" element={<BuildingThumbnailPage />} />
                     </Routes>
                 </div>
             </main>

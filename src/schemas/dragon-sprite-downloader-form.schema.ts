@@ -1,4 +1,5 @@
 import { DragonPhase, DragonSpriteQuality, StaticFileUrlPlatformPrefix } from "@dchighs/dc-core"
+import type { DragonSpriteDownloaderOptions } from "@dchighs/dc-assets"
 
 import { z } from "zod"
 
@@ -14,7 +15,7 @@ export const dragonSpriteDownloaderFormSchema = z.object({
     ),
     imageQuality: z.preprocess((value) => (value === emptyKey ? "" : value), z.enum(DragonSpriteQuality)),
     platformPrefix: z.enum(StaticFileUrlPlatformPrefix),
-})
+} satisfies Record<keyof DragonSpriteDownloaderOptions, any>)
 
 export type DragonSpriteDownloaderFormValues = Omit<
     z.infer<typeof dragonSpriteDownloaderFormSchema>,
