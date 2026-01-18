@@ -1,5 +1,5 @@
-import type { DragonThumbnailDownloaderOptions } from "@dchighs/dc-assets/dist/dragon-thumbnail-downloader"
 import { DragonPhase, StaticFileUrlPlatformPrefix } from "@dchighs/dc-core"
+import type { DragonThumbnailDownloaderOptions } from "@dchighs/dc-assets"
 
 import { z } from "zod"
 

@@ -8,6 +8,7 @@ import HabitatThumbnailPage from "./pages/assets/habitat-thumbnail"
 import DecorationSpritePage from "./pages/assets/decoration-sprite"
 import DragonThumbnailPage from "./pages/assets/dragon-thumbnail"
 import BuildingSpritePage from "./pages/assets/building-sprite"
+import IslandPackagePage from "./pages/assets/island-package"
 import HabitatSpritePage from "./pages/assets/habitat-sprite"
 import AppSidebar from "./components/layout/app/app-sidebar"
 import DragonSpritePage from "./pages/assets/dragon-sprite"
@@ -42,6 +43,7 @@ function App() {
                         <Route path="/assets/chests/sprite" element={<ChestSpritePage />} />
                         <Route path="/assets/habitats/sprite" element={<HabitatSpritePage />} />
                         <Route path="/assets/habitats/thumbnail" element={<HabitatThumbnailPage />} />
+                        <Route path="/assets/islands/package" element={<IslandPackagePage />} />
                     </Routes>
                 </div>
             </main>

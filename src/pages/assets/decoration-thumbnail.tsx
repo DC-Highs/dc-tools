@@ -114,7 +114,7 @@ const DecorationThumbnailPage: FC = () => {
                                         <Input
                                             {...field}
                                             aria-invalid={fieldState.invalid}
-                                            placeholder="e.g. 1000_decoration_nature"
+                                            placeholder="e.g. 11643_deco_spookyscarecrow"
                                         />
                                         {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                                     </Field>

@@ -1,15 +1,11 @@
-import { StaticFileUrlPlatformPrefix } from "@dchighs/dc-core"
+import { LuDownload, LuPackage } from "react-icons/lu"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Controller, useForm } from "react-hook-form"
-import { LuDownload } from "react-icons/lu"
+import { IslandType } from "@dchighs/dc-core"
 import dcAssets from "@dchighs/dc-assets"
 import { useState, type FC } from "react"
 import { toast } from "sonner"
 
-import {
-    habitatThumbnailDownloaderFormSchema,
-    type HabitatThumbnailDownloaderFormValues,
-} from "@/schemas/habitat-thumbnail-downloader-form.schema"
 import {
     Select,
     SelectContent,
@@ -19,6 +15,10 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
+import {
+    islandPackageDownloaderFormSchema,
+    type IslandPackageDownloaderFormValues,
+} from "@/schemas/island-package-downloader-form.schema"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Field, FieldGroup, FieldLabel, FieldError } from "@/components/ui/field"
 import { Typography } from "@/components/ui/typography"
@@ -27,24 +27,24 @@ import { Spinner } from "@/components/ui/spinner"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
-const HabitatThumbnailPage: FC = () => {
+const IslandPackagePage: FC = () => {
     const [isDownloading, setIsDownloading] = useState(false)
 
     const form = useForm({
-        resolver: zodResolver(habitatThumbnailDownloaderFormSchema),
+        resolver: zodResolver(islandPackageDownloaderFormSchema),
         defaultValues: {
-            imageName: "0040_habitat_legend_c",
-            platformPrefix: StaticFileUrlPlatformPrefix.iOS,
+            fileName: "runner-island-test_d.zip",
+            islandType: IslandType.RunnerIslands,
         },
         mode: "onChange",
     })
 
     const currentData = form.watch()
-    const currentDownloader = dcAssets.habitats.thumbnail(currentData as any)
+    const currentDownloader = dcAssets.islands.package(currentData as any)
     const downloadUrl = currentDownloader.url
 
-    const onSubmit = async (data: HabitatThumbnailDownloaderFormValues) => {
-        const currentDownloader = dcAssets.habitats.thumbnail(data as any)
+    const onSubmit = async (data: IslandPackageDownloaderFormValues) => {
+        const currentDownloader = dcAssets.islands.package(data as any)
         const downloadUrl = currentDownloader.url
 
         try {
@@ -70,52 +70,52 @@ const HabitatThumbnailPage: FC = () => {
         <div className="space-y-2">
             <Card>
                 <CardHeader>
-                    <CardTitle>Habitat Thumbnail Downloader</CardTitle>
+                    <CardTitle>Island Package Downloader</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <form id="form-rhf-demo" onSubmit={form.handleSubmit(onSubmit)}>
                         <FieldGroup className="grid grid-cols-2">
                             <Controller
-                                name="platformPrefix"
+                                name="fileName"
                                 control={form.control}
                                 render={({ field, fieldState }) => (
                                     <Field data-invalid={fieldState.invalid}>
-                                        <FieldLabel>Platform Prefix</FieldLabel>
-                                        <Select onValueChange={field.onChange} value={field.value}>
-                                            <SelectTrigger className="w-full">
-                                                <SelectValue placeholder="Select a platform prefix" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectGroup>
-                                                    <SelectLabel>Platform prefixes</SelectLabel>
-                                                    {Object.entries(StaticFileUrlPlatformPrefix)
-                                                        .filter(([name]) => name !== "Default")
-                                                        .map(([name, prefix]) => (
-                                                            <SelectItem
-                                                                key={`prefix-${prefix.toString()}`}
-                                                                value={prefix.toString()}
-                                                            >
-                                                                {name}
-                                                            </SelectItem>
-                                                        ))}
-                                                </SelectGroup>
-                                            </SelectContent>
-                                        </Select>
+                                        <FieldLabel>File Name</FieldLabel>
+                                        <Input
+                                            {...field}
+                                            aria-invalid={fieldState.invalid}
+                                            placeholder="e.g. runner-island-test_d.zip"
+                                        />
                                         {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                                     </Field>
                                 )}
                             />
                             <Controller
-                                name="imageName"
+                                name="islandType"
                                 control={form.control}
                                 render={({ field, fieldState }) => (
                                     <Field data-invalid={fieldState.invalid}>
-                                        <FieldLabel>Image Name</FieldLabel>
-                                        <Input
-                                            {...field}
-                                            aria-invalid={fieldState.invalid}
-                                            placeholder="e.g. 0040_habitat_legend_c"
-                                        />
+                                        <FieldLabel>Island Type</FieldLabel>
+                                        <Select onValueChange={field.onChange} value={field.value}>
+                                            <SelectTrigger className="w-full">
+                                                <SelectValue placeholder="Select an island type" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectGroup>
+                                                    <SelectLabel>Island types</SelectLabel>
+                                                    {Object.entries(IslandType)
+                                                        .filter(([key]) => isNaN(Number(key)))
+                                                        .map(([name, type]) => (
+                                                            <SelectItem
+                                                                key={`type-${type.toString()}`}
+                                                                value={type.toString()}
+                                                            >
+                                                                {name.split(/(?=[A-Z])/).join(" ")}
+                                                            </SelectItem>
+                                                        ))}
+                                                </SelectGroup>
+                                            </SelectContent>
+                                        </Select>
                                         {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                                     </Field>
                                 )}
@@ -142,7 +142,9 @@ const HabitatThumbnailPage: FC = () => {
                 </CardHeader>
                 <CardContent>
                     <div className="flex flex-col items-center gap-4 p-6">
-                        <img src={downloadUrl} alt="Preview" />
+                        <div className="flex items-center gap-2 font-semibold text-lg text-primary/80">
+                            <LuPackage /> {downloadUrl.split("/").pop()}
+                        </div>
                     </div>
                 </CardContent>
                 <Separator />
@@ -154,4 +156,4 @@ const HabitatThumbnailPage: FC = () => {
     )
 }
 
-export default HabitatThumbnailPage
+export default IslandPackagePage

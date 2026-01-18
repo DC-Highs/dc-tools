@@ -116,7 +116,7 @@ const HabitatSpritePage: FC = () => {
                                         <Input
                                             {...field}
                                             aria-invalid={fieldState.invalid}
-                                            placeholder="e.g. 1000_habitat_nature"
+                                            placeholder="e.g. 0040_habitat_legend_c"
                                         />
                                         {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                                     </Field>

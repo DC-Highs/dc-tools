@@ -121,7 +121,7 @@ const ChestSpritePage: FC = () => {
                                         <Input
                                             {...field}
                                             aria-invalid={fieldState.invalid}
-                                            placeholder="e.g. 1000_chest_nature"
+                                            placeholder="e.g. 149_chest_minibreedingragnarok_b"
                                         />
                                         {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                                     </Field>
