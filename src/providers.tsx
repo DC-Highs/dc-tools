@@ -11,7 +11,7 @@ const Providers: FC<Props> = ({ children }) => {
     return (
         <HashRouter>
             <SidebarProvider>{children}</SidebarProvider>
-        </HashRouter >
+        </HashRouter>
     )
 }
 

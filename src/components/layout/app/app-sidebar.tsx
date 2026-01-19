@@ -1,6 +1,16 @@
-import { LuChevronUp, LuChevronDown, LuImage, LuMusic, LuSettings, LuFolder, LuPackage, LuGithub } from "react-icons/lu"
-import { RiGitRepositoryLine } from "react-icons/ri"
+import {
+    LuChevronUp,
+    LuChevronDown,
+    LuImage,
+    LuMusic,
+    LuSettings,
+    LuFolder,
+    LuPackage,
+    LuGithub,
+    LuFileSearch,
+} from "react-icons/lu"
 import { MdAnimation, MdOutlineTranslate } from "react-icons/md"
+import { RiGitRepositoryLine } from "react-icons/ri"
 import { VscIssues } from "react-icons/vsc"
 import { FaDragon } from "react-icons/fa"
 import { Link } from "react-router-dom"
@@ -87,6 +97,11 @@ const assetItems = [
         url: "/assets/sounds/music",
         icon: LuMusic,
     },
+    {
+        title: "Find All Dragon Files",
+        url: "/assets/dragons/all",
+        icon: LuFileSearch,
+    },
 ]
 
 const configItems = [
@@ -114,6 +129,11 @@ const gitHubItems = [
         icon: VscIssues,
     },
     {
+        title: "Releases",
+        url: "https://github.com/dc-highs/dc-tools/releases",
+        icon: LuPackage,
+    },
+    {
         title: "DC Highs",
         url: "https://github.com/dc-highs",
         icon: LuGithub,
@@ -129,7 +149,10 @@ const AppSidebar: FC = () => {
     return (
         <Sidebar collapsible="icon">
             <SidebarHeader>
-                <Link className={`flex items-center py-2 gap-6 ${open ? "px-2" : "justify-center"} gap-2 transition-all duration-300 hover:opacity-80`} to="/">
+                <Link
+                    className={`flex items-center py-2 gap-6 ${open ? "px-2" : "justify-center"} gap-2 transition-all duration-300 hover:opacity-80`}
+                    to="/"
+                >
                     <FaDragon width={24} height={24} />
                     {open && (
                         <div>

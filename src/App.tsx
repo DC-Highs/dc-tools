@@ -2,6 +2,7 @@ import { Routes, Route } from "react-router-dom"
 
 import DragonSpineAnimationPage from "./pages/assets/dragon-spine-animation"
 import DragonFlashAnimationPage from "./pages/assets/dragon-flash-animation"
+import FindAllDragonFilesPage from "./pages/assets/find-all-dragon-files"
 import DecorationThumbnailPage from "./pages/assets/decoration-thumbnail"
 import BuildingThumbnailPage from "./pages/assets/building-thumbnail"
 import HabitatThumbnailPage from "./pages/assets/habitat-thumbnail"
@@ -46,6 +47,7 @@ function App() {
                         <Route path="/assets/habitats/thumbnail" element={<HabitatThumbnailPage />} />
                         <Route path="/assets/islands/package" element={<IslandPackagePage />} />
                         <Route path="/assets/sounds/music" element={<SoundMusicPage />} />
+                        <Route path="/assets/dragons/all" element={<FindAllDragonFilesPage />} />
                     </Routes>
                 </div>
             </main>

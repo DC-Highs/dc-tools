@@ -1,4 +1,5 @@
 import { app, BrowserWindow, shell } from "electron"
+
 import path from "node:path"
 
 import "./http-reqest.handler"
@@ -12,7 +13,10 @@ function createWindow() {
             contextIsolation: true,
             preload: path.join(__dirname, "preload.js"),
         },
-        icon: process.env.NODE_ENV === "development" ? path.join(__dirname, "..", "..", "public", "icon.png") : path.join(__dirname, "..", "..", "dist", "icon.png"),
+        icon:
+            process.env.NODE_ENV === "development"
+                ? path.join(__dirname, "..", "..", "public", "icon.png")
+                : path.join(__dirname, "..", "..", "dist", "icon.png"),
     })
 
     win.maximize()

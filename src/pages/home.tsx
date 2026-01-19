@@ -39,9 +39,7 @@ const HomePage: FC = () => {
                         LivePix
                     </Link>
                 </Typography.ListItem>
-                <Typography.ListItem>
-                    Via PIX: pix@marcuth.dev
-                </Typography.ListItem>
+                <Typography.ListItem>Via PIX: pix@marcuth.dev</Typography.ListItem>
             </Typography.List>
             <Typography.H2 className="mt-6">License</Typography.H2>
             <Typography.P>
