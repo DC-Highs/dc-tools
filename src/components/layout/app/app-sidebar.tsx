@@ -130,7 +130,8 @@ const gitHubItems = [
     },
     {
         title: "Releases",
-        url: "https://github.com/dc-highs/dc-tools/releases",
+        // url: "https://github.com/dc-highs/dc-tools/releases",
+        url: "/releases",
         icon: LuPackage,
     },
     {
@@ -249,10 +250,17 @@ const AppSidebar: FC = () => {
                                     {gitHubItems.map((item) => (
                                         <SidebarMenuItem key={item.title}>
                                             <SidebarMenuButton asChild>
-                                                <a href={item.url} target="_blank">
-                                                    <item.icon />
-                                                    <span>{item.title}</span>
-                                                </a>
+                                                {item.url.startsWith("http") ? (
+                                                    <a href={item.url} target="_blank">
+                                                        <item.icon />
+                                                        <span>{item.title}</span>
+                                                    </a>
+                                                ) : (
+                                                    <Link to={item.url}>
+                                                        <item.icon />
+                                                        <span>{item.title}</span>
+                                                    </Link>
+                                                )}
                                             </SidebarMenuButton>
                                         </SidebarMenuItem>
                                     ))}

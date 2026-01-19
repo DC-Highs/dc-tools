@@ -17,6 +17,7 @@ import ChestSpritePage from "./pages/assets/chest-sprite"
 import { SidebarTrigger } from "./components/ui/sidebar"
 import SoundMusicPage from "./pages/assets/sound-music"
 import { Toaster } from "./components/ui/sonner"
+import ReleasesPage from "./pages/releases"
 import HomePage from "./pages/home"
 import Providers from "./providers"
 
@@ -48,6 +49,7 @@ function App() {
                         <Route path="/assets/islands/package" element={<IslandPackagePage />} />
                         <Route path="/assets/sounds/music" element={<SoundMusicPage />} />
                         <Route path="/assets/dragons/all" element={<FindAllDragonFilesPage />} />
+                        <Route path="/releases" element={<ReleasesPage />} />
                     </Routes>
                 </div>
             </main>

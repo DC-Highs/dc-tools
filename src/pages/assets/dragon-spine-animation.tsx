@@ -124,11 +124,13 @@ const DragonSpineAnimationPage: FC = () => {
                                             <SelectContent>
                                                 <SelectGroup>
                                                     <SelectLabel>Texture compression formats</SelectLabel>
-                                                    {Object.entries(TextureCompressionFormat).map(([name, format]) => (
-                                                        <SelectItem key={format} value={format}>
-                                                            {name}
-                                                        </SelectItem>
-                                                    ))}
+                                                    {Object.entries(TextureCompressionFormat)
+                                                        .filter(([name]) => name !== "Default")
+                                                        .map(([name, format]) => (
+                                                            <SelectItem key={format} value={format}>
+                                                                {name}
+                                                            </SelectItem>
+                                                        ))}
                                                 </SelectGroup>
                                             </SelectContent>
                                         </Select>
