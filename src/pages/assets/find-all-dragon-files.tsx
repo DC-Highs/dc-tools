@@ -1,4 +1,4 @@
-import { LuDownload, LuSearch } from "react-icons/lu"
+import { LuCopy, LuDownload, LuSearch } from "react-icons/lu"
 import { useState, type FC } from "react"
 
 import { StaticFileUrlPlatformPrefix } from "@dchighs/dc-core"
@@ -73,6 +73,11 @@ const FindAllDragonFilesPage: FC = () => {
             setIsDownloading(false)
             setDownloadingUrl(null)
         }
+    }
+
+    const handleCopy = async (url: string) => {
+        await navigator.clipboard.writeText(url)
+        toast.success("URL copied to clipboard!")
     }
 
     return (
@@ -158,7 +163,10 @@ const FindAllDragonFilesPage: FC = () => {
                                                 {file.value.slice(0, 75)}...
                                             </Link>
                                         </TableCell>
-                                        <TableCell>
+                                        <TableCell className="space-x-2">
+                                            <Button variant="secondary" onClick={() => handleCopy(file.value)}>
+                                                <LuCopy />
+                                            </Button>
                                             <Button onClick={() => handleDownload(file.value)} disabled={isDownloading}>
                                                 {isDownloading && downloadingUrl === file.value ? (
                                                     <>

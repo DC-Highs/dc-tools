@@ -12,7 +12,7 @@ function createSpriteFiles(
 
     qualities.forEach((quality) => {
         phases.forEach((phase) => {
-            const label = `Sprite of ${getPhaseName(phase)} (quality ${quality})`
+            const label = `Sprite of ${getPhaseName(phase)} (quality ${quality === DragonSpriteQuality.Normal ? "Normal" : "Large"})`
 
             const value = dcAssets.dragons.sprite({
                 imageName: imageName,
@@ -26,7 +26,7 @@ function createSpriteFiles(
 
         skins.forEach((skin) => {
             const phase = 3
-            const label = `Sprite of ${getPhaseName(phase)}${skin > 0 ? ` skin ${skin}` : ""} (quality ${quality})`
+            const label = `Sprite of ${getPhaseName(phase)}${skin > 0 ? ` skin ${skin}` : ""} (quality ${quality === DragonSpriteQuality.Normal ? "Normal" : "Large"})`
             const adjustedSkin = `_skin${skin}`
 
             const value = dcAssets.dragons.sprite({
