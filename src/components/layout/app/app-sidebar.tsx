@@ -1,5 +1,7 @@
-import { LuUser, LuChevronUp, LuChevronDown, LuImage, LuMusic, LuSettings, LuFolder, LuPackage } from "react-icons/lu"
+import { LuChevronUp, LuChevronDown, LuImage, LuMusic, LuSettings, LuFolder, LuPackage, LuGithub } from "react-icons/lu"
+import { RiGitRepositoryLine } from "react-icons/ri"
 import { MdAnimation, MdOutlineTranslate } from "react-icons/md"
+import { VscIssues } from "react-icons/vsc"
 import { FaDragon } from "react-icons/fa"
 import { Link } from "react-router-dom"
 import { useState } from "react"
@@ -8,7 +10,6 @@ import type { FC } from "react"
 import {
     Sidebar,
     SidebarContent,
-    SidebarFooter,
     SidebarGroup,
     SidebarGroupContent,
     SidebarGroupLabel,
@@ -16,8 +17,8 @@ import {
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
+    useSidebar,
 } from "@/components/ui/sidebar"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 
 const assetItems = [
@@ -101,23 +102,45 @@ const configItems = [
     },
 ]
 
+const gitHubItems = [
+    {
+        title: "Repository",
+        url: "https://github.com/dc-highs/dc-tools",
+        icon: RiGitRepositoryLine,
+    },
+    {
+        title: "Issues",
+        url: "https://github.com/dc-highs/dc-tools/issues",
+        icon: VscIssues,
+    },
+    {
+        title: "DC Highs",
+        url: "https://github.com/dc-highs",
+        icon: LuGithub,
+    },
+]
+
 const AppSidebar: FC = () => {
-    const [assetsOpen, setAssetsOpen] = useState(false)
+    const [assetsOpen, setAssetsOpen] = useState(true)
     const [configOpen, setConfigOpen] = useState(false)
+    const [gitHubOpen, setGitHubOpen] = useState(true)
+    const { open } = useSidebar()
 
     return (
         <Sidebar collapsible="icon">
             <SidebarHeader>
-                <SidebarMenu>
-                    <SidebarMenuItem>
-                        <SidebarMenuButton>
-                            <div className="text-base flex items-center gap-2 font-semibold">
-                                <FaDragon />
-                                <span>DC Tools</span>
+                <Link className={`flex items-center py-2 gap-6 ${open ? "px-2" : "justify-center"} gap-2 transition-all duration-300 hover:opacity-80`} to="/">
+                    <FaDragon width={24} height={24} />
+                    {open && (
+                        <div>
+                            <div className="font-bold text-xl max-lg:text-base text-nowrap">DC Tools</div>
+                            <div className="text-xs flex gap-1 text-nowrap">
+                                <span>Powered by</span>
+                                <span className="font-semibold">DC Highs</span>
                             </div>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
-                </SidebarMenu>
+                        </div>
+                    )}
+                </Link>
             </SidebarHeader>
             <SidebarContent>
                 <Collapsible open={assetsOpen} onOpenChange={setAssetsOpen}>
@@ -182,32 +205,40 @@ const AppSidebar: FC = () => {
                         </CollapsibleContent>
                     </SidebarGroup>
                 </Collapsible> */}
+                <Collapsible open={gitHubOpen} onOpenChange={setGitHubOpen}>
+                    <SidebarGroup>
+                        <SidebarGroupLabel asChild>
+                            <CollapsibleTrigger className="flex w-full items-center justify-between">
+                                <div className="flex gap-2 items-center">
+                                    <LuGithub />
+                                    <span>GitHub</span>
+                                </div>
+                                {gitHubOpen ? (
+                                    <LuChevronDown className="h-4 w-4" />
+                                ) : (
+                                    <LuChevronUp className="h-4 w-4" />
+                                )}
+                            </CollapsibleTrigger>
+                        </SidebarGroupLabel>
+                        <CollapsibleContent>
+                            <SidebarGroupContent>
+                                <SidebarMenu>
+                                    {gitHubItems.map((item) => (
+                                        <SidebarMenuItem key={item.title}>
+                                            <SidebarMenuButton asChild>
+                                                <a href={item.url} target="_blank">
+                                                    <item.icon />
+                                                    <span>{item.title}</span>
+                                                </a>
+                                            </SidebarMenuButton>
+                                        </SidebarMenuItem>
+                                    ))}
+                                </SidebarMenu>
+                            </SidebarGroupContent>
+                        </CollapsibleContent>
+                    </SidebarGroup>
+                </Collapsible>
             </SidebarContent>
-            <SidebarFooter>
-                <SidebarMenu>
-                    <SidebarMenuItem>
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <SidebarMenuButton>
-                                    <LuUser /> Username
-                                    <LuChevronUp className="ml-auto" />
-                                </SidebarMenuButton>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent side="top" className="w-[--radix-popper-anchor-width]">
-                                <DropdownMenuItem>
-                                    <span>Account</span>
-                                </DropdownMenuItem>
-                                <DropdownMenuItem>
-                                    <span>Billing</span>
-                                </DropdownMenuItem>
-                                <DropdownMenuItem>
-                                    <span>Sign out</span>
-                                </DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
-                    </SidebarMenuItem>
-                </SidebarMenu>
-            </SidebarFooter>
         </Sidebar>
     )
 }
