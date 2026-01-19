@@ -1,4 +1,4 @@
-import { BrowserRouter } from "react-router-dom"
+import { HashRouter } from "react-router-dom"
 import type { FC, ReactNode } from "react"
 
 import { SidebarProvider } from "@/components/ui/sidebar"
@@ -9,9 +9,9 @@ type Props = {
 
 const Providers: FC<Props> = ({ children }) => {
     return (
-        <BrowserRouter>
+        <HashRouter>
             <SidebarProvider>{children}</SidebarProvider>
-        </BrowserRouter>
+        </HashRouter >
     )
 }
 
