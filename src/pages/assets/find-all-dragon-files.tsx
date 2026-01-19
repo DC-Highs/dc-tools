@@ -32,14 +32,13 @@ const FindAllDragonFilesPage: FC = () => {
     const [loading, setLoading] = useState(false)
 
     const handleSearch = async () => {
+        setLoading(true)
+
+        const loadingToastId = toast.loading("Searching for files...")
+
         try {
-            const loadingToastId = toast.loading("Searching for files...")
-
-            setLoading(true)
-
             const staticFileUrls = await findDragonStaticFileUrls(imageName, platformPrefix)
 
-            toast.dismiss(loadingToastId)
             toast.success(`${staticFileUrls.length} files found!`)
 
             setFiles(staticFileUrls)
@@ -48,6 +47,7 @@ const FindAllDragonFilesPage: FC = () => {
             toast.error("Failed to search for files!")
         } finally {
             setLoading(false)
+            toast.dismiss(loadingToastId)
         }
     }
 

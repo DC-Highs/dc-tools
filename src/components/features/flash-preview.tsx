@@ -20,7 +20,7 @@ const FlashPreview: FC<Props> = ({ src, width = 500, height = 500 }) => {
             }
 
             try {
-                toast.info("Fetching for animation file...")
+                const animationFetchToastId = toast.loading("Fetching for animation file...")
 
                 const response = await window.electronAPI.request<ArrayBuffer>({
                     url: src,
@@ -29,6 +29,7 @@ const FlashPreview: FC<Props> = ({ src, width = 500, height = 500 }) => {
                     },
                 })
 
+                toast.dismiss(animationFetchToastId)
                 toast.success("File successfully retrieved!")
 
                 if (isCancelled || !containerRef.current) return
@@ -41,13 +42,14 @@ const FlashPreview: FC<Props> = ({ src, width = 500, height = 500 }) => {
                 player.style.width = typeof width === "number" ? `${width}px` : width
                 player.style.height = typeof height === "number" ? `${height}px` : height
 
-                toast.info("Loading Flash player...")
+                const playerLoadToastId = toast.loading("Loading Flash player...")
 
                 await player.load({
                     data: response.data,
                     backgroundColor: "#ffffff",
                 })
 
+                toast.dismiss(playerLoadToastId)
                 toast.success("Flash loaded successfully!")
             } catch (error) {
                 console.error("Error loading SWF file:", error)

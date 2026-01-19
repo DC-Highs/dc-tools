@@ -49,10 +49,11 @@ const DragonFlashAnimationPage: FC = () => {
         const currentDownloader = dcAssets.dragons.animations.flash(data as any)
         const downloadUrl = currentDownloader.url
 
-        try {
-            setIsDownloading(true)
-            toast.info("Downloading file...")
+        setIsDownloading(true)
 
+        const downloadToastId = toast.loading("Downloading file...")
+
+        try {
             const result = await window.electronAPI.downloadFile(downloadUrl)
 
             if (typeof result === "string") {
@@ -65,6 +66,7 @@ const DragonFlashAnimationPage: FC = () => {
             toast.error("An error occurred while trying to download the file!")
         } finally {
             setIsDownloading(false)
+            toast.dismiss(downloadToastId)
         }
     }
 
