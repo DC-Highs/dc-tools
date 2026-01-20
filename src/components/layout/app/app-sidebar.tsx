@@ -9,6 +9,7 @@ import {
     LuGithub,
     LuFileSearch,
     LuRegex,
+    LuBox,
 } from "react-icons/lu"
 import { MdAnimation, MdOutlineTranslate } from "react-icons/md"
 import { RiGitRepositoryLine } from "react-icons/ri"
@@ -158,7 +159,7 @@ const gitHubItems = [
     {
         title: "Releases",
         url: "/releases",
-        icon: LuPackage,
+        icon: LuBox,
     },
     {
         title: "DC Highs",
@@ -337,7 +338,7 @@ const AppSidebar: FC = () => {
             <SidebarFooter>
                 {open && (
                     <div className="flex items-center justify-center gap-2 text-xs font-mono overflow-x-hidden text-nowrap">
-                        <span>Current version: v{pkg.version}</span>
+                        <span>App version: v{pkg.version}</span>
                     </div>
                 )}
             </SidebarFooter>

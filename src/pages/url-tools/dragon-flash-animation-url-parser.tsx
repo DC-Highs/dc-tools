@@ -1,6 +1,7 @@
 import { StaticFileUrlPlatformPrefix, DragonStaticFileUrlParser, DragonPhase } from "@dchighs/dc-core"
+import { LuCopy, LuRegex } from "react-icons/lu"
 import { useState, type FC } from "react"
-import { LuRegex } from "react-icons/lu"
+import { toast } from "sonner"
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Typography } from "@/components/ui/typography"
@@ -23,6 +24,50 @@ const DragonFlashAnimationUrlParserPage: FC = () => {
     const handleParseUrl = () => {
         const data = DragonStaticFileUrlParser.parseFromFlashAnimation(url)
         setParsedData(data)
+    }
+
+    const handleCopyImageName = async () => {
+        if (!parsedData?.imageName) {
+            toast.error("No image name to copy")
+            return
+        }
+
+        await navigator.clipboard.writeText(parsedData.imageName)
+
+        toast.success("Image name copied to clipboard")
+    }
+
+    const handleCopyDragonId = async () => {
+        if (!parsedData?.id) {
+            toast.error("No dragon ID to copy")
+            return
+        }
+
+        await navigator.clipboard.writeText(parsedData.id.toString())
+
+        toast.success("Dragon ID copied to clipboard")
+    }
+
+    const handleCopyPlatformPrefix = async () => {
+        if (!parsedData?.platformPrefix) {
+            toast.error("No platform prefix to copy")
+            return
+        }
+
+        await navigator.clipboard.writeText(parsedData.platformPrefix)
+
+        toast.success("Platform prefix copied to clipboard")
+    }
+
+    const handleCopyPhase = async () => {
+        if (!parsedData?.phase) {
+            toast.error("No phase to copy")
+            return
+        }
+
+        await navigator.clipboard.writeText(parsedData.phase.toString())
+
+        toast.success("Phase copied to clipboard")
     }
 
     return (
@@ -56,48 +101,68 @@ const DragonFlashAnimationUrlParserPage: FC = () => {
                         <div className="grid grid-cols-2 gap-x-2 gap-y-6">
                             <div className="space-y-4">
                                 <Label>Platform Prefix</Label>
-                                <Typography.Muted className="text-sm">
-                                    {parsedData.platformPrefix ? (
-                                        <>
-                                            {parsedData.platformPrefix} (
-                                            {
-                                                Object.entries(StaticFileUrlPlatformPrefix).find(
-                                                    ([key, value]) =>
-                                                        key !== "Default" && value === parsedData.platformPrefix,
-                                                )?.[0]
-                                            }
-                                            )
-                                        </>
-                                    ) : (
-                                        <span className="text-red-500">-</span>
-                                    )}
-                                </Typography.Muted>
+                                <div className="flex items-center gap-2">
+                                    <Typography.Muted className="text-sm">
+                                        {parsedData.platformPrefix ? (
+                                            <>
+                                                {parsedData.platformPrefix} (
+                                                {
+                                                    Object.entries(StaticFileUrlPlatformPrefix).find(
+                                                        ([key, value]) =>
+                                                            key !== "Default" && value === parsedData.platformPrefix,
+                                                    )?.[0]
+                                                }
+                                                )
+                                            </>
+                                        ) : (
+                                            <span className="text-red-500">-</span>
+                                        )}
+                                    </Typography.Muted>
+                                    <Button size="xs" variant="ghost" onClick={handleCopyPlatformPrefix}>
+                                        <LuCopy />
+                                    </Button>
+                                </div>
                             </div>
                             <div className="space-y-4">
                                 <Label>Dragon ID</Label>
-                                <Typography.Muted className="text-sm">{parsedData.id}</Typography.Muted>
+                                <div className="flex items-center gap-2">
+                                    <Typography.Muted className="text-sm">{parsedData.id}</Typography.Muted>
+                                    <Button size="xs" variant="ghost" onClick={handleCopyDragonId}>
+                                        <LuCopy />
+                                    </Button>
+                                </div>
                             </div>
                             <div className="space-y-4">
                                 <Label>Image Name</Label>
-                                <Typography.Muted className="text-sm">{parsedData.imageName}</Typography.Muted>
+                                <div className="flex items-center gap-2">
+                                    <Typography.Muted className="text-sm">{parsedData.imageName}</Typography.Muted>
+                                    <Button size="xs" variant="ghost" onClick={handleCopyImageName}>
+                                        <LuCopy />
+                                    </Button>
+                                </div>
                             </div>
                             <div className="space-y-4">
                                 <Label>Phase</Label>
-                                <Typography.Muted className="text-sm">
-                                    {parsedData.phase !== null ? (
-                                        <>
-                                            {parsedData.phase} (
-                                            {
-                                                Object.entries(DragonPhase).find(
-                                                    ([_, value]) => value === parsedData.phase,
-                                                )?.[0]
-                                            }
-                                            )
-                                        </>
-                                    ) : (
-                                        "-"
-                                    )}
-                                </Typography.Muted>
+                                <div className="flex items-center gap-2">
+                                    <Typography.Muted className="text-sm">
+                                        {parsedData.phase !== null ? (
+                                            <>
+                                                {parsedData.phase} (
+                                                {
+                                                    Object.entries(DragonPhase).find(
+                                                        ([_, value]) => value === parsedData.phase,
+                                                    )?.[0]
+                                                }
+                                                )
+                                            </>
+                                        ) : (
+                                            "-"
+                                        )}
+                                    </Typography.Muted>
+                                    <Button size="xs" variant="ghost" onClick={handleCopyPhase}>
+                                        <LuCopy />
+                                    </Button>
+                                </div>
                             </div>
                         </div>
                     ) : (
