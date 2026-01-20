@@ -1,5 +1,5 @@
 import { DragonPhase, StaticFileUrlPlatformPrefix, TextureCompressionFormat } from "@dchighs/dc-core"
-import { LuDownload, LuPackage } from "react-icons/lu"
+import { LuCopy, LuDownload, LuPackage } from "react-icons/lu"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Controller, useForm } from "react-hook-form"
 import dcAssets from "@dchighs/dc-assets"
@@ -70,6 +70,11 @@ const DragonSpineAnimationPage: FC = () => {
             setIsDownloading(false)
             toast.dismiss(downloadToastId)
         }
+    }
+
+    const handleCopyUrl = async () => {
+        await navigator.clipboard.writeText(downloadUrl)
+        toast.success("URL copied to clipboard!")
     }
 
     return (
@@ -212,18 +217,23 @@ const DragonSpineAnimationPage: FC = () => {
                                 )}
                             />
                         </FieldGroup>
-                        <br />
-                        <Button disabled={isDownloading} type="submit" className="mt-6">
-                            {isDownloading ? (
-                                <>
-                                    <Spinner /> Downloading...
-                                </>
-                            ) : (
-                                <>
-                                    <LuDownload /> Download and save
-                                </>
-                            )}
-                        </Button>
+                        <div className="mt-6 space-x-2">
+                            <Button variant="secondary" type="button" onClick={handleCopyUrl}>
+                                <LuCopy />
+                                Copy file URL
+                            </Button>
+                            <Button disabled={isDownloading} type="submit">
+                                {isDownloading ? (
+                                    <>
+                                        <Spinner /> Downloading...
+                                    </>
+                                ) : (
+                                    <>
+                                        <LuDownload /> Download and save
+                                    </>
+                                )}
+                            </Button>
+                        </div>
                     </form>
                 </CardContent>
             </Card>
