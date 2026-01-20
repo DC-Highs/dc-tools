@@ -22,6 +22,7 @@ import type { FC } from "react"
 import {
     Sidebar,
     SidebarContent,
+    SidebarFooter,
     SidebarGroup,
     SidebarGroupContent,
     SidebarGroupLabel,
@@ -32,6 +33,7 @@ import {
     useSidebar,
 } from "@/components/ui/sidebar"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
+import pkg from "@/../package.json"
 
 const assetItems = [
     {
@@ -329,6 +331,11 @@ const AppSidebar: FC = () => {
                     </SidebarGroup>
                 </Collapsible>
             </SidebarContent>
+            <SidebarFooter>
+                <div className="flex items-center justify-center gap-2 text-xs font-mono">
+                    <span>Current version: v{pkg.version}</span>
+                </div>
+            </SidebarFooter>
         </Sidebar>
     )
 }
