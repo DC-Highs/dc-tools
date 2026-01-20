@@ -1,6 +1,8 @@
 import { contextBridge, ipcRenderer } from "electron"
 
-import { HttpRequestOptions, HttpResponse } from "./http-reqest.handler"
+import { FetchOptions, GameConfigDto } from "@dchighs/dc-config"
+
+import { HttpRequestOptions, HttpResponse } from "./http-request.handler"
 
 interface DownloadProgress {
     progress: number
@@ -28,4 +30,6 @@ contextBridge.exposeInMainWorld("electronAPI", {
 
     request: <T = any>(options: HttpRequestOptions): Promise<HttpResponse<T>> =>
         ipcRenderer.invoke("http-request", options),
+
+    fetchConfig: (options: FetchOptions): Promise<GameConfigDto> => ipcRenderer.invoke("fetch-config", options),
 })

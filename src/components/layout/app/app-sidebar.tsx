@@ -157,7 +157,6 @@ const gitHubItems = [
     },
     {
         title: "Releases",
-        // url: "https://github.com/dc-highs/dc-tools/releases",
         url: "/releases",
         icon: LuPackage,
     },
@@ -261,11 +260,14 @@ const AppSidebar: FC = () => {
                         </CollapsibleContent>
                     </SidebarGroup>
                 </Collapsible>
-                {/* <Collapsible open={configOpen} onOpenChange={setConfigOpen}>
+                <Collapsible open={configOpen} onOpenChange={setConfigOpen}>
                     <SidebarGroup>
                         <SidebarGroupLabel asChild>
                             <CollapsibleTrigger className="flex w-full items-center justify-between">
-                                <span>Game Config</span>
+                                <div className="flex gap-2 items-center">
+                                    <LuSettings />
+                                    <span>Game Config</span>
+                                </div>
                                 {configOpen ? (
                                     <LuChevronDown className="h-4 w-4" />
                                 ) : (
@@ -280,6 +282,7 @@ const AppSidebar: FC = () => {
                                         <SidebarMenuItem key={item.title}>
                                             <SidebarMenuButton asChild>
                                                 <Link to={item.url}>
+                                                    <item.icon />
                                                     <span>{item.title}</span>
                                                 </Link>
                                             </SidebarMenuButton>
@@ -289,7 +292,7 @@ const AppSidebar: FC = () => {
                             </SidebarGroupContent>
                         </CollapsibleContent>
                     </SidebarGroup>
-                </Collapsible> */}
+                </Collapsible>
                 <Collapsible open={gitHubOpen} onOpenChange={setGitHubOpen}>
                     <SidebarGroup>
                         <SidebarGroupLabel asChild>

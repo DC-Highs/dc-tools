@@ -2,7 +2,8 @@ import { app, BrowserWindow, shell } from "electron"
 
 import path from "node:path"
 
-import "./http-reqest.handler"
+import "./config-fetcher.handler"
+import "./http-request.handler"
 import "./downloader.handler"
 
 function createWindow() {

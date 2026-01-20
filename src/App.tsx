@@ -7,12 +7,14 @@ import DragonSpriteUrlParserPage from "./pages/url-tools/dragon-sprite-url-parse
 import DragonSpineAnimationPage from "./pages/assets/dragon-spine-animation"
 import DragonFlashAnimationPage from "./pages/assets/dragon-flash-animation"
 import FindAllDragonFilesPage from "./pages/assets/find-all-dragon-files"
+import LocalizationFetcherPage from "./pages/config/localization-fetcher"
 import DecorationThumbnailPage from "./pages/assets/decoration-thumbnail"
 import BuildingThumbnailPage from "./pages/assets/building-thumbnail"
 import HabitatThumbnailPage from "./pages/assets/habitat-thumbnail"
 import DecorationSpritePage from "./pages/assets/decoration-sprite"
 import DragonThumbnailPage from "./pages/assets/dragon-thumbnail"
 import BuildingSpritePage from "./pages/assets/building-sprite"
+import ConfigFetcherPage from "./pages/config/config-fetcher"
 import IslandPackagePage from "./pages/assets/island-package"
 import HabitatSpritePage from "./pages/assets/habitat-sprite"
 import AppSidebar from "./components/layout/app/app-sidebar"
@@ -67,6 +69,8 @@ function App() {
                             path="/url-tools/dragon-spine-animation-url-parser"
                             element={<DragonSpineAnimationUrlParserPage />}
                         />
+                        <Route path="/config/config-fetcher" element={<ConfigFetcherPage />} />
+                        <Route path="/config/localization-fetcher" element={<LocalizationFetcherPage />} />
                     </Routes>
                 </div>
             </main>

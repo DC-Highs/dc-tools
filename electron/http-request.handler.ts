@@ -5,6 +5,7 @@ export interface HttpRequestOptions {
     method?: "GET" | "POST" | "PUT" | "DELETE" | "PATCH"
     headers?: Record<string, string>
     body?: any
+    params?: Record<string, string>
 }
 
 export interface HttpResponse<T = any> {
@@ -14,12 +15,14 @@ export interface HttpResponse<T = any> {
 }
 
 ipcMain.handle("http-request", async (_event, options: HttpRequestOptions): Promise<HttpResponse> => {
-    const { url, method = "GET", headers = {}, body } = options
+    const { url, method = "GET", headers = {}, body, params } = options
+
+    console.log(url + (params ? `?${new URLSearchParams(params).toString()}` : ""), method)
 
     return new Promise((resolve, reject) => {
         const request = net.request({
             method,
-            url,
+            url: url + (params ? `?${new URLSearchParams(params).toString()}` : ""),
         })
 
         // headers

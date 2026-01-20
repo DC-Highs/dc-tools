@@ -1,3 +1,5 @@
+import type { FetchOptions } from "@dchighs/dc-config"
+
 interface DownloadProgress {
     progress: number
     receivedBytes: number
@@ -10,6 +12,7 @@ interface ElectronAPI {
     onDownloadComplete: (callback: (filePath: string) => void) => () => void
     onDownloadError: (callback: (error: string) => void) => () => void
     request: <T = any>(options: HttpRequestOptions) => Promise<HttpResponse<T>>
+    fetchConfig: (options: FetchOptions) => Promise<GameConfigDto>
 }
 
 declare global {
