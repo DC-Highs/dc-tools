@@ -335,9 +335,11 @@ const AppSidebar: FC = () => {
                 </Collapsible>
             </SidebarContent>
             <SidebarFooter>
-                <div className="flex items-center justify-center gap-2 text-xs font-mono">
-                    <span>Current version: v{pkg.version}</span>
-                </div>
+                {open && (
+                    <div className="flex items-center justify-center gap-2 text-xs font-mono overflow-x-hidden text-nowrap">
+                        <span>Current version: v{pkg.version}</span>
+                    </div>
+                )}
             </SidebarFooter>
         </Sidebar>
     )
