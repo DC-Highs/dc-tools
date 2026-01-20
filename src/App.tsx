@@ -1,5 +1,9 @@
 import { Routes, Route } from "react-router-dom"
 
+import DragonSpineAnimationUrlParserPage from "./pages/url-tools/dragon-spine-animation-url-parser"
+import DragonFlashAnimationUrlParserPage from "./pages/url-tools/dragon-flash-animation-url-parser"
+import DragonThumbnailUrlParserPage from "./pages/url-tools/dragon-thumbnail-url-parser"
+import DragonSpriteUrlParserPage from "./pages/url-tools/dragon-sprite-url-parser"
 import DragonSpineAnimationPage from "./pages/assets/dragon-spine-animation"
 import DragonFlashAnimationPage from "./pages/assets/dragon-flash-animation"
 import FindAllDragonFilesPage from "./pages/assets/find-all-dragon-files"
@@ -50,6 +54,19 @@ function App() {
                         <Route path="/assets/sounds/music" element={<SoundMusicPage />} />
                         <Route path="/assets/dragons/all" element={<FindAllDragonFilesPage />} />
                         <Route path="/releases" element={<ReleasesPage />} />
+                        <Route path="/url-tools/dragon-sprite-url-parser" element={<DragonSpriteUrlParserPage />} />
+                        <Route
+                            path="/url-tools/dragon-thumbnail-url-parser"
+                            element={<DragonThumbnailUrlParserPage />}
+                        />
+                        <Route
+                            path="/url-tools/dragon-flash-animation-url-parser"
+                            element={<DragonFlashAnimationUrlParserPage />}
+                        />
+                        <Route
+                            path="/url-tools/dragon-spine-animation-url-parser"
+                            element={<DragonSpineAnimationUrlParserPage />}
+                        />
                     </Routes>
                 </div>
             </main>

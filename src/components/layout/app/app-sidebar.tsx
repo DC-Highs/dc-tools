@@ -8,9 +8,11 @@ import {
     LuPackage,
     LuGithub,
     LuFileSearch,
+    LuRegex,
 } from "react-icons/lu"
 import { MdAnimation, MdOutlineTranslate } from "react-icons/md"
 import { RiGitRepositoryLine } from "react-icons/ri"
+import { PiBracketsCurly } from "react-icons/pi"
 import { VscIssues } from "react-icons/vsc"
 import { FaDragon } from "react-icons/fa"
 import { Link } from "react-router-dom"
@@ -117,6 +119,29 @@ const configItems = [
     },
 ]
 
+const urlToolsItems = [
+    {
+        title: "D. Sprite File URL Parser",
+        url: "/url-tools/dragon-sprite-url-parser",
+        icon: PiBracketsCurly,
+    },
+    {
+        title: "D. Thumbnail File URL Parser",
+        url: "/url-tools/dragon-thumbnail-url-parser",
+        icon: PiBracketsCurly,
+    },
+    {
+        title: "D. Flash Animation File URL Parser",
+        url: "/url-tools/dragon-flash-animation-url-parser",
+        icon: PiBracketsCurly,
+    },
+    {
+        title: "D. Spine Animation File URL Parser",
+        url: "/url-tools/dragon-spine-animation-url-parser",
+        icon: PiBracketsCurly,
+    },
+]
+
 const gitHubItems = [
     {
         title: "Repository",
@@ -144,6 +169,7 @@ const gitHubItems = [
 const AppSidebar: FC = () => {
     const [assetsOpen, setAssetsOpen] = useState(true)
     const [configOpen, setConfigOpen] = useState(false)
+    const [urlToolsOpen, setUrlToolsOpen] = useState(false)
     const [gitHubOpen, setGitHubOpen] = useState(true)
     const { open } = useSidebar()
 
@@ -186,6 +212,39 @@ const AppSidebar: FC = () => {
                             <SidebarGroupContent>
                                 <SidebarMenu>
                                     {assetItems.map((item) => (
+                                        <SidebarMenuItem key={item.title}>
+                                            <SidebarMenuButton asChild>
+                                                <Link to={item.url}>
+                                                    <item.icon />
+                                                    <span>{item.title}</span>
+                                                </Link>
+                                            </SidebarMenuButton>
+                                        </SidebarMenuItem>
+                                    ))}
+                                </SidebarMenu>
+                            </SidebarGroupContent>
+                        </CollapsibleContent>
+                    </SidebarGroup>
+                </Collapsible>
+                <Collapsible open={urlToolsOpen} onOpenChange={setUrlToolsOpen}>
+                    <SidebarGroup>
+                        <SidebarGroupLabel asChild>
+                            <CollapsibleTrigger className="flex w-full items-center justify-between">
+                                <div className="flex gap-2 items-center">
+                                    <LuRegex />
+                                    <span>URL Tools</span>
+                                </div>
+                                {urlToolsOpen ? (
+                                    <LuChevronDown className="h-4 w-4" />
+                                ) : (
+                                    <LuChevronUp className="h-4 w-4" />
+                                )}
+                            </CollapsibleTrigger>
+                        </SidebarGroupLabel>
+                        <CollapsibleContent>
+                            <SidebarGroupContent>
+                                <SidebarMenu>
+                                    {urlToolsItems.map((item) => (
                                         <SidebarMenuItem key={item.title}>
                                             <SidebarMenuButton asChild>
                                                 <Link to={item.url}>

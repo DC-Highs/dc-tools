@@ -1,0 +1,137 @@
+import {
+    StaticFileUrlPlatformPrefix,
+    DragonStaticFileUrlParser,
+    DragonPhase,
+    DragonSpriteQuality,
+} from "@dchighs/dc-core"
+import { useState, type FC } from "react"
+import { LuRegex } from "react-icons/lu"
+
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Typography } from "@/components/ui/typography"
+import { Button } from "@/components/ui/button"
+import { Label } from "@/components/ui/label"
+import { Input } from "@/components/ui/input"
+
+const DragonSpriteUrlParserPage: FC = () => {
+    const [url, setUrl] = useState<string>(
+        "https://dci-static-s1.socialpointgames.com/static/dragoncity/mobile/ui/dragons/ui_3421_dragon_highwar_1@2x.png",
+    )
+    const [parsedData, setParsedData] = useState<{
+        platformPrefix: StaticFileUrlPlatformPrefix | null
+        id: number | null
+        imageName: string | null
+        phase: DragonPhase | null
+        skin: string | null
+        imageQuality: DragonSpriteQuality
+    } | null>(null)
+
+    const handleParseUrl = () => {
+        const data = DragonStaticFileUrlParser.parseFromSprite(url)
+        setParsedData(data)
+    }
+
+    return (
+        <div className="space-y-2">
+            <Card>
+                <CardHeader>
+                    <CardTitle>Dragon Sprite URL Parser</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <div className="flex flex-col space-y-4">
+                        <Label>Image URL</Label>
+                        <div className="flex items-center gap-2">
+                            <Input
+                                value={url}
+                                onChange={(e) => setUrl(e.target.value)}
+                                placeholder="e.g. https://dci-static-s1.socialpointgames.com/static/dragoncity/mobile/ui/dragons/ui_3421_dragon_highwar_1@2x.png"
+                            />
+                        </div>
+                    </div>
+                    <Button onClick={handleParseUrl} className="mt-6">
+                        <LuRegex /> Parse URL
+                    </Button>
+                </CardContent>
+            </Card>
+            <Card>
+                <CardHeader>
+                    <CardTitle>Parsing result</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    {parsedData ? (
+                        <div className="grid grid-cols-2 gap-x-2 gap-y-6">
+                            <div className="space-y-4">
+                                <Label>Platform Prefix</Label>
+                                <Typography.Muted className="text-sm">
+                                    {parsedData.platformPrefix ? (
+                                        <>
+                                            {parsedData.platformPrefix} (
+                                            {
+                                                Object.entries(StaticFileUrlPlatformPrefix).find(
+                                                    ([key, value]) =>
+                                                        key !== "Default" && value === parsedData.platformPrefix,
+                                                )?.[0]
+                                            }
+                                            )
+                                        </>
+                                    ) : (
+                                        <span className="text-red-500">-</span>
+                                    )}
+                                </Typography.Muted>
+                            </div>
+                            <div className="space-y-4">
+                                <Label>Dragon ID</Label>
+                                <Typography.Muted className="text-sm">{parsedData.id}</Typography.Muted>
+                            </div>
+                            <div className="space-y-4">
+                                <Label>Image Name</Label>
+                                <Typography.Muted className="text-sm">{parsedData.imageName}</Typography.Muted>
+                            </div>
+                            <div className="space-y-4">
+                                <Label>Phase</Label>
+                                <Typography.Muted className="text-sm">
+                                    {parsedData.phase !== null ? (
+                                        <>
+                                            {parsedData.phase} (
+                                            {
+                                                Object.entries(DragonPhase).find(
+                                                    ([_, value]) => value === parsedData.phase,
+                                                )?.[0]
+                                            }
+                                            )
+                                        </>
+                                    ) : (
+                                        "-"
+                                    )}
+                                </Typography.Muted>
+                            </div>
+                            <div className="space-y-4">
+                                <Label>Image Quality</Label>
+                                <Typography.Muted className="text-sm">
+                                    {parsedData.imageQuality !== null ? (
+                                        <>
+                                            {parsedData.imageQuality || <span className="text-red-500">-</span>} (
+                                            {
+                                                Object.entries(DragonSpriteQuality).find(
+                                                    ([key, value]) =>
+                                                        key !== "Default" && value === parsedData.imageQuality,
+                                                )?.[0]
+                                            }
+                                            )
+                                        </>
+                                    ) : (
+                                        "-"
+                                    )}
+                                </Typography.Muted>
+                            </div>
+                        </div>
+                    ) : (
+                        <Typography.P className="text-center">Parse a URL to see the result</Typography.P>
+                    )}
+                </CardContent>
+            </Card>
+        </div>
+    )
+}
+
+export default DragonSpriteUrlParserPage
