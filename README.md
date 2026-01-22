@@ -1,3 +1,14 @@
 # DC Tools
 
-<img width="1536" height="829" alt="OnPaste 20260119-021855" src="https://github.com/user-attachments/assets/dea769ea-1cd1-47ad-9df6-e338aa161fd7" />
+**DC Tools** is a tool developed by the [DC Highs team](https://github.com/dc-highs) - more specifically by the member [Marcuth](https://github.com/marcuth) - to perform static file search operations and search for data related to Dragon City in a more intuitive way, without having to manually build URLs and write parameters.
+
+## Donate
+
+- Via [Buy Me A Coffee](https://www.buymeacoffee.com/marcuth)
+- Via [Ko-fi](https://ko-fi.com/marcuth)
+- Via [LivePix](https://livepix.com/marcuth)
+- Via pix@marcuth.dev
+
+## License
+
+The project is licensed under the MIT license.
