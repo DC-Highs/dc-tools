@@ -1,10 +1,12 @@
-import { app, BrowserWindow, shell } from "electron"
+import { app, BrowserWindow, protocol, shell } from "electron"
 
 import path from "node:path"
 
 import "./config-fetcher.handler"
 import "./http-request.handler"
 import "./downloader.handler"
+import "./animation-conversor.handler"
+import "./static-server"
 
 function createWindow() {
     const win = new BrowserWindow({
@@ -49,3 +51,13 @@ app.on("activate", () => {
         createWindow()
     }
 })
+
+app.whenReady().then(() => {
+    protocol.registerFileProtocol("app", (request, callback) => {
+        const url = decodeURI(request.url.replace("app://", ""))
+        const diskId = url.split("/")[0]
+        const filePath = url.split("/").slice(1).join("/")
+        const fileSystemPath = path.normalize(`${diskId}:/${filePath}`)
+        callback({ path: fileSystemPath })
+    })
+}) 

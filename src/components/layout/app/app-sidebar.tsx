@@ -10,6 +10,7 @@ import {
     LuFileSearch,
     LuRegex,
     LuBox,
+    LuPenTool,
 } from "react-icons/lu"
 import { MdAnimation, MdOutlineTranslate } from "react-icons/md"
 import { RiGitRepositoryLine } from "react-icons/ri"
@@ -145,6 +146,14 @@ const urlToolsItems = [
     },
 ]
 
+const animationManipulatorItems = [
+    {
+        title: "Spine Animation",
+        url: "/animation-manipulators/spine-animation",
+        icon: MdAnimation,
+    },
+]
+
 const gitHubItems = [
     {
         title: "Repository",
@@ -173,6 +182,7 @@ const AppSidebar: FC = () => {
     const [configOpen, setConfigOpen] = useState(false)
     const [urlToolsOpen, setUrlToolsOpen] = useState(false)
     const [gitHubOpen, setGitHubOpen] = useState(true)
+    const [animationManipulatorOpen, setAnimationManipulatorOpen] = useState(false)
     const { open } = useSidebar()
 
     return (
@@ -280,6 +290,39 @@ const AppSidebar: FC = () => {
                             <SidebarGroupContent>
                                 <SidebarMenu>
                                     {configItems.map((item) => (
+                                        <SidebarMenuItem key={item.title}>
+                                            <SidebarMenuButton asChild>
+                                                <Link to={item.url}>
+                                                    <item.icon />
+                                                    <span>{item.title}</span>
+                                                </Link>
+                                            </SidebarMenuButton>
+                                        </SidebarMenuItem>
+                                    ))}
+                                </SidebarMenu>
+                            </SidebarGroupContent>
+                        </CollapsibleContent>
+                    </SidebarGroup>
+                </Collapsible>
+                <Collapsible open={animationManipulatorOpen} onOpenChange={setAnimationManipulatorOpen}>
+                    <SidebarGroup>
+                        <SidebarGroupLabel asChild>
+                            <CollapsibleTrigger className="flex w-full items-center justify-between">
+                                <div className="flex gap-2 items-center">
+                                    <LuPenTool />
+                                    <span>Animation Manipulators</span>
+                                </div>
+                                {animationManipulatorOpen ? (
+                                    <LuChevronDown className="h-4 w-4" />
+                                ) : (
+                                    <LuChevronUp className="h-4 w-4" />
+                                )}
+                            </CollapsibleTrigger>
+                        </SidebarGroupLabel>
+                        <CollapsibleContent>
+                            <SidebarGroupContent>
+                                <SidebarMenu>
+                                    {animationManipulatorItems.map((item) => (
                                         <SidebarMenuItem key={item.title}>
                                             <SidebarMenuButton asChild>
                                                 <Link to={item.url}>

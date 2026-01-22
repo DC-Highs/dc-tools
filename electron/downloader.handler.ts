@@ -13,7 +13,7 @@ ipcMain.handle("download-file", async (event, url: string) => {
     const fileName = path.basename(new URL(url).pathname) || "download.png"
 
     const result = (await dialog.showSaveDialog(mainWindow, {
-        title: "Salvar sprite",
+        title: "Save sprite",
         defaultPath: path.join(app.getPath("downloads"), fileName),
         filters: [
             { name: "Images", extensions: ["png", "jpg", "jpeg", "gif", "webp"] },
@@ -22,7 +22,7 @@ ipcMain.handle("download-file", async (event, url: string) => {
     })) as any
 
     if (result.canceled || !result.filePath) {
-        return null // usuário cancelou
+        return null
     }
 
     const filePath = result.filePath

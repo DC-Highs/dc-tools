@@ -26,6 +26,7 @@ import { Toaster } from "./components/ui/sonner"
 import ReleasesPage from "./pages/releases"
 import HomePage from "./pages/home"
 import Providers from "./providers"
+import DragonSpineAnimationManipulatorPage from "./pages/animation-manipulators/spine-animation"
 
 function App() {
     return (
@@ -70,7 +71,8 @@ function App() {
                             element={<DragonSpineAnimationUrlParserPage />}
                         />
                         <Route path="/config/config-fetcher" element={<ConfigFetcherPage />} />
-                        <Route path="/config/localization-fetcher" element={<LocalizationFetcherPage />} />
+                        <Route path="/config/localization-fetcher" element={<LocalizationFetcherPage />} /> 
+                        <Route path="/animation-manipulators/spine-animation" element={<DragonSpineAnimationManipulatorPage />} />
                     </Routes>
                 </div>
             </main>

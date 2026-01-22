@@ -31,5 +31,7 @@ contextBridge.exposeInMainWorld("electronAPI", {
     request: <T = any>(options: HttpRequestOptions): Promise<HttpResponse<T>> =>
         ipcRenderer.invoke("http-request", options),
 
+    convertAnimation: () => ipcRenderer.invoke("convert-animation"),
+
     fetchConfig: (options: FetchOptions): Promise<GameConfigDto> => ipcRenderer.invoke("fetch-config", options),
 })
