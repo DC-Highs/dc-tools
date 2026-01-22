@@ -234,9 +234,8 @@ const DragonSpineAnimationManipulatorPage: FC = () => {
 
     useEffect(() => {
         if (!playerRef.current || !playerRef.current.skeleton) return
-        const factor = 4.7
-        playerRef.current.skeleton.bones[0].scaleX = scale / factor
-        playerRef.current.skeleton.bones[0].scaleY = scale / factor
+        playerRef.current.skeleton.scaleX = scale * 5
+        playerRef.current.skeleton.scaleY = scale * 5
     }, [playerRef.current, scale, currentDragonAnimation])
 
     useEffect(() => {
