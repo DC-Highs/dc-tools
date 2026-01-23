@@ -1,9 +1,16 @@
-import { useEffect, useRef, useState, type Dispatch, type FC, type RefObject, type SetStateAction } from "react"
+import {
+    useEffect,
+    useMemo,
+    useRef,
+    useState,
+    type Dispatch,
+    type FC,
+    type RefObject,
+    type SetStateAction,
+} from "react"
 import { LuUpload, LuPlay, LuPause, LuCamera, LuImage } from "react-icons/lu"
 import { PiRecordDuotone, PiRecordFill } from "react-icons/pi"
 import { toast } from "sonner"
-
-import { Checkbox } from "@/components/ui/checkbox"
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -12,6 +19,7 @@ import type { ConvertAnimationResult } from "@/types/global"
 import { toTitleCase } from "@/utils/to-title-case.util"
 import { Typography } from "@/components/ui/typography"
 import { recordCanvas } from "@/utils/record-canvas"
+import { Checkbox } from "@/components/ui/checkbox"
 import { Spinner } from "@/components/ui/spinner"
 import { Slider } from "@/components/ui/slider"
 import { Button } from "@/components/ui/button"
@@ -55,6 +63,7 @@ type ControlsProps = {
     recordAnimationResolution: Resolution
     onRecordAnimationResolutionChange: Dispatch<SetStateAction<Resolution>>
     playerRef: RefObject<any>
+    fileNameWithoutExtension: string
 }
 
 const SpinePlayerControls: FC<ControlsProps> = ({
@@ -74,6 +83,7 @@ const SpinePlayerControls: FC<ControlsProps> = ({
     recordAnimationResolution,
     onRecordAnimationResolutionChange,
     playerRef,
+    fileNameWithoutExtension,
 }) => {
     const [recordAnimationDuration, onRecordAnimationDurationChange] = useState<number>(5000)
     const [isRecording, setIsRecording] = useState<boolean>(false)
@@ -84,32 +94,14 @@ const SpinePlayerControls: FC<ControlsProps> = ({
 
         const canvas = playerRef.current.canvas as HTMLCanvasElement
 
-        const originalWidth = canvas.width
-        const originalHeight = canvas.height
-        const originalStyleWidth = canvas.style.width
-        const originalStyleHeight = canvas.style.height
-        const originalAutoResizeCanvas = playerRef.current.autoResizeCanvas
-
-        playerRef.current.autoResizeCanvas = false
-        canvas.width = recordAnimationResolution.width
-        canvas.height = recordAnimationResolution.height
-        canvas.style.width = `${recordAnimationResolution.width}px`
-        canvas.style.height = `${recordAnimationResolution.height}px`
-
         requestAnimationFrame(() => {
             const url = canvas.toDataURL("image/png")
-
+            const now = Date.now()
             const link = document.createElement("a")
 
             link.href = url
-            link.download = `dragon-snapshot-${Date.now()}.png`
+            link.download = `${fileNameWithoutExtension}-snapshot-${now}.png`
             link.click()
-
-            canvas.width = originalWidth
-            canvas.height = originalHeight
-            canvas.style.width = originalStyleWidth
-            canvas.style.height = originalStyleHeight
-            playerRef.current.autoResizeCanvas = originalAutoResizeCanvas
         })
     }
 
@@ -122,17 +114,6 @@ const SpinePlayerControls: FC<ControlsProps> = ({
         setIsRecording(true)
 
         const canvas = playerRef.current.canvas
-        const originalWidth = canvas.width
-        const originalHeight = canvas.height
-        const originalStyleWidth = canvas.style.width
-        const originalStyleHeight = canvas.style.height
-        const originalAutoResizeCanvas = playerRef.current.autoResizeCanvas
-
-        playerRef.current.autoResizeCanvas = false
-        canvas.width = recordAnimationResolution.width
-        canvas.height = recordAnimationResolution.height
-        canvas.style.width = `${recordAnimationResolution.width}px`
-        canvas.style.height = `${recordAnimationResolution.height}px`
 
         if (typeof playerRef.current.resize === "function") {
             playerRef.current.resize()
@@ -140,33 +121,21 @@ const SpinePlayerControls: FC<ControlsProps> = ({
 
         await new Promise((resolve) => setTimeout(resolve, 100))
 
-        const recordingToastId = toast.loading("Recording animation...", {
-            id: "record-animation",
-        })
+        const recordingToastId = toast.loading("Recording animation...")
+        const now = Date.now()
 
         try {
             await recordCanvas({
                 canvas: canvas,
                 duration: recordAnimationDuration,
-                fileNameWithoutExtension: `dragon-animation-${Date.now()}`,
+                fileNameWithoutExtension: `${fileNameWithoutExtension}-animation-${now}`,
                 mimeType,
             })
         } catch (error) {
             console.error(error)
             toast.error("Failed to record animation!")
         } finally {
-            canvas.width = originalWidth
-            canvas.height = originalHeight
-            canvas.style.width = originalStyleWidth
-            canvas.style.height = originalStyleHeight
-            playerRef.current.autoResizeCanvas = originalAutoResizeCanvas
-
-            if (typeof playerRef.current.resize === "function") {
-                playerRef.current.resize()
-            }
-
             setIsRecording(false)
-
             toast.dismiss(recordingToastId)
         }
     }
@@ -205,7 +174,7 @@ const SpinePlayerControls: FC<ControlsProps> = ({
                     <Label>Scale</Label>
                     <Input
                         type="number"
-                        value={scale}
+                        value={Number(scale).toString()}
                         onChange={(event) => onScaleChange(Number(event.target.value))}
                         step={0.1}
                     />
@@ -232,13 +201,13 @@ const SpinePlayerControls: FC<ControlsProps> = ({
                         <Input
                             type="number"
                             placeholder="X"
-                            value={position.x}
+                            value={Number(position.x).toString()}
                             onChange={(e) => onPositionChange({ ...position, x: Number(e.target.value) })}
                         />
                         <Input
                             type="number"
                             placeholder="Y"
-                            value={position.y}
+                            value={Number(position.y).toString()}
                             onChange={(e) => onPositionChange({ ...position, y: Number(e.target.value) })}
                         />
                     </div>
@@ -311,7 +280,7 @@ const SpinePlayerControls: FC<ControlsProps> = ({
                         <Input
                             type="number"
                             placeholder="Width"
-                            value={recordAnimationResolution.width}
+                            value={Number(recordAnimationResolution.width).toString()}
                             onChange={(e) =>
                                 onRecordAnimationResolutionChange({
                                     ...recordAnimationResolution,
@@ -322,7 +291,7 @@ const SpinePlayerControls: FC<ControlsProps> = ({
                         <Input
                             type="number"
                             placeholder="Height"
-                            value={recordAnimationResolution.height}
+                            value={Number(recordAnimationResolution.height).toString()}
                             onChange={(e) =>
                                 onRecordAnimationResolutionChange({
                                     ...recordAnimationResolution,
@@ -337,7 +306,7 @@ const SpinePlayerControls: FC<ControlsProps> = ({
                     <div className="flex gap-2">
                         <Input
                             type="number"
-                            value={recordAnimationDuration}
+                            value={Number(recordAnimationDuration).toString()}
                             onChange={(event) => onRecordAnimationDurationChange(Number(event.target.value))}
                         />
                         <Button
@@ -373,7 +342,7 @@ const DragonSpineAnimationPlayerPage: FC = () => {
     const [convertedAnimation, setConvertedAnimation] = useState<ConvertAnimationResult | null>(null)
     const [isConverting, setIsConverting] = useState<boolean>(false)
     const [background, setBackground] = useState<Background>({ color: "#ffffff" })
-    const [position, setPosition] = useState<Position>({ x: 0, y: 0 })
+    const [position, setPosition] = useState<Position>({ x: 640, y: 0 })
     const [scale, setScale] = useState<number>(1)
     const playerRef = useRef<any>(null)
     const [dragonAnimations, setDragonAnimations] = useState<string[]>([])
@@ -381,6 +350,14 @@ const DragonSpineAnimationPlayerPage: FC = () => {
     const [recordAnimationResolution, setRecordAnimationResolution] = useState<Resolution>({ width: 1280, height: 720 })
     const [speed, setSpeed] = useState<number>(1)
     const [isPlaying, setIsPlaying] = useState<boolean>(false)
+
+    const fileNameWithoutExtension = useMemo(() => {
+        if (!convertedAnimation) return "file"
+        const pathPars = convertedAnimation.skel.split("/")
+        const fileName = pathPars.pop()
+        if (!fileName) return "file"
+        return fileName.replace(".skel", "")
+    }, [convertedAnimation])
 
     const handleSelectFile = async () => {
         setIsConverting(true)
@@ -431,6 +408,10 @@ const DragonSpineAnimationPlayerPage: FC = () => {
                 y: 0,
                 width: recordAnimationResolution.width,
                 height: recordAnimationResolution.height,
+                padLeft: 0,
+                padRight: 0,
+                padTop: 0,
+                padBottom: 0,
             },
             success: (player: any) => {
                 const animations = player.skeleton.data.animations.map((animation: any) => animation.name)
@@ -443,9 +424,12 @@ const DragonSpineAnimationPlayerPage: FC = () => {
 
                 player.setAnimation(currentDragonAnimation ?? animations[0], true)
 
-                player.autoFit = true
-                player.autoResizeCanvas = true
-                player.autoResizeViewport = true
+                player.autoFit = false
+                player.autoResizeCanvas = false
+                player.autoResizeViewport = false
+
+                Object.defineProperty(player.canvas, "clientWidth", { value: recordAnimationResolution.width })
+                Object.defineProperty(player.canvas, "clientHeight", { value: recordAnimationResolution.height })
 
                 setIsPlaying(true)
             },
@@ -466,7 +450,7 @@ const DragonSpineAnimationPlayerPage: FC = () => {
     useEffect(() => {
         if (!playerRef.current || !playerRef.current.skeleton) return
         playerRef.current.skeleton.x = position.x
-        playerRef.current.skeleton.y = position.y
+        playerRef.current.skeleton.y = -position.y
     }, [playerRef.current, position.x, position.y])
 
     useEffect(() => {
@@ -510,129 +494,129 @@ const DragonSpineAnimationPlayerPage: FC = () => {
                     </Button>
                 </CardContent>
             </Card>
-            <Card>
-                <CardHeader>
-                    <CardTitle>Parsing result</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <div ref={containerRef} />
-                    {convertedAnimation && (
-                        <SpinePlayerControls
-                            playerRef={playerRef}
-                            background={background}
-                            onBackgroundChange={setBackground}
-                            animations={dragonAnimations}
-                            currentAnimation={currentDragonAnimation}
-                            onCurrentAnimationChange={setCurrentDragonAnimation}
-                            isPlaying={isPlaying}
-                            onIsPlayingChange={setIsPlaying}
-                            position={position}
-                            onPositionChange={setPosition}
-                            recordAnimationResolution={recordAnimationResolution}
-                            onRecordAnimationResolutionChange={setRecordAnimationResolution}
-                            scale={scale}
-                            onScaleChange={setScale}
-                            speed={speed}
-                            onSpeedChange={setSpeed}
-                        />
-                    )}
-                </CardContent>
-            </Card>
-            <style>{`
-                .SpinePlayer__container{
-                    display: flex;
-                    width: 100vw;
-                    justify-content: center;
-                    align-items: center;
-                    margin-top: 17px;
-                }
+            {convertedAnimation && (
+                <>
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Preview</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <div ref={containerRef} />
+                            <SpinePlayerControls
+                                playerRef={playerRef}
+                                background={background}
+                                onBackgroundChange={setBackground}
+                                animations={dragonAnimations}
+                                currentAnimation={currentDragonAnimation}
+                                onCurrentAnimationChange={setCurrentDragonAnimation}
+                                isPlaying={isPlaying}
+                                onIsPlayingChange={setIsPlaying}
+                                position={position}
+                                onPositionChange={setPosition}
+                                recordAnimationResolution={recordAnimationResolution}
+                                onRecordAnimationResolutionChange={setRecordAnimationResolution}
+                                scale={scale}
+                                onScaleChange={setScale}
+                                speed={speed}
+                                onSpeedChange={setSpeed}
+                                fileNameWithoutExtension={fileNameWithoutExtension}
+                            />
+                        </CardContent>
+                    </Card>
+                    <style>{`
+                        .SpinePlayer__container{
+                            display: flex;
+                            width: 100vw;
+                            justify-content: center;
+                            align-items: center;
+                            margin-top: 17px;
+                        }
 
-                .SpinePlayer__canvas_container{
-                    display: flex;
-                    flex-direction: column;
-                    justify-content: center;
-                }
+                        .SpinePlayer__canvas_container{
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: center;
+                        }
 
-                .spine-player-canvas{
-                    /* width: 1280px;
-                    height: 720px; */
-                    width: 100%;
-                    margin: 0 auto;
-                }
+                        .spine-player-canvas{
+                            width: 100%;
+                        }
 
-                .spine-player-controls{
-                    display: none;
-                }
+                        .spine-player-controls{
+                            display: none;
+                        }
 
-                .SpinePlayer__logo{
-                    position: absolute;
-                    width: 60px;
-                    height: 60px;
-                    opacity: 0.3;
-                }
+                        .SpinePlayer__logo{
+                            position: absolute;
+                            width: 60px;
+                            height: 60px;
+                            opacity: 0.3;
+                        }
 
-                .SpinePlayer__canvas_container_buttons_container{
-                    display: flex;
-                    justify-content: center;
-                    gap: 30px;
-                }
+                        .SpinePlayer__canvas_container_buttons_container{
+                            display: flex;
+                            justify-content: center;
+                            gap: 30px;
+                        }
 
-                .SpinePlayer__canvas_container_secondstorecord_container, .SpinePlayer__canvas_container_setscale_input_container{
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    justify-content: center;
-                }
+                        .SpinePlayer__canvas_container_secondstorecord_container, .SpinePlayer__canvas_container_setscale_input_container{
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+                            justify-content: center;
+                        }
 
-                .SpinePlayer__canvas_container_setscale_container, .SpinePlayer__canvas_container_changeanim_container{
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                }
+                        .SpinePlayer__canvas_container_setscale_container, .SpinePlayer__canvas_container_changeanim_container{
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                        }
 
-                .SpinePlayer__canvas_container_changeanim_container{
-                    flex-direction: column;
-                }
+                        .SpinePlayer__canvas_container_changeanim_container{
+                            flex-direction: column;
+                        }
 
-                .SpinePlayer__canvas_container_secondstorecord_container input[type="number"], .SpinePlayer__canvas_container_setscale_container input[type="number"]{
-                    width: 60px;
-                    height: 20px;
-                    margin-top: 18px;
-                    /* color: #fafafa;*/
-                }
+                        .SpinePlayer__canvas_container_secondstorecord_container input[type="number"], .SpinePlayer__canvas_container_setscale_container input[type="number"]{
+                            width: 60px;
+                            height: 20px;
+                            margin-top: 18px;
+                            /* color: #fafafa;*/
+                        }
 
-                .SpinePlayer__canvas_container_secondstorecord_container label, .SpinePlayer__canvas_container_setscale_container label{
-                    font-size: 1.55rem;
-                }
+                        .SpinePlayer__canvas_container_secondstorecord_container label, .SpinePlayer__canvas_container_setscale_container label{
+                            font-size: 1.55rem;
+                        }
 
-                .SpinePlayer__canvas_container_changeanim_container label{
-                    margin-top: 6px;
-                    font-size: 1.56rem;
-                }
+                        .SpinePlayer__canvas_container_changeanim_container label{
+                            margin-top: 6px;
+                            font-size: 1.56rem;
+                        }
 
-                .SpinePlayer__canvas_container_changeanim_btn, .SpinePlayer__canvas_container_startrecording_btn,
-                .SpinePlayer__canvas_container_setscale_btn, .SpinePlayer__canvas_container_vpsettings_btn,
-                .vpsettings__apply_btn, .Home__output_video_link{
-                    display: flex;
-                    width: 145px;
-                    height: 45px;
-                    
-                    margin-top: 16px;
-                    justify-content: center;
-                    align-items: center;
-                    cursor: pointer;
-                    color: #fafafa;
-                    background-color: #212129;
-                    border: none;
-                    border-radius: 6px;
-                }
+                        .SpinePlayer__canvas_container_changeanim_btn, .SpinePlayer__canvas_container_startrecording_btn,
+                        .SpinePlayer__canvas_container_setscale_btn, .SpinePlayer__canvas_container_vpsettings_btn,
+                        .vpsettings__apply_btn, .Home__output_video_link{
+                            display: flex;
+                            width: 145px;
+                            height: 45px;
+                            
+                            margin-top: 16px;
+                            justify-content: center;
+                            align-items: center;
+                            cursor: pointer;
+                            color: #fafafa;
+                            background-color: #212129;
+                            border: none;
+                            border-radius: 6px;
+                        }
 
-                .SpinePlayer__canvas_container_changeanim_btn:hover, .SpinePlayer__canvas_container_startrecording_btn:hover,
-                .SpinePlayer__canvas_container_vpsettings_btn:hover, .SpinePlayer__canvas_container_setscale_btn:hover,
-                .Home__output_video_link:hover{
-                    background-color: #2c2c35;
-                }
-            `}</style>
+                        .SpinePlayer__canvas_container_changeanim_btn:hover, .SpinePlayer__canvas_container_startrecording_btn:hover,
+                        .SpinePlayer__canvas_container_vpsettings_btn:hover, .SpinePlayer__canvas_container_setscale_btn:hover,
+                        .Home__output_video_link:hover{
+                            background-color: #2c2c35;
+                        }
+                    `}</style>
+                </>
+            )}
         </div>
     )
 }
