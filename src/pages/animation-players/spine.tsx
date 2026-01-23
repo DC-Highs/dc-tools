@@ -467,12 +467,12 @@ const DragonSpineAnimationPlayerPage: FC = () => {
     useEffect(() => {
         if (!playerRef.current) return
         playerRef.current.paused = !isPlaying
-    }, [isPlaying])
+    }, [isPlaying, playerRef.current])
 
     useEffect(() => {
         if (!playerRef.current) return
         playerRef.current.speed = speed
-    }, [speed])
+    }, [speed, playerRef.current])
 
     return (
         <div className="space-y-2">
