@@ -10,7 +10,7 @@ import {
     LuFileSearch,
     LuRegex,
     LuBox,
-    LuPenTool,
+    LuPlay,
 } from "react-icons/lu"
 import { MdAnimation, MdOutlineTranslate } from "react-icons/md"
 import { RiGitRepositoryLine } from "react-icons/ri"
@@ -146,10 +146,10 @@ const urlToolsItems = [
     },
 ]
 
-const animationManipulatorItems = [
+const animationPlayerItems = [
     {
-        title: "Spine Animation",
-        url: "/animation-manipulators/spine-animation",
+        title: "Spine Player",
+        url: "/animation-players/spine",
         icon: MdAnimation,
     },
 ]
@@ -182,7 +182,7 @@ const AppSidebar: FC = () => {
     const [configOpen, setConfigOpen] = useState(false)
     const [urlToolsOpen, setUrlToolsOpen] = useState(false)
     const [gitHubOpen, setGitHubOpen] = useState(true)
-    const [animationManipulatorOpen, setAnimationManipulatorOpen] = useState(false)
+    const [animationPlayerOpen, setAnimationPlayerOpen] = useState(false)
     const { open } = useSidebar()
 
     return (
@@ -304,15 +304,15 @@ const AppSidebar: FC = () => {
                         </CollapsibleContent>
                     </SidebarGroup>
                 </Collapsible>
-                <Collapsible open={animationManipulatorOpen} onOpenChange={setAnimationManipulatorOpen}>
+                <Collapsible open={animationPlayerOpen} onOpenChange={setAnimationPlayerOpen}>
                     <SidebarGroup>
                         <SidebarGroupLabel asChild>
                             <CollapsibleTrigger className="flex w-full items-center justify-between">
                                 <div className="flex gap-2 items-center">
-                                    <LuPenTool />
-                                    <span>Animation Manipulators</span>
+                                    <LuPlay />
+                                    <span>Animation Players</span>
                                 </div>
-                                {animationManipulatorOpen ? (
+                                {animationPlayerOpen ? (
                                     <LuChevronDown className="h-4 w-4" />
                                 ) : (
                                     <LuChevronUp className="h-4 w-4" />
@@ -322,7 +322,7 @@ const AppSidebar: FC = () => {
                         <CollapsibleContent>
                             <SidebarGroupContent>
                                 <SidebarMenu>
-                                    {animationManipulatorItems.map((item) => (
+                                    {animationPlayerItems.map((item) => (
                                         <SidebarMenuItem key={item.title}>
                                             <SidebarMenuButton asChild>
                                                 <Link to={item.url}>

@@ -1,5 +1,21 @@
-export function recordCanvas(canvas: HTMLCanvasElement, duration: number) {
+import { getVideoFileExtension } from "./get-video-file-extension.util"
+import type { VideoMimeType } from "@/enums/video-mime-type.enum"
+
+type RecordCanvasOptions = {
+    canvas: HTMLCanvasElement
+    duration: number
+    mimeType: VideoMimeType
+    fileNameWithoutExtension: string
+}
+
+export function recordCanvas({
+    canvas,
+    duration,
+    mimeType,
+    fileNameWithoutExtension,
+}: RecordCanvasOptions): Promise<void> {
     const recordedChunks: Blob[] = []
+    const fileExtension = getVideoFileExtension(mimeType)
 
     return new Promise<void>((resolve) => {
         const mediaStream = canvas.captureStream()
@@ -12,18 +28,17 @@ export function recordCanvas(canvas: HTMLCanvasElement, duration: number) {
         }
 
         mediaRecorder.onstop = () => {
-            const blob = new Blob(recordedChunks, { type: "video/webm" })
+            const blob = new Blob(recordedChunks, { type: mimeType })
             const url = URL.createObjectURL(blob)
 
-            const a = document.createElement("a")
-            a.style.display = "none"
-            a.href = url
-            a.download = `dragon-animation-${Date.now()}.webm`
-            document.body.appendChild(a)
-            a.click()
+            const link = document.createElement("a")
+
+            link.style.display = "none"
+            link.href = url
+            link.download = `${fileNameWithoutExtension}.${fileExtension}`
+            link.click()
 
             setTimeout(() => {
-                document.body.removeChild(a)
                 window.URL.revokeObjectURL(url)
             }, 100)
 

@@ -23,6 +23,7 @@ interface ElectronAPI {
     request: <T = any>(options: HttpRequestOptions) => Promise<HttpResponse<T>>
     convertAnimation: () => Promise<ConvertAnimationResult | null>
     fetchConfig: (options: FetchOptions) => Promise<GameConfigDto>
+    selectImage: () => Promise<string | null>
 }
 
 declare global {

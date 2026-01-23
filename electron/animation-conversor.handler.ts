@@ -1,18 +1,12 @@
 import { convertDdsToPng } from "@marcuth/dds-to-png"
 import { app, dialog, ipcMain } from "electron"
 import AdmZip from "adm-zip"
+
 import path from "node:path"
 import fs from "node:fs"
 
-import { cacheDir, staticServerPort } from "./constants"
-
-
-// tenho que manipular os arquivos atlas, para apontarem para um arquivo png ao invés de um dds
-
-function toAppUrl(filePath: string) {
-    const normalized = filePath.replace(/\\/g, "/")
-    return `http://localhost:${staticServerPort}/${encodeURI(normalized)}`
-}
+import { toAppUrl } from "./to-app-url.util"
+import { cacheDir } from "./constants"
 
 ipcMain.handle("convert-animation", async (event) => {
     if (!fs.existsSync(cacheDir)) {
@@ -55,7 +49,7 @@ ipcMain.handle("convert-animation", async (event) => {
             const atlasPath = path.join(outDirPath, fileName)
             const atlasContent = await fs.promises.readFile(atlasPath, "utf-8")
             const atlasLines = atlasContent.split("\n")
-            
+
             const atlasLinesWithNewPng = atlasLines.map((line) => {
                 if (line.endsWith(".dds")) {
                     return line.replace(".dds", ".png")
@@ -71,12 +65,12 @@ ipcMain.handle("convert-animation", async (event) => {
 
     const version = "spine-3-8-59_dxt5"
 
-    const png = outputFileNames.find(fileName => fileName.endsWith(`${version}.png`))
-    const atlas = outputFileNames.find(fileName => fileName.endsWith(`${version}.atlas`))
-    const skel = outputFileNames.find(fileName => fileName.endsWith(`${version}.skel`))
-    const mapPng = outputFileNames.find(fileName => fileName.endsWith(`${version}_map.png`))
-    const mapSkel = outputFileNames.find(fileName => fileName.endsWith(`${version}_map.skel`))
-    const mapAtlas = outputFileNames.find(fileName => fileName.endsWith(`${version}_map.atlas`))
+    const png = outputFileNames.find((fileName) => fileName.endsWith(`${version}.png`))
+    const atlas = outputFileNames.find((fileName) => fileName.endsWith(`${version}.atlas`))
+    const skel = outputFileNames.find((fileName) => fileName.endsWith(`${version}.skel`))
+    const mapPng = outputFileNames.find((fileName) => fileName.endsWith(`${version}_map.png`))
+    const mapSkel = outputFileNames.find((fileName) => fileName.endsWith(`${version}_map.skel`))
+    const mapAtlas = outputFileNames.find((fileName) => fileName.endsWith(`${version}_map.atlas`))
 
     if (!png || !atlas || !skel || !mapPng || !mapSkel || !mapAtlas) {
         throw new Error("Some files were not found, check if the texture format is dxt5!")
@@ -91,4 +85,3 @@ ipcMain.handle("convert-animation", async (event) => {
         mapAtlas: toAppUrl(path.join(outDirName, mapAtlas)),
     }
 })
-

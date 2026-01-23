@@ -6,6 +6,7 @@ import DragonThumbnailUrlParserPage from "./pages/url-tools/dragon-thumbnail-url
 import DragonSpriteUrlParserPage from "./pages/url-tools/dragon-sprite-url-parser"
 import DragonSpineAnimationPage from "./pages/assets/dragon-spine-animation"
 import DragonFlashAnimationPage from "./pages/assets/dragon-flash-animation"
+import DragonSpineAnimationPlayerPage from "./pages/animation-players/spine"
 import FindAllDragonFilesPage from "./pages/assets/find-all-dragon-files"
 import LocalizationFetcherPage from "./pages/config/localization-fetcher"
 import DecorationThumbnailPage from "./pages/assets/decoration-thumbnail"
@@ -26,7 +27,6 @@ import { Toaster } from "./components/ui/sonner"
 import ReleasesPage from "./pages/releases"
 import HomePage from "./pages/home"
 import Providers from "./providers"
-import DragonSpineAnimationManipulatorPage from "./pages/animation-manipulators/spine-animation"
 
 function App() {
     return (
@@ -71,8 +71,8 @@ function App() {
                             element={<DragonSpineAnimationUrlParserPage />}
                         />
                         <Route path="/config/config-fetcher" element={<ConfigFetcherPage />} />
-                        <Route path="/config/localization-fetcher" element={<LocalizationFetcherPage />} /> 
-                        <Route path="/animation-manipulators/spine-animation" element={<DragonSpineAnimationManipulatorPage />} />
+                        <Route path="/config/localization-fetcher" element={<LocalizationFetcherPage />} />
+                        <Route path="/animation-players/spine" element={<DragonSpineAnimationPlayerPage />} />
                     </Routes>
                 </div>
             </main>

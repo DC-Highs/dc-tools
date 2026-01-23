@@ -34,4 +34,6 @@ contextBridge.exposeInMainWorld("electronAPI", {
     convertAnimation: () => ipcRenderer.invoke("convert-animation"),
 
     fetchConfig: (options: FetchOptions): Promise<GameConfigDto> => ipcRenderer.invoke("fetch-config", options),
+
+    selectImage: (): Promise<string> => ipcRenderer.invoke("select-image"),
 })

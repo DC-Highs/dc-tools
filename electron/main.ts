@@ -2,10 +2,11 @@ import { app, BrowserWindow, protocol, shell } from "electron"
 
 import path from "node:path"
 
+import "./animation-conversor.handler"
 import "./config-fetcher.handler"
+import "./select-image.handler"
 import "./http-request.handler"
 import "./downloader.handler"
-import "./animation-conversor.handler"
 import "./static-server"
 
 function createWindow() {
@@ -60,4 +61,4 @@ app.whenReady().then(() => {
         const fileSystemPath = path.normalize(`${diskId}:/${filePath}`)
         callback({ path: fileSystemPath })
     })
-}) 
+})
