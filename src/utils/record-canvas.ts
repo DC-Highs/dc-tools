@@ -17,9 +17,19 @@ export function recordCanvas({
     const recordedChunks: Blob[] = []
     const fileExtension = getVideoFileExtension(mimeType)
 
+    const dpr = Math.min(window.devicePixelRatio || 1, 2)
+
+    const width = canvas.clientWidth * dpr
+    const height = canvas.clientHeight * dpr
+
+    if (canvas.width !== width || canvas.height !== height) {
+        canvas.width = width
+        canvas.height = height
+    }
+
     return new Promise<void>((resolve) => {
-        const mediaStream = canvas.captureStream()
-        const mediaRecorder = new MediaRecorder(mediaStream)
+        const mediaStream = canvas.captureStream(60)
+        const mediaRecorder = new MediaRecorder(mediaStream, { mimeType: mimeType })
 
         mediaRecorder.ondataavailable = (event) => {
             if (event.data.size > 0) {
