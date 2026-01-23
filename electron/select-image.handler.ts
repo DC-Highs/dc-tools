@@ -4,7 +4,7 @@ import path from "node:path"
 import fs from "node:fs"
 
 import { toAppUrl } from "./to-app-url.util"
-import { cacheDir } from "./constants"
+import { tempDir } from "./constants"
 
 ipcMain.handle("select-image", async (event) => {
     const result = dialog.showOpenDialogSync({
@@ -22,19 +22,13 @@ ipcMain.handle("select-image", async (event) => {
 
     const filePath = result[0]
 
-    const fileName = path.basename(filePath)
-    const destDirName = "images"
-    const destDir = path.join(cacheDir, destDirName)
+    const fileName = `${Date.now()}-${path.basename(filePath)}`
 
-    if (!fs.existsSync(destDir)) {
-        await fs.promises.mkdir(destDir, { recursive: true })
-    }
-
-    const outputFilePath = path.join(destDir, fileName)
+    const outputFilePath = path.join(tempDir, fileName)
 
     if (!fs.existsSync(outputFilePath)) {
         await fs.promises.copyFile(filePath, outputFilePath)
     }
 
-    return toAppUrl(path.join(destDirName, fileName))
+    return toAppUrl(fileName)
 })

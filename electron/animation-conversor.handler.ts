@@ -6,13 +6,9 @@ import path from "node:path"
 import fs from "node:fs"
 
 import { toAppUrl } from "./to-app-url.util"
-import { cacheDir } from "./constants"
+import { tempDir } from "./constants"
 
-ipcMain.handle("convert-animation", async (event) => {
-    if (!fs.existsSync(cacheDir)) {
-        await fs.promises.mkdir(cacheDir, { recursive: true })
-    }
-
+ipcMain.handle("convert-animation", async () => {
     const result = dialog.showOpenDialogSync({
         title: "Select animation file",
         defaultPath: path.join(app.getPath("downloads")),
@@ -30,7 +26,7 @@ ipcMain.handle("convert-animation", async (event) => {
 
     const zip = new AdmZip(filePath)
     const outDirName = path.basename(filePath, ".zip")
-    const outDirPath = path.join(cacheDir, outDirName)
+    const outDirPath = path.join(tempDir, outDirName)
 
     zip.extractAllTo(outDirPath, true)
 
@@ -54,6 +50,7 @@ ipcMain.handle("convert-animation", async (event) => {
                 if (line.endsWith(".dds")) {
                     return line.replace(".dds", ".png")
                 }
+
                 return line
             })
 
