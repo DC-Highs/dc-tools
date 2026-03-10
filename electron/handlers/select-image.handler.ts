@@ -3,10 +3,10 @@ import { app, dialog, ipcMain } from "electron"
 import path from "node:path"
 import fs from "node:fs"
 
-import { toAppUrl } from "./to-app-url.util"
-import { tempDir } from "./constants"
+import { toAppUrl } from "../lib/to-app-url.util"
+import { tempDir } from "../lib/constants"
 
-ipcMain.handle("select-image", async (event) => {
+ipcMain.handle("file:select", async (event) => {
     const result = dialog.showOpenDialogSync({
         title: "Select image",
         defaultPath: path.join(app.getPath("downloads")),

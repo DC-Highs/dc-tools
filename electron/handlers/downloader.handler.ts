@@ -3,14 +3,14 @@ import { app, BrowserWindow, ipcMain, dialog, net } from "electron"
 import path from "node:path"
 import fs from "node:fs"
 
-ipcMain.handle("download-file", async (event, url: string) => {
+ipcMain.handle("file:download", async (event, url: string, customFileName?: string) => {
     const mainWindow = BrowserWindow.fromWebContents(event.sender)
 
     if (!mainWindow) {
         throw new Error("Window not found")
     }
 
-    const fileName = path.basename(new URL(url).pathname) || "download.png"
+    const fileName = customFileName || path.basename(new URL(url).pathname) || "download.png"
 
     const result = (await dialog.showSaveDialog(mainWindow, {
         title: "Save sprite",
@@ -45,7 +45,7 @@ ipcMain.handle("download-file", async (event, url: string) => {
                 receivedBytes += chunk.length
 
                 if (totalBytes) {
-                    event.sender.send("download-progress", {
+                    event.sender.send("file:download-progress", {
                         progress: (receivedBytes / totalBytes) * 100,
                         receivedBytes,
                         totalBytes,
@@ -56,19 +56,19 @@ ipcMain.handle("download-file", async (event, url: string) => {
             response.pipe(writeStream)
 
             writeStream.on("finish", () => {
-                event.sender.send("download-complete", filePath)
+                event.sender.send("file:download-complete", filePath)
                 resolve(filePath)
             })
 
             writeStream.on("error", (err) => {
                 fs.unlink(filePath, () => {})
-                event.sender.send("download-error", err.message)
+                event.sender.send("file:download-error", err.message)
                 reject(err)
             })
         })
 
         request.on("error", (err) => {
-            event.sender.send("download-error", err.message)
+            event.sender.send("file:download-error", err.message)
             reject(err)
         })
 

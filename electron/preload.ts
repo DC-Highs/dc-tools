@@ -2,7 +2,7 @@ import { contextBridge, ipcRenderer } from "electron"
 
 import { FetchOptions, GameConfigDto } from "@dchighs/dc-config"
 
-import { HttpRequestOptions, HttpResponse } from "./http-request.handler"
+import { HttpRequestOptions, HttpResponse } from "./handlers/http-request.handler"
 
 interface DownloadProgress {
     progress: number
@@ -11,29 +11,37 @@ interface DownloadProgress {
 }
 
 contextBridge.exposeInMainWorld("electronAPI", {
-    downloadFile: (url: string) => ipcRenderer.invoke("download-file", url),
+    downloadFile: (url: string, filename?: string) => ipcRenderer.invoke("file:download", url, filename),
 
     onDownloadProgress: (callback: (progress: DownloadProgress) => void) => {
-        ipcRenderer.on("download-progress", (_, progress) => callback(progress))
-        return () => ipcRenderer.removeAllListeners("download-progress")
+        ipcRenderer.on("file:download-progress", (_, progress) => callback(progress))
+        return () => ipcRenderer.removeAllListeners("file:download-progress")
     },
 
     onDownloadComplete: (callback: (filePath: string) => void) => {
-        ipcRenderer.on("download-complete", (_, filePath) => callback(filePath))
-        return () => ipcRenderer.removeAllListeners("download-complete")
+        ipcRenderer.on("file:download-complete", (_, filePath) => callback(filePath))
+        return () => ipcRenderer.removeAllListeners("file:download-complete")
     },
 
     onDownloadError: (callback: (error: string) => void) => {
-        ipcRenderer.on("download-error", (_, error) => callback(error))
-        return () => ipcRenderer.removeAllListeners("download-error")
+        ipcRenderer.on("file:download-error", (_, error) => callback(error))
+        return () => ipcRenderer.removeAllListeners("file:download-error")
     },
 
     request: <T = any>(options: HttpRequestOptions): Promise<HttpResponse<T>> =>
-        ipcRenderer.invoke("http-request", options),
+        ipcRenderer.invoke("http:request", options),
 
-    convertAnimation: () => ipcRenderer.invoke("convert-animation"),
+    convertAnimation: () => ipcRenderer.invoke("animation:convert"),
 
-    fetchConfig: (options: FetchOptions): Promise<GameConfigDto> => ipcRenderer.invoke("fetch-config", options),
+    bigjpgEnlarge: (url: string) => ipcRenderer.invoke("bigjpg:enlarge", url),
 
-    selectImage: (): Promise<string> => ipcRenderer.invoke("select-image"),
+    fetchConfig: (options: FetchOptions): Promise<GameConfigDto> => ipcRenderer.invoke("config:fetch", options),
+
+    selectImage: (): Promise<string> => ipcRenderer.invoke("file:select"),
+
+    store: {
+        get: (key: string) => ipcRenderer.invoke("store:get", key),
+        set: (key: string, value: any) => ipcRenderer.invoke("store:set", key, value),
+        delete: (key: string) => ipcRenderer.invoke("store:delete", key),
+    },
 })

@@ -14,7 +14,7 @@ export interface HttpResponse<T = any> {
     data: T
 }
 
-ipcMain.handle("http-request", async (_event, options: HttpRequestOptions): Promise<HttpResponse> => {
+ipcMain.handle("http:request", async (_event, options: HttpRequestOptions): Promise<HttpResponse> => {
     const { url, method = "GET", headers = {}, body, params } = options
 
     console.log(url + (params ? `?${new URLSearchParams(params).toString()}` : ""), method)
@@ -25,7 +25,6 @@ ipcMain.handle("http-request", async (_event, options: HttpRequestOptions): Prom
             url: url + (params ? `?${new URLSearchParams(params).toString()}` : ""),
         })
 
-        // headers
         Object.entries(headers).forEach(([key, value]) => {
             request.setHeader(key, value)
         })
@@ -62,7 +61,6 @@ ipcMain.handle("http-request", async (_event, options: HttpRequestOptions): Prom
             reject(err)
         })
 
-        // body
         if (body) {
             const payload = typeof body === "string" || Buffer.isBuffer(body) ? body : JSON.stringify(body)
 

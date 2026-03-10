@@ -5,10 +5,10 @@ import AdmZip from "adm-zip"
 import path from "node:path"
 import fs from "node:fs"
 
-import { toAppUrl } from "./to-app-url.util"
-import { tempDir } from "./constants"
+import { toAppUrl } from "../lib/to-app-url.util"
+import { tempDir } from "../lib/constants"
 
-ipcMain.handle("convert-animation", async () => {
+ipcMain.handle("animation:convert", async () => {
     const result = dialog.showOpenDialogSync({
         title: "Select animation file",
         defaultPath: path.join(app.getPath("downloads")),

@@ -2,12 +2,14 @@ import { app, BrowserWindow, protocol, shell } from "electron"
 
 import path from "node:path"
 
-import "./animation-conversor.handler"
-import "./config-fetcher.handler"
-import "./select-image.handler"
-import "./http-request.handler"
-import "./downloader.handler"
-import "./static-server"
+import "./handlers/animation-conversor.handler"
+import "./handlers/config-fetcher.handler"
+import "./handlers/select-image.handler"
+import "./handlers/http-request.handler"
+import "./handlers/downloader.handler"
+import "./handlers/bigjpg.handler"
+import "./handlers/store.handler"
+import "./lib/static-server"
 
 function createWindow() {
     const win = new BrowserWindow({
