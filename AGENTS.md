@@ -137,3 +137,18 @@ Before committing:
 - **Windows execution**: Use `;` to chain commands (not `&&`)
 - **Import errors**: Use relative imports for local files
 - **Type errors**: Use `import type` for interfaces/types
+
+---
+
+## 8. Commit Conventions
+
+When making commits, include the agent as co-author using:
+
+```
+Co-Authored-By: opencode-agent[bot] <219766164+opencode-agent[bot]@users.noreply.github.com>
+```
+
+Example commit message:
+```
+git commit -m "feat: add new feature" -m "Co-Authored-By: opencode-agent[bot] <219766164+opencode-agent[bot]@users.noreply.github.com>"
+```
