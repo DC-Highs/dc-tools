@@ -30,6 +30,13 @@ interface ElectronAPI {
         set: (key: string, value: any) => Promise<void>
         delete: (key: string) => Promise<void>
     }
+    cache: {
+        getSize: () => Promise<number>
+        clear: () => Promise<boolean>
+    }
+    zip: {
+        list: (url: string) => Promise<Array<{ name: string; size: number; isDirectory: boolean }>>
+    }
 }
 
 declare global {

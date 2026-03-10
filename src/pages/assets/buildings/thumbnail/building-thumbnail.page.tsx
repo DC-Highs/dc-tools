@@ -77,9 +77,7 @@ const BuildingThumbnailPage: FC = () => {
         <div className="space-y-2">
             <Card>
                 <CardHeader>
-                    <CardTitle>
-                        <Typography.H4>Building Thumbnail Downloader</Typography.H4>
-                    </CardTitle>
+                    <CardTitle>Building Thumbnail Downloader</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <form id="form-rhf-demo" onSubmit={form.handleSubmit(onSubmit)}>
@@ -89,9 +87,7 @@ const BuildingThumbnailPage: FC = () => {
                                 control={form.control}
                                 render={({ field, fieldState }) => (
                                     <Field data-invalid={fieldState.invalid}>
-                                        <FieldLabel>
-                                            <Typography.Small>Platform Prefix</Typography.Small>
-                                        </FieldLabel>
+                                        <FieldLabel>Platform Prefix</FieldLabel>
                                         <Select onValueChange={field.onChange} value={field.value}>
                                             <SelectTrigger className="w-full">
                                                 <SelectValue placeholder="Select a platform prefix" />
@@ -108,7 +104,7 @@ const BuildingThumbnailPage: FC = () => {
                                                                 key={`prefix-${platformPrefix.toString()}`}
                                                                 value={platformPrefix.toString()}
                                                             >
-                                                                <Typography.Small>{platformName}</Typography.Small>
+                                                                {platformName}
                                                             </SelectItem>
                                                         ))}
                                                 </SelectGroup>
@@ -123,9 +119,7 @@ const BuildingThumbnailPage: FC = () => {
                                 control={form.control}
                                 render={({ field, fieldState }) => (
                                     <Field data-invalid={fieldState.invalid}>
-                                        <FieldLabel>
-                                            <Typography.Small>Image Name</Typography.Small>
-                                        </FieldLabel>
+                                        <FieldLabel>Image Name</FieldLabel>
                                         <Input
                                             {...field}
                                             aria-invalid={fieldState.invalid}
@@ -147,9 +141,7 @@ const BuildingThumbnailPage: FC = () => {
             </Card>
             <Card>
                 <CardHeader>
-                    <CardTitle>
-                        <Typography.H4>Preview</Typography.H4>
-                    </CardTitle>
+                    <CardTitle>Preview</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <div className="flex flex-col items-center gap-4 p-6">
@@ -158,9 +150,7 @@ const BuildingThumbnailPage: FC = () => {
                 </CardContent>
                 <Separator />
                 <CardFooter className="font-mono">
-                    <Typography.Small>
-                        <b>File URL:</b> <Typography.Code>{downloadUrl}</Typography.Code>
-                    </Typography.Small>
+                    <b>File URL:</b> <Typography.Code>{downloadUrl}</Typography.Code>
                 </CardFooter>
             </Card>
         </div>

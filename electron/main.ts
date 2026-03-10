@@ -9,6 +9,8 @@ import { registerDownloaderHandler } from "./handlers/downloader.handler"
 import { registerHttpRequestHandler } from "./handlers/http-request.handler"
 import { registerSelectImageHandler } from "./handlers/select-image.handler"
 import { registerStoreHandlers } from "./handlers/store.handler"
+import { registerCacheHandler } from "./handlers/cache.handler"
+import { registerZipHandler } from "./handlers/zip.handler"
 import "./lib/static-server"
 
 function registerIpcHandlers() {
@@ -19,6 +21,8 @@ function registerIpcHandlers() {
     registerHttpRequestHandler()
     registerSelectImageHandler()
     registerStoreHandlers()
+    registerCacheHandler()
+    registerZipHandler()
 }
 
 function createWindow() {

@@ -44,4 +44,12 @@ contextBridge.exposeInMainWorld("electronAPI", {
         set: (key: string, value: any) => ipcRenderer.invoke("store:set", key, value),
         delete: (key: string) => ipcRenderer.invoke("store:delete", key),
     },
+
+    cache: {
+        getSize: (): Promise<number> => ipcRenderer.invoke("cache:get-size"),
+        clear: (): Promise<boolean> => ipcRenderer.invoke("cache:clear"),
+    },
+    zip: {
+        list: (url: string) => ipcRenderer.invoke("zip:list", url),
+    },
 })

@@ -22,9 +22,9 @@ import { settingsFormSchema, type SettingsFormValues } from "@/schemas/settings-
 import { ConfigLanguageSelect } from "@/components/common/config-language-select"
 import { PageContainer } from "@/components/common/page-container"
 import { PasswordInput } from "@/components/ui/password-input"
+import { CacheSection } from "./components/cache-section"
 import { Separator } from "@/components/ui/separator"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { Link } from "@/components/ui/link"
 
 const SettingsPage: FC = () => {
@@ -70,19 +70,13 @@ const SettingsPage: FC = () => {
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                     <Card>
                         <CardHeader>
-                            <CardTitle>
-                                <Typography.H4>General</Typography.H4>
-                            </CardTitle>
-                            <CardDescription>
-                                <Typography.Small>General application settings.</Typography.Small>
-                            </CardDescription>
+                            <CardTitle>General</CardTitle>
+                            <CardDescription>General application settings.</CardDescription>
                         </CardHeader>
                         <CardContent>
                             <FieldGroup>
                                 <Field>
-                                    <FieldLabel>
-                                        <Typography.Small>DDS Texture Conversion Tool</Typography.Small>
-                                    </FieldLabel>
+                                    <FieldLabel>DDS Texture Conversion Tool</FieldLabel>
                                     <Controller
                                         control={form.control}
                                         name="conversionTool"
@@ -93,26 +87,18 @@ const SettingsPage: FC = () => {
                                                 </SelectTrigger>
                                                 <SelectContent>
                                                     <SelectGroup>
-                                                        <SelectLabel>
-                                                            <Typography.Small>Tools</Typography.Small>
-                                                        </SelectLabel>
+                                                        <SelectLabel>Tools</SelectLabel>
                                                         <SelectItem value="local">
-                                                            <Typography.Small>
-                                                                Local (@marcuth/dds-to-png)
-                                                            </Typography.Small>
+                                                            Local (@marcuth/dds-to-png)
                                                         </SelectItem>
-                                                        <SelectItem value="convertio">
-                                                            <Typography.Small>Convertio.co</Typography.Small>
-                                                        </SelectItem>
+                                                        <SelectItem value="convertio">Convertio.co</SelectItem>
                                                     </SelectGroup>
                                                 </SelectContent>
                                             </Select>
                                         )}
                                     />
                                     <FieldDescription>
-                                        <Typography.Small>
-                                            Choose the tool used for image/asset conversions.
-                                        </Typography.Small>
+                                        Choose the tool used for image/asset conversions.
                                     </FieldDescription>
                                     <FieldError errors={[form.formState.errors.conversionTool]} />
                                 </Field>
@@ -121,24 +107,18 @@ const SettingsPage: FC = () => {
                     </Card>
                     <Card>
                         <CardHeader>
-                            <CardTitle>
-                                <Typography.H4>Bigjpg</Typography.H4>
-                            </CardTitle>
+                            <CardTitle>Bigjpg</CardTitle>
                             <CardDescription>
-                                <Typography.Small>
-                                    Configuration for Bigjpg integration. Enlarge images with AI. Get your API key at{" "}
-                                    <Link href="https://bigjpg.com/" target="_blank">
-                                        https://bigjpg.com/
-                                    </Link>
-                                </Typography.Small>
+                                Configuration for Bigjpg integration. Enlarge images with AI. Get your API key at{" "}
+                                <Link href="https://bigjpg.com/" target="_blank">
+                                    https://bigjpg.com/
+                                </Link>
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
                             <FieldGroup className="grid gap-4 sm:grid-cols-2">
                                 <Field className="sm:col-span-2">
-                                    <FieldLabel>
-                                        <Typography.Small>API Key</Typography.Small>
-                                    </FieldLabel>
+                                    <FieldLabel>API Key</FieldLabel>
                                     <Controller
                                         control={form.control}
                                         name="bigjpg.apiKey"
@@ -149,9 +129,7 @@ const SettingsPage: FC = () => {
                                     <FieldError errors={[form.formState.errors.bigjpg?.apiKey]} />
                                 </Field>
                                 <Field>
-                                    <FieldLabel>
-                                        <Typography.Small>Noise Reduction</Typography.Small>
-                                    </FieldLabel>
+                                    <FieldLabel>Noise Reduction</FieldLabel>
                                     <Controller
                                         control={form.control}
                                         name="bigjpg.noise"
@@ -161,30 +139,18 @@ const SettingsPage: FC = () => {
                                                     <SelectValue placeholder="Select noise reduction" />
                                                 </SelectTrigger>
                                                 <SelectContent>
-                                                    <SelectItem value="-1">
-                                                        <Typography.Small>None</Typography.Small>
-                                                    </SelectItem>
-                                                    <SelectItem value="0">
-                                                        <Typography.Small>Low</Typography.Small>
-                                                    </SelectItem>
-                                                    <SelectItem value="1">
-                                                        <Typography.Small>Medium</Typography.Small>
-                                                    </SelectItem>
-                                                    <SelectItem value="2">
-                                                        <Typography.Small>High</Typography.Small>
-                                                    </SelectItem>
-                                                    <SelectItem value="3">
-                                                        <Typography.Small>Highest</Typography.Small>
-                                                    </SelectItem>
+                                                    <SelectItem value="-1">None</SelectItem>
+                                                    <SelectItem value="0">Low</SelectItem>
+                                                    <SelectItem value="1">Medium</SelectItem>
+                                                    <SelectItem value="2">High</SelectItem>
+                                                    <SelectItem value="3">Highest</SelectItem>
                                                 </SelectContent>
                                             </Select>
                                         )}
                                     />
                                 </Field>
                                 <Field>
-                                    <FieldLabel>
-                                        <Typography.Small>Enlarge Factor</Typography.Small>
-                                    </FieldLabel>
+                                    <FieldLabel>Enlarge Factor</FieldLabel>
                                     <Controller
                                         control={form.control}
                                         name="bigjpg.enlarge"
@@ -194,18 +160,10 @@ const SettingsPage: FC = () => {
                                                     <SelectValue placeholder="Select enlarge factor" />
                                                 </SelectTrigger>
                                                 <SelectContent>
-                                                    <SelectItem value="1">
-                                                        <Typography.Small>2x</Typography.Small>
-                                                    </SelectItem>
-                                                    <SelectItem value="2">
-                                                        <Typography.Small>4x</Typography.Small>
-                                                    </SelectItem>
-                                                    <SelectItem value="3">
-                                                        <Typography.Small>8x</Typography.Small>
-                                                    </SelectItem>
-                                                    <SelectItem value="4">
-                                                        <Typography.Small>16x</Typography.Small>
-                                                    </SelectItem>
+                                                    <SelectItem value="1">2x</SelectItem>
+                                                    <SelectItem value="2">4x</SelectItem>
+                                                    <SelectItem value="3">8x</SelectItem>
+                                                    <SelectItem value="4">16x</SelectItem>
                                                 </SelectContent>
                                             </Select>
                                         )}
@@ -216,24 +174,18 @@ const SettingsPage: FC = () => {
                     </Card>
                     <Card>
                         <CardHeader>
-                            <CardTitle>
-                                <Typography.H4>Convertio</Typography.H4>
-                            </CardTitle>
+                            <CardTitle>Convertio</CardTitle>
                             <CardDescription>
-                                <Typography.Small>
-                                    Configuration for Convertio integration. Get your API key at{" "}
-                                    <Link href="https://developers.convertio.co/" target="_blank">
-                                        https://developers.convertio.co/
-                                    </Link>
-                                </Typography.Small>
+                                Configuration for Convertio integration. Get your API key at{" "}
+                                <Link href="https://developers.convertio.co/" target="_blank">
+                                    https://developers.convertio.co/
+                                </Link>
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
                             <FieldGroup>
                                 <Field>
-                                    <FieldLabel>
-                                        <Typography.Small>API Key</Typography.Small>
-                                    </FieldLabel>
+                                    <FieldLabel>API Key</FieldLabel>
                                     <Controller
                                         control={form.control}
                                         name="convertio.apiKey"
@@ -248,36 +200,28 @@ const SettingsPage: FC = () => {
                     </Card>
                     <Card>
                         <CardHeader>
-                            <CardTitle>
-                                <Typography.H4>Game Config</Typography.H4>
-                            </CardTitle>
-                            <CardDescription>
-                                <Typography.Small>Default configuration for game interactions.</Typography.Small>
-                            </CardDescription>
+                            <CardTitle>Game Config</CardTitle>
+                            <CardDescription>Default configuration for game interactions.</CardDescription>
                         </CardHeader>
                         <CardContent>
                             <FieldGroup className="grid gap-4 sm:grid-cols-2">
                                 <Field className="sm:col-span-2">
-                                    <FieldLabel>
-                                        <Typography.Small>URL</Typography.Small>
-                                    </FieldLabel>
+                                    <FieldLabel>URL</FieldLabel>
                                     <Controller
                                         control={form.control}
                                         name="gameConfig.url"
                                         render={({ field }) => (
-                                            <Input placeholder="https://api.example.com" {...field} />
+                                            <PasswordInput placeholder="https://api.example.com" {...field} />
                                         )}
                                     />
                                     <FieldError errors={[form.formState.errors.gameConfig?.url]} />
                                 </Field>
                                 <Field>
-                                    <FieldLabel>
-                                        <Typography.Small>User ID</Typography.Small>
-                                    </FieldLabel>
+                                    <FieldLabel>User ID</FieldLabel>
                                     <Controller
                                         control={form.control}
                                         name="gameConfig.userId"
-                                        render={({ field }) => <Input placeholder="User ID" {...field} />}
+                                        render={({ field }) => <PasswordInput placeholder="User ID" {...field} />}
                                     />
                                     <FieldError errors={[form.formState.errors.gameConfig?.userId]} />
                                 </Field>
@@ -288,9 +232,7 @@ const SettingsPage: FC = () => {
                                     placeholder="Select a language"
                                 />
                                 <Field className="sm:col-span-2">
-                                    <FieldLabel>
-                                        <Typography.Small>Auth Token</Typography.Small>
-                                    </FieldLabel>
+                                    <FieldLabel>Auth Token</FieldLabel>
                                     <Controller
                                         control={form.control}
                                         name="gameConfig.authToken"
@@ -303,12 +245,8 @@ const SettingsPage: FC = () => {
                     </Card>
                     <Card>
                         <CardHeader>
-                            <CardTitle>
-                                <Typography.H4>Localization</Typography.H4>
-                            </CardTitle>
-                            <CardDescription>
-                                <Typography.Small>Application localization settings.</Typography.Small>
-                            </CardDescription>
+                            <CardTitle>Localization</CardTitle>
+                            <CardDescription>Application localization settings.</CardDescription>
                         </CardHeader>
                         <CardContent>
                             <FieldGroup>
@@ -321,9 +259,10 @@ const SettingsPage: FC = () => {
                             </FieldGroup>
                         </CardContent>
                     </Card>
+                    <CacheSection />
                     <div className="flex justify-end">
                         <Button type="submit">
-                            <LuSave className="mr-2 h-4 w-4" /> <Typography.Small>Save Settings</Typography.Small>
+                            <LuSave className="mr-2 h-4 w-4" /> Save Settings
                         </Button>
                     </div>
                 </form>

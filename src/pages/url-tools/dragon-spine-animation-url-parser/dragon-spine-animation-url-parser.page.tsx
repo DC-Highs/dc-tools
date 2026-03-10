@@ -5,6 +5,7 @@ import { toast } from "sonner"
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field"
+import { ZipPreview } from "@/components/common/zip-preview"
 import { Typography } from "@/components/ui/typography"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -90,9 +91,7 @@ const DragonSpineAnimationUrlParserPage: FC = () => {
                 <CardContent>
                     <FieldGroup>
                         <Field>
-                            <FieldLabel>
-                                <Typography.Small>Image URL</Typography.Small>
-                            </FieldLabel>
+                            <FieldLabel>Image URL</FieldLabel>
                             <div className="flex items-center gap-2">
                                 <Input
                                     value={url}
@@ -103,8 +102,16 @@ const DragonSpineAnimationUrlParserPage: FC = () => {
                         </Field>
                     </FieldGroup>
                     <Button onClick={handleParseUrl} className="mt-6">
-                        <LuRegex /> <Typography.Small>Parse URL</Typography.Small>
+                        <LuRegex /> Parse URL
                     </Button>
+                </CardContent>
+            </Card>
+            <Card>
+                <CardHeader>
+                    <CardTitle>ZIP Contents</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <ZipPreview url={url} />
                 </CardContent>
             </Card>
             <Card>
@@ -117,9 +124,7 @@ const DragonSpineAnimationUrlParserPage: FC = () => {
                     {parsedData ? (
                         <div className="grid grid-cols-2 gap-x-2 gap-y-6">
                             <div className="space-y-4">
-                                <FieldLabel>
-                                    <Typography.Small>Platform Prefix</Typography.Small>
-                                </FieldLabel>
+                                <FieldLabel>Platform Prefix</FieldLabel>
                                 <div className="flex items-center gap-2">
                                     <Typography.Muted className="text-sm">
                                         {parsedData.platformPrefix ? (
@@ -144,9 +149,7 @@ const DragonSpineAnimationUrlParserPage: FC = () => {
                                 </div>
                             </div>
                             <div className="space-y-4">
-                                <FieldLabel>
-                                    <Typography.Small>Dragon ID</Typography.Small>
-                                </FieldLabel>
+                                <FieldLabel>Dragon ID</FieldLabel>
                                 <div className="flex items-center gap-2">
                                     <Typography.Muted className="text-sm">{parsedData.id}</Typography.Muted>
                                     <Button size="xs" variant="ghost" onClick={handleCopyDragonId}>
@@ -155,9 +158,7 @@ const DragonSpineAnimationUrlParserPage: FC = () => {
                                 </div>
                             </div>
                             <div className="space-y-4">
-                                <FieldLabel>
-                                    <Typography.Small>Image Name</Typography.Small>
-                                </FieldLabel>
+                                <FieldLabel>Image Name</FieldLabel>
                                 <div className="flex items-center gap-2">
                                     <Typography.Muted className="text-sm">{parsedData.imageName}</Typography.Muted>
                                     <Button size="xs" variant="ghost" onClick={handleCopyImageName}>
@@ -166,9 +167,7 @@ const DragonSpineAnimationUrlParserPage: FC = () => {
                                 </div>
                             </div>
                             <div className="space-y-4">
-                                <FieldLabel>
-                                    <Typography.Small>Phase</Typography.Small>
-                                </FieldLabel>
+                                <FieldLabel>Phase</FieldLabel>
                                 <div className="flex items-center gap-2">
                                     <Typography.Muted className="text-sm">
                                         {parsedData.phase !== null ? (
@@ -192,9 +191,7 @@ const DragonSpineAnimationUrlParserPage: FC = () => {
                                 </div>
                             </div>
                             <div className="space-y-4">
-                                <FieldLabel>
-                                    <Typography.Small>Skin</Typography.Small>
-                                </FieldLabel>
+                                <FieldLabel>Skin</FieldLabel>
                                 <div className="flex items-center gap-2">
                                     <Typography.Muted className="text-sm">
                                         {parsedData.skin !== null ? (

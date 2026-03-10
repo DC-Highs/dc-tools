@@ -87,16 +87,16 @@ export const ReleaseCard: FC<ReleaseCardProps> = ({ release, isLatest }) => {
                                         {release.name || release.tag_name}
                                     </Typography.H3>
                                     <Badge variant="outline" className="font-mono text-xs shrink-0">
-                                        <Typography.Small className="text-[10px]">{release.tag_name}</Typography.Small>
+                                        <span className="text-[10px]">{release.tag_name}</span>
                                     </Badge>
                                     {isLatest && (
                                         <Badge className="bg-primary text-primary-foreground shrink-0">
-                                            <Typography.Small className="text-[10px]">Latest version</Typography.Small>
+                                            <span className="text-[10px]">Latest version</span>
                                         </Badge>
                                     )}
                                     {release.prerelease && (
                                         <Badge variant="secondary" className="shrink-0">
-                                            <Typography.Small className="text-[10px]">Pre-release</Typography.Small>
+                                            <span className="text-[10px]">Pre-release</span>
                                         </Badge>
                                     )}
                                 </div>
@@ -107,27 +107,23 @@ export const ReleaseCard: FC<ReleaseCardProps> = ({ release, isLatest }) => {
                                                 src={release.author.avatar_url || "/placeholder.svg"}
                                                 alt={release.author.login}
                                             />
-                                            <AvatarFallback>
-                                                <Typography.Small>
-                                                    {release.author.login[0].toUpperCase()}
-                                                </Typography.Small>
-                                            </AvatarFallback>
+                                            <AvatarFallback>{release.author.login[0].toUpperCase()}</AvatarFallback>
                                         </Avatar>
-                                        <Typography.Small className="text-muted-foreground truncate">
+                                        <span className="text-sm text-muted-foreground truncate">
                                             {release.author.login}
-                                        </Typography.Small>
+                                        </span>
                                     </div>
-                                    <Typography.Small
-                                        className="text-muted-foreground whitespace-nowrap"
+                                    <span
+                                        className="text-sm text-muted-foreground whitespace-nowrap"
                                         title={formatDate(release.published_at)}
                                     >
                                         {getTimeAgo(release.published_at)}
-                                    </Typography.Small>
+                                    </span>
                                     {totalDownloads > 0 && (
-                                        <Typography.Small className="flex items-center gap-1 text-muted-foreground">
+                                        <span className="flex items-center gap-1 text-sm text-muted-foreground">
                                             <Download className="h-3.5 w-3.5" />
                                             {totalDownloads.toLocaleString("en-US")}
-                                        </Typography.Small>
+                                        </span>
                                     )}
                                 </div>
                             </div>
@@ -138,7 +134,7 @@ export const ReleaseCard: FC<ReleaseCardProps> = ({ release, isLatest }) => {
                                     <DropdownMenuTrigger asChild>
                                         <Button size="sm" className="gap-2">
                                             <Download className="h-4 w-4" />
-                                            <Typography.Small className="hidden sm:inline">Download</Typography.Small>
+                                            <span className="hidden sm:inline">Download</span>
                                         </Button>
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent align="end" className="w-72">
@@ -152,13 +148,11 @@ export const ReleaseCard: FC<ReleaseCardProps> = ({ release, isLatest }) => {
                                                 >
                                                     <div className="flex items-center gap-2 min-w-0">
                                                         {getPlatformIcon(asset.name)}
-                                                        <Typography.Small className="truncate">
-                                                            {asset.name}
-                                                        </Typography.Small>
+                                                        <span className="text-sm truncate">{asset.name}</span>
                                                     </div>
-                                                    <Typography.Small className="text-muted-foreground shrink-0 text-[10px]">
+                                                    <span className="text-muted-foreground shrink-0 text-[10px]">
                                                         {formatBytes(asset.size)}
-                                                    </Typography.Small>
+                                                    </span>
                                                 </Link>
                                             </DropdownMenuItem>
                                         ))}
@@ -180,7 +174,7 @@ export const ReleaseCard: FC<ReleaseCardProps> = ({ release, isLatest }) => {
                             {release.body && (
                                 <div className="prose prose-sm prose-invert max-w-none">
                                     <div className="bg-muted/30 rounded-lg p-4 text-sm whitespace-pre-wrap font-mono text-muted-foreground leading-relaxed">
-                                        <Typography.Small>{release.body}</Typography.Small>
+                                        {release.body}
                                     </div>
                                 </div>
                             )}
@@ -204,9 +198,9 @@ export const ReleaseCard: FC<ReleaseCardProps> = ({ release, isLatest }) => {
                                                         <Typography.P className="text-sm font-medium truncate group-hover:text-primary transition-colors">
                                                             {item.name}
                                                         </Typography.P>
-                                                        <Typography.Small className="text-xs text-muted-foreground">
+                                                        <p className="text-xs text-muted-foreground">
                                                             {getPlatformName(item.name)} • {formatBytes(item.size)}
-                                                        </Typography.Small>
+                                                        </p>
                                                     </div>
                                                 </div>
                                                 <div className="flex items-center gap-3 text-sm text-muted-foreground shrink-0">
@@ -230,7 +224,7 @@ export const ReleaseCard: FC<ReleaseCardProps> = ({ release, isLatest }) => {
                                         showExternalIcon={false}
                                         underline="none"
                                     >
-                                        <Typography.Small>View on GitHub</Typography.Small>
+                                        View on GitHub
                                         <ExternalLink className="h-3.5 w-3.5" />
                                     </Link>
                                 </Button>
