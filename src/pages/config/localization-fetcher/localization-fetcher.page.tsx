@@ -17,7 +17,7 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import { fetchLocalizationFormSchema, type FetchLocalizationFormValues } from "@/schemas/fetch-localization-form.schema"
-import { ConfigLanguageSelect } from "../../components/composition/config-language-select"
+import { ConfigLanguageSelect } from "@/components/composition/config-language-select"
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { type SettingsFormValues } from "@/schemas/settings-form.schema"

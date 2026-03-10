@@ -14,59 +14,61 @@ export interface HttpResponse<T = any> {
     data: T
 }
 
-ipcMain.handle("http:request", async (_event, options: HttpRequestOptions): Promise<HttpResponse> => {
-    const { url, method = "GET", headers = {}, body, params } = options
+export function registerHttpRequestHandler() {
+    ipcMain.handle("http:request", async (_event, options: HttpRequestOptions): Promise<HttpResponse> => {
+        const { url, method = "GET", headers = {}, body, params } = options
 
-    console.log(url + (params ? `?${new URLSearchParams(params).toString()}` : ""), method)
+        console.log(url + (params ? `?${new URLSearchParams(params).toString()}` : ""), method)
 
-    return new Promise((resolve, reject) => {
-        const request = net.request({
-            method,
-            url: url + (params ? `?${new URLSearchParams(params).toString()}` : ""),
-        })
-
-        Object.entries(headers).forEach(([key, value]) => {
-            request.setHeader(key, value)
-        })
-
-        request.on("response", (response) => {
-            const chunks: Buffer[] = []
-
-            response.on("data", (chunk) => {
-                chunks.push(chunk)
+        return new Promise((resolve, reject) => {
+            const request = net.request({
+                method,
+                url: url + (params ? `?${new URLSearchParams(params).toString()}` : ""),
             })
 
-            response.on("end", () => {
-                const buffer = Buffer.concat(chunks)
-                const contentType = response.headers["content-type"]?.toString() || ""
+            Object.entries(headers).forEach(([key, value]) => {
+                request.setHeader(key, value)
+            })
 
-                let data: any
+            request.on("response", (response) => {
+                const chunks: Buffer[] = []
 
-                if (contentType.includes("application/octet-stream") || contentType.includes("shockwave-flash")) {
-                    data = buffer.buffer.slice(buffer.byteOffset, buffer.byteOffset + buffer.byteLength)
-                } else {
-                    const text = buffer.toString("utf-8")
-                    data = contentType.includes("application/json") ? JSON.parse(text) : text
-                }
+                response.on("data", (chunk) => {
+                    chunks.push(chunk)
+                })
 
-                resolve({
-                    status: response.statusCode ?? 0,
-                    headers: response.headers,
-                    data,
+                response.on("end", () => {
+                    const buffer = Buffer.concat(chunks)
+                    const contentType = response.headers["content-type"]?.toString() || ""
+
+                    let data: any
+
+                    if (contentType.includes("application/octet-stream") || contentType.includes("shockwave-flash")) {
+                        data = buffer.buffer.slice(buffer.byteOffset, buffer.byteOffset + buffer.byteLength)
+                    } else {
+                        const text = buffer.toString("utf-8")
+                        data = contentType.includes("application/json") ? JSON.parse(text) : text
+                    }
+
+                    resolve({
+                        status: response.statusCode ?? 0,
+                        headers: response.headers,
+                        data,
+                    })
                 })
             })
+
+            request.on("error", (err) => {
+                reject(err)
+            })
+
+            if (body) {
+                const payload = typeof body === "string" || Buffer.isBuffer(body) ? body : JSON.stringify(body)
+
+                request.write(payload)
+            }
+
+            request.end()
         })
-
-        request.on("error", (err) => {
-            reject(err)
-        })
-
-        if (body) {
-            const payload = typeof body === "string" || Buffer.isBuffer(body) ? body : JSON.stringify(body)
-
-            request.write(payload)
-        }
-
-        request.end()
     })
-})
+}

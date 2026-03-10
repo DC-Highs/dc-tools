@@ -6,29 +6,31 @@ import fs from "node:fs"
 import { toAppUrl } from "../lib/to-app-url.util"
 import { tempDir } from "../lib/constants"
 
-ipcMain.handle("file:select", async (event) => {
-    const result = dialog.showOpenDialogSync({
-        title: "Select image",
-        defaultPath: path.join(app.getPath("downloads")),
-        filters: [
-            { name: "Images", extensions: ["png", "jpg", "jpeg", "gif", "bmp", "webp"] },
-            { name: "All Files", extensions: ["*"] },
-        ],
+export function registerSelectImageHandler() {
+    ipcMain.handle("file:select", async (event) => {
+        const result = dialog.showOpenDialogSync({
+            title: "Select image",
+            defaultPath: path.join(app.getPath("downloads")),
+            filters: [
+                { name: "Images", extensions: ["png", "jpg", "jpeg", "gif", "bmp", "webp"] },
+                { name: "All Files", extensions: ["*"] },
+            ],
+        })
+
+        if (!result) {
+            return null
+        }
+
+        const filePath = result[0]
+
+        const fileName = `${Date.now()}-${path.basename(filePath)}`
+
+        const outputFilePath = path.join(tempDir, fileName)
+
+        if (!fs.existsSync(outputFilePath)) {
+            await fs.promises.copyFile(filePath, outputFilePath)
+        }
+
+        return toAppUrl(fileName)
     })
-
-    if (!result) {
-        return null
-    }
-
-    const filePath = result[0]
-
-    const fileName = `${Date.now()}-${path.basename(filePath)}`
-
-    const outputFilePath = path.join(tempDir, fileName)
-
-    if (!fs.existsSync(outputFilePath)) {
-        await fs.promises.copyFile(filePath, outputFilePath)
-    }
-
-    return toAppUrl(fileName)
-})
+}

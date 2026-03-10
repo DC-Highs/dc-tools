@@ -2,14 +2,24 @@ import { app, BrowserWindow, protocol, shell } from "electron"
 
 import path from "node:path"
 
-import "./handlers/animation-conversor.handler"
-import "./handlers/config-fetcher.handler"
-import "./handlers/select-image.handler"
-import "./handlers/http-request.handler"
-import "./handlers/downloader.handler"
-import "./handlers/bigjpg.handler"
-import "./handlers/store.handler"
+import { registerAnimationConversorHandler } from "./handlers/animation-conversor.handler"
+import { registerBigjpgHandler } from "./handlers/bigjpg.handler"
+import { registerConfigFetcherHandler } from "./handlers/config-fetcher.handler"
+import { registerDownloaderHandler } from "./handlers/downloader.handler"
+import { registerHttpRequestHandler } from "./handlers/http-request.handler"
+import { registerSelectImageHandler } from "./handlers/select-image.handler"
+import { registerStoreHandlers } from "./handlers/store.handler"
 import "./lib/static-server"
+
+function registerIpcHandlers() {
+    registerAnimationConversorHandler()
+    registerBigjpgHandler()
+    registerConfigFetcherHandler()
+    registerDownloaderHandler()
+    registerHttpRequestHandler()
+    registerSelectImageHandler()
+    registerStoreHandlers()
+}
 
 function createWindow() {
     const win = new BrowserWindow({
@@ -41,7 +51,10 @@ function createWindow() {
     })
 }
 
-app.whenReady().then(createWindow)
+app.whenReady().then(() => {
+    registerIpcHandlers()
+    createWindow()
+})
 
 app.on("window-all-closed", () => {
     if (process.platform !== "darwin") {

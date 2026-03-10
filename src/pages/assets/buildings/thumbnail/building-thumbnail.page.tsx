@@ -1,4 +1,4 @@
-import { BuildingSpriteQuality, StaticFileUrlPlatformPrefix } from "@dchighs/dc-core"
+import { StaticFileUrlPlatformPrefix } from "@dchighs/dc-core"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Controller, useForm } from "react-hook-form"
 import dcAssets from "@dchighs/dc-assets"
@@ -6,11 +6,11 @@ import { useState, type FC } from "react"
 import { toast } from "sonner"
 
 import { useMagicDownload } from "@/hooks/use-magic-download"
-import { DownloadFormActions } from "@/components/composition/download-form-actions"
+
 import {
-    decorationSpriteDownloaderFormSchema,
-    type DecorationSpriteDownloaderFormValues,
-} from "@/schemas/decoration-sprite-downloader-form.schema"
+    buildingThumbnailDownloaderFormSchema,
+    type BuildingThumbnailDownloaderFormValues,
+} from "@/schemas/building-thumbnail-downloader-form.schema"
 import {
     Select,
     SelectContent,
@@ -21,40 +21,39 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { DownloadFormActions } from "@/components/composition/download-form-actions"
 import { Field, FieldGroup, FieldLabel, FieldError } from "@/components/ui/field"
 import { Typography } from "@/components/ui/typography"
-import { emptyKey } from "@/helpers/constants.helper"
 import { Separator } from "@/components/ui/separator"
 import { Input } from "@/components/ui/input"
 
-const DecorationSpritePage: FC = () => {
+const BuildingThumbnailPage: FC = () => {
     const [isDownloading, setIsDownloading] = useState(false)
     const { isMagicDownloading, handleMagicDownload } = useMagicDownload()
 
     const form = useForm({
-        resolver: zodResolver(decorationSpriteDownloaderFormSchema),
+        resolver: zodResolver(buildingThumbnailDownloaderFormSchema),
         defaultValues: {
-            imageName: "1_decoration_fountain_youth_01",
-            imageQuality: emptyKey,
+            imageName: "1_building_habitat_earth_01",
             platformPrefix: StaticFileUrlPlatformPrefix.iOS,
         },
         mode: "onChange",
     })
 
     const currentData = form.watch()
-    const currentDownloader = dcAssets.decorations.sprite(currentData as any)
+    const currentDownloader = dcAssets.buildings.thumbnail(currentData as any)
     const downloadUrl = currentDownloader.url
 
-    const onSubmit = async (data: DecorationSpriteDownloaderFormValues) => {
-        const currentDownloader = dcAssets.decorations.sprite(data as any)
-        const downloadUrl = currentDownloader.url
+    const onSubmit = async (formData: BuildingThumbnailDownloaderFormValues) => {
+        const downloader = dcAssets.buildings.thumbnail(formData as any)
+        const urlForDownload = downloader.url
 
         setIsDownloading(true)
 
         const downloadToastId = toast.loading("Downloading file...")
 
         try {
-            const result = await window.electronAPI.downloadFile(downloadUrl)
+            const result = await window.electronAPI.downloadFile(urlForDownload)
 
             if (typeof result === "string") {
                 return toast.success("File downloaded successfully!")
@@ -79,7 +78,9 @@ const DecorationSpritePage: FC = () => {
         <div className="space-y-2">
             <Card>
                 <CardHeader>
-                    <CardTitle>Decoration Sprite Downloader</CardTitle>
+                    <CardTitle>
+                        <Typography.H4>Building Thumbnail Downloader</Typography.H4>
+                    </CardTitle>
                 </CardHeader>
                 <CardContent>
                     <form id="form-rhf-demo" onSubmit={form.handleSubmit(onSubmit)}>
@@ -89,22 +90,26 @@ const DecorationSpritePage: FC = () => {
                                 control={form.control}
                                 render={({ field, fieldState }) => (
                                     <Field data-invalid={fieldState.invalid}>
-                                        <FieldLabel>Platform Prefix</FieldLabel>
+                                        <FieldLabel>
+                                            <Typography.Small>Platform Prefix</Typography.Small>
+                                        </FieldLabel>
                                         <Select onValueChange={field.onChange} value={field.value}>
                                             <SelectTrigger className="w-full">
                                                 <SelectValue placeholder="Select a platform prefix" />
                                             </SelectTrigger>
                                             <SelectContent>
                                                 <SelectGroup>
-                                                    <SelectLabel>Platform prefixes</SelectLabel>
+                                                    <SelectLabel>
+                                                        <Typography.Small>Platform prefixes</Typography.Small>
+                                                    </SelectLabel>
                                                     {Object.entries(StaticFileUrlPlatformPrefix)
-                                                        .filter(([name]) => name !== "Default")
-                                                        .map(([name, prefix]) => (
+                                                        .filter(([platformName]) => platformName !== "Default")
+                                                        .map(([platformName, platformPrefix]) => (
                                                             <SelectItem
-                                                                key={`prefix-${prefix.toString()}`}
-                                                                value={prefix.toString()}
+                                                                key={`prefix-${platformPrefix.toString()}`}
+                                                                value={platformPrefix.toString()}
                                                             >
-                                                                {name}
+                                                                <Typography.Small>{platformName}</Typography.Small>
                                                             </SelectItem>
                                                         ))}
                                                 </SelectGroup>
@@ -119,42 +124,14 @@ const DecorationSpritePage: FC = () => {
                                 control={form.control}
                                 render={({ field, fieldState }) => (
                                     <Field data-invalid={fieldState.invalid}>
-                                        <FieldLabel>Image Name</FieldLabel>
+                                        <FieldLabel>
+                                            <Typography.Small>Image Name</Typography.Small>
+                                        </FieldLabel>
                                         <Input
                                             {...field}
                                             aria-invalid={fieldState.invalid}
-                                            placeholder="e.g. 1_decoration_fountain_youth_01"
+                                            placeholder="e.g. 1_building_habitat_earth_01"
                                         />
-                                        {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                                    </Field>
-                                )}
-                            />
-                            <Controller
-                                name="imageQuality"
-                                control={form.control}
-                                render={({ field, fieldState }) => (
-                                    <Field data-invalid={fieldState.invalid}>
-                                        <FieldLabel>Sprite Quality</FieldLabel>
-                                        <Select onValueChange={field.onChange} value={field.value as string}>
-                                            <SelectTrigger className="w-full">
-                                                <SelectValue placeholder="Select a sprite quality" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectGroup>
-                                                    <SelectLabel>Sprite qualities</SelectLabel>
-                                                    {Object.entries(BuildingSpriteQuality)
-                                                        .filter(([key]) => key !== "Default")
-                                                        .map(([name, quality]) => (
-                                                            <SelectItem
-                                                                key={`quality-${quality.toString()}`}
-                                                                value={quality.toString() || emptyKey}
-                                                            >
-                                                                {name}
-                                                            </SelectItem>
-                                                        ))}
-                                                </SelectGroup>
-                                            </SelectContent>
-                                        </Select>
                                         {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                                     </Field>
                                 )}
@@ -171,7 +148,9 @@ const DecorationSpritePage: FC = () => {
             </Card>
             <Card>
                 <CardHeader>
-                    <CardTitle>Preview</CardTitle>
+                    <CardTitle>
+                        <Typography.H4>Preview</Typography.H4>
+                    </CardTitle>
                 </CardHeader>
                 <CardContent>
                     <div className="flex flex-col items-center gap-4 p-6">
@@ -180,11 +159,13 @@ const DecorationSpritePage: FC = () => {
                 </CardContent>
                 <Separator />
                 <CardFooter className="font-mono">
-                    <b>File URL:</b> <Typography.Code>{downloadUrl}</Typography.Code>
+                    <Typography.Small>
+                        <b>File URL:</b> <Typography.Code>{downloadUrl}</Typography.Code>
+                    </Typography.Small>
                 </CardFooter>
             </Card>
         </div>
     )
 }
 
-export default DecorationSpritePage
+export default BuildingThumbnailPage

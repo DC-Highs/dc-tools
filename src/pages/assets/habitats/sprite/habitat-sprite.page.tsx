@@ -1,9 +1,10 @@
-import { ChestSpriteQuality, StaticFileUrlPlatformPrefix } from "@dchighs/dc-core"
+import { HabitatSpriteQuality, StaticFileUrlPlatformPrefix } from "@dchighs/dc-core"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Controller, useForm } from "react-hook-form"
 import dcAssets from "@dchighs/dc-assets"
 import { useState, type FC } from "react"
 import { toast } from "sonner"
+
 import { useMagicDownload } from "@/hooks/use-magic-download"
 
 import { DownloadFormActions } from "@/components/composition/download-form-actions"
@@ -18,25 +19,25 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import {
-    chestSpriteDownloaderFormSchema,
-    type ChestSpriteDownloaderFormValues,
-} from "@/schemas/chest-sprite-downloader-form.schema"
+    habitatSpriteDownloaderFormSchema,
+    type HabitatSpriteDownloaderFormValues,
+} from "@/schemas/habitat-sprite-downloader-form.schema"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Field, FieldGroup, FieldLabel, FieldError } from "@/components/ui/field"
-import { Checkbox } from "../../components/ui/checkbox"
 import { Typography } from "@/components/ui/typography"
 import { emptyKey } from "@/helpers/constants.helper"
+import { cleanFormData } from "@/helpers/form.helper"
 import { Separator } from "@/components/ui/separator"
 import { Input } from "@/components/ui/input"
 
-const ChestSpritePage: FC = () => {
+const HabitatSpritePage: FC = () => {
     const [isDownloading, setIsDownloading] = useState(false)
     const { isMagicDownloading, handleMagicDownload } = useMagicDownload()
 
     const form = useForm({
-        resolver: zodResolver(chestSpriteDownloaderFormSchema),
+        resolver: zodResolver(habitatSpriteDownloaderFormSchema),
         defaultValues: {
-            imageName: "1001_chest_bronze_c",
+            imageName: "1000_habitat_terra",
             imageQuality: emptyKey,
             platformPrefix: StaticFileUrlPlatformPrefix.iOS,
         },
@@ -44,11 +45,11 @@ const ChestSpritePage: FC = () => {
     })
 
     const currentData = form.watch()
-    const currentDownloader = dcAssets.chests.sprite(currentData as any)
+    const currentDownloader = dcAssets.habitats.sprite(cleanFormData(currentData) as any)
     const downloadUrl = currentDownloader.url
 
-    const onSubmit = async (data: ChestSpriteDownloaderFormValues) => {
-        const currentDownloader = dcAssets.chests.sprite(data as any)
+    const onSubmit = async (data: HabitatSpriteDownloaderFormValues) => {
+        const currentDownloader = dcAssets.habitats.sprite(cleanFormData(data) as any)
         const downloadUrl = currentDownloader.url
 
         setIsDownloading(true)
@@ -81,7 +82,7 @@ const ChestSpritePage: FC = () => {
         <div className="space-y-2">
             <Card>
                 <CardHeader>
-                    <CardTitle>Chest Sprite Downloader</CardTitle>
+                    <CardTitle>Habitat Sprite Downloader</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <form id="form-rhf-demo" onSubmit={form.handleSubmit(onSubmit)}>
@@ -125,7 +126,7 @@ const ChestSpritePage: FC = () => {
                                         <Input
                                             {...field}
                                             aria-invalid={fieldState.invalid}
-                                            placeholder="e.g. 1001_chest_bronze_c"
+                                            placeholder="e.g. 1000_habitat_terra"
                                         />
                                         {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                                     </Field>
@@ -144,7 +145,7 @@ const ChestSpritePage: FC = () => {
                                             <SelectContent>
                                                 <SelectGroup>
                                                     <SelectLabel>Sprite qualities</SelectLabel>
-                                                    {Object.entries(ChestSpriteQuality)
+                                                    {Object.entries(HabitatSpriteQuality)
                                                         .filter(([key]) => key !== "Default")
                                                         .map(([name, quality]) => (
                                                             <SelectItem
@@ -189,4 +190,4 @@ const ChestSpritePage: FC = () => {
     )
 }
 
-export default ChestSpritePage
+export default HabitatSpritePage

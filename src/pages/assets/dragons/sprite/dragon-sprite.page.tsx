@@ -1,15 +1,14 @@
-import { DragonPhase, StaticFileUrlPlatformPrefix } from "@dchighs/dc-core"
+import { DragonPhase, DragonSpriteQuality, StaticFileUrlPlatformPrefix } from "@dchighs/dc-core"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Controller, useForm } from "react-hook-form"
-import { LuCopy, LuDownload } from "react-icons/lu"
 import dcAssets from "@dchighs/dc-assets"
 import { useState, type FC } from "react"
 import { toast } from "sonner"
 
-import {
-    dragonFlashAnimationDownloaderFormSchema,
-    type DragonFlashAnimationDownloaderFormValues,
-} from "../../schemas/dragon-flash-animation-downloader-form.schema"
+import { useMagicDownload } from "@/hooks/use-magic-download"
+
+import { DownloadFormActions } from "@/components/composition/download-form-actions"
+
 import {
     Select,
     SelectContent,
@@ -19,42 +18,47 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
+import {
+    dragonSpriteDownloaderFormSchema,
+    type DragonSpriteDownloaderFormValues,
+} from "@/schemas/dragon-sprite-downloader-form.schema"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Field, FieldGroup, FieldLabel, FieldError } from "@/components/ui/field"
-import FlashPreview from "../../components/features/flash-preview"
 import { Typography } from "@/components/ui/typography"
+import { emptyKey } from "@/helpers/constants.helper"
+import { cleanFormData } from "@/helpers/form.helper"
 import { Separator } from "@/components/ui/separator"
-import { Spinner } from "@/components/ui/spinner"
-import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
-const DragonFlashAnimationPage: FC = () => {
+const DragonSpritePage: FC = () => {
     const [isDownloading, setIsDownloading] = useState(false)
+    const { isMagicDownloading, handleMagicDownload } = useMagicDownload()
 
     const form = useForm({
-        resolver: zodResolver(dragonFlashAnimationDownloaderFormSchema),
+        resolver: zodResolver(dragonSpriteDownloaderFormSchema),
         defaultValues: {
             imageName: "1000_dragon_nature",
-            phase: DragonPhase.Baby.toString(),
+            imageQuality: emptyKey,
+            phase: DragonPhase.Adult.toString(),
             platformPrefix: StaticFileUrlPlatformPrefix.iOS,
         },
         mode: "onChange",
     })
 
     const currentData = form.watch()
-    const currentDownloader = dcAssets.dragons.animations.flash(currentData as any)
+    const currentDownloader = dcAssets.dragons.sprite(cleanFormData(currentData) as any)
     const downloadUrl = currentDownloader.url
 
-    const onSubmit = async (data: DragonFlashAnimationDownloaderFormValues) => {
-        const currentDownloader = dcAssets.dragons.animations.flash(data as any)
-        const downloadUrl = currentDownloader.url
+    const onSubmit = async (formData: DragonSpriteDownloaderFormValues) => {
+        const downloader = dcAssets.dragons.sprite(cleanFormData(formData) as any)
+        const urlForDownload = downloader.url
 
         setIsDownloading(true)
 
         const downloadToastId = toast.loading("Downloading file...")
 
         try {
-            const result = await window.electronAPI.downloadFile(downloadUrl)
+            const result = await window.electronAPI.downloadFile(urlForDownload)
 
             if (typeof result === "string") {
                 return toast.success("File downloaded successfully!")
@@ -79,7 +83,7 @@ const DragonFlashAnimationPage: FC = () => {
         <div className="space-y-2">
             <Card>
                 <CardHeader>
-                    <CardTitle>Dragon Flash Animation Downloader</CardTitle>
+                    <CardTitle>Dragon Sprite Downloader</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <form id="form-rhf-demo" onSubmit={form.handleSubmit(onSubmit)}>
@@ -102,13 +106,13 @@ const DragonFlashAnimationPage: FC = () => {
                                                         <Typography.Small>Platform prefixes</Typography.Small>
                                                     </SelectLabel>
                                                     {Object.entries(StaticFileUrlPlatformPrefix)
-                                                        .filter(([currentName]) => currentName !== "Default")
-                                                        .map(([currentName, currentPrefix]) => (
+                                                        .filter(([platformName]) => platformName !== "Default")
+                                                        .map(([platformName, platformPrefix]) => (
                                                             <SelectItem
-                                                                key={`prefix-${currentPrefix.toString()}`}
-                                                                value={currentPrefix.toString()}
+                                                                key={`prefix-${platformPrefix.toString()}`}
+                                                                value={platformPrefix.toString()}
                                                             >
-                                                                <Typography.Small>{currentName}</Typography.Small>
+                                                                <Typography.Small>{platformName}</Typography.Small>
                                                             </SelectItem>
                                                         ))}
                                                 </SelectGroup>
@@ -143,23 +147,57 @@ const DragonFlashAnimationPage: FC = () => {
                                         <FieldLabel>
                                             <Typography.Small>Dragon Phase</Typography.Small>
                                         </FieldLabel>
-                                        <Select onValueChange={field.onChange} value={field.value}>
+                                        <Select onValueChange={field.onChange} value={field.value as string}>
                                             <SelectTrigger className="w-full">
                                                 <SelectValue placeholder="Select a dragon phase" />
                                             </SelectTrigger>
                                             <SelectContent>
                                                 <SelectGroup>
                                                     <SelectLabel>
-                                                        <Typography.Small>Phases</Typography.Small>
+                                                        <Typography.Small>Dragon phases</Typography.Small>
                                                     </SelectLabel>
                                                     {Object.entries(DragonPhase)
-                                                        .filter(([currentKey]) => isNaN(Number(currentKey)))
-                                                        .map(([currentName, currentPhase]) => (
+                                                        .filter(([phaseName]) => phaseName !== "Default")
+                                                        .map(([phaseName, phaseValue]) => (
                                                             <SelectItem
-                                                                key={`phase-${currentPhase.toString()}`}
-                                                                value={currentPhase.toString()}
+                                                                key={`phase-${phaseValue.toString()}`}
+                                                                value={phaseValue.toString()}
                                                             >
-                                                                <Typography.Small>{currentName}</Typography.Small>
+                                                                <Typography.Small>{phaseName}</Typography.Small>
+                                                            </SelectItem>
+                                                        ))}
+                                                </SelectGroup>
+                                            </SelectContent>
+                                        </Select>
+                                        {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                                    </Field>
+                                )}
+                            />
+                            <Controller
+                                name="imageQuality"
+                                control={form.control}
+                                render={({ field, fieldState }) => (
+                                    <Field data-invalid={fieldState.invalid}>
+                                        <FieldLabel>
+                                            <Typography.Small>Sprite Quality</Typography.Small>
+                                        </FieldLabel>
+                                        <Select onValueChange={field.onChange} value={field.value as string}>
+                                            <SelectTrigger className="w-full">
+                                                <SelectValue placeholder="Select a sprite quality" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectGroup>
+                                                    <SelectLabel>
+                                                        <Typography.Small>Sprite qualities</Typography.Small>
+                                                    </SelectLabel>
+                                                    {Object.entries(DragonSpriteQuality)
+                                                        .filter(([qualityName]) => qualityName !== "Default")
+                                                        .map(([qualityName, qualityValue]) => (
+                                                            <SelectItem
+                                                                key={`quality-${qualityValue.toString()}`}
+                                                                value={qualityValue.toString() || emptyKey}
+                                                            >
+                                                                <Typography.Small>{qualityName}</Typography.Small>
                                                             </SelectItem>
                                                         ))}
                                                 </SelectGroup>
@@ -187,47 +225,35 @@ const DragonFlashAnimationPage: FC = () => {
                                 )}
                             />
                         </FieldGroup>
-                        <div className="mt-6 space-x-2">
-                            <Button variant="secondary" type="button" onClick={handleCopyUrl}>
-                                <LuCopy />
-                                <Typography.Small>Copy file URL</Typography.Small>
-                            </Button>
-                            <Button disabled={isDownloading} type="submit">
-                                {isDownloading ? (
-                                    <>
-                                        <Spinner /> <Typography.Small>Downloading...</Typography.Small>
-                                    </>
-                                ) : (
-                                    <>
-                                        <LuDownload /> <Typography.Small>Download and save</Typography.Small>
-                                    </>
-                                )}
-                            </Button>
-                        </div>
+                        <DownloadFormActions
+                            isDownloading={isDownloading}
+                            onCopyUrl={handleCopyUrl}
+                            onMagicDownload={() => handleMagicDownload(downloadUrl)}
+                            isMagicDownloading={isMagicDownloading}
+                        />
                     </form>
                 </CardContent>
             </Card>
             <Card>
                 <CardHeader>
                     <CardTitle>
-                        <Typography.H3>Preview</Typography.H3>
+                        <Typography.H4>Preview</Typography.H4>
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
                     <div className="flex flex-col items-center gap-4 p-6">
-                        <FlashPreview src={downloadUrl} />
+                        <img src={downloadUrl} alt="Preview" />
                     </div>
                 </CardContent>
                 <Separator />
                 <CardFooter className="font-mono">
-                    <Typography.P>
-                        <Typography.Large className="inline">File URL:</Typography.Large>{" "}
-                        <Typography.Code>{downloadUrl}</Typography.Code>
-                    </Typography.P>
+                    <Typography.Small>
+                        <b>File URL:</b> <Typography.Code>{downloadUrl}</Typography.Code>
+                    </Typography.Small>
                 </CardFooter>
             </Card>
         </div>
     )
 }
 
-export default DragonFlashAnimationPage
+export default DragonSpritePage

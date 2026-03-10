@@ -4,14 +4,11 @@ import { Controller, useForm } from "react-hook-form"
 import dcAssets from "@dchighs/dc-assets"
 import { useState, type FC } from "react"
 import { toast } from "sonner"
+
 import { useMagicDownload } from "@/hooks/use-magic-download"
 
 import { DownloadFormActions } from "@/components/composition/download-form-actions"
 
-import {
-    decorationThumbnailDownloaderFormSchema,
-    type DecorationThumbnailDownloaderFormValues,
-} from "@/schemas/decoration-thumbnail-downloader-form.schema"
 import {
     Select,
     SelectContent,
@@ -21,39 +18,44 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
+import {
+    buildingSpriteDownloaderFormSchema,
+    type BuildingSpriteDownloaderFormValues,
+} from "@/schemas/building-sprite-downloader-form.schema"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Field, FieldGroup, FieldLabel, FieldError } from "@/components/ui/field"
 import { Typography } from "@/components/ui/typography"
+
 import { Separator } from "@/components/ui/separator"
 import { Input } from "@/components/ui/input"
 
-const DecorationThumbnailPage: FC = () => {
+const BuildingSpritePage: FC = () => {
     const [isDownloading, setIsDownloading] = useState(false)
     const { isMagicDownloading, handleMagicDownload } = useMagicDownload()
 
     const form = useForm({
-        resolver: zodResolver(decorationThumbnailDownloaderFormSchema),
+        resolver: zodResolver(buildingSpriteDownloaderFormSchema),
         defaultValues: {
-            imageName: "1_decoration_fountain_youth_01",
+            imageName: "1_building_habitat_earth_01",
             platformPrefix: StaticFileUrlPlatformPrefix.iOS,
         },
         mode: "onChange",
     })
 
     const currentData = form.watch()
-    const currentDownloader = dcAssets.decorations.thumbnail(currentData as any)
+    const currentDownloader = dcAssets.buildings.sprite(currentData as any)
     const downloadUrl = currentDownloader.url
 
-    const onSubmit = async (data: DecorationThumbnailDownloaderFormValues) => {
-        const currentDownloader = dcAssets.decorations.thumbnail(data as any)
-        const downloadUrl = currentDownloader.url
+    const onSubmit = async (formData: BuildingSpriteDownloaderFormValues) => {
+        const downloader = dcAssets.buildings.sprite(formData as any)
+        const urlForDownload = downloader.url
 
         setIsDownloading(true)
 
         const downloadToastId = toast.loading("Downloading file...")
 
         try {
-            const result = await window.electronAPI.downloadFile(downloadUrl)
+            const result = await window.electronAPI.downloadFile(urlForDownload)
 
             if (typeof result === "string") {
                 return toast.success("File downloaded successfully!")
@@ -78,7 +80,7 @@ const DecorationThumbnailPage: FC = () => {
         <div className="space-y-2">
             <Card>
                 <CardHeader>
-                    <CardTitle>Decoration Thumbnail Downloader</CardTitle>
+                    <CardTitle>Building Sprite Downloader</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <form id="form-rhf-demo" onSubmit={form.handleSubmit(onSubmit)}>
@@ -88,22 +90,26 @@ const DecorationThumbnailPage: FC = () => {
                                 control={form.control}
                                 render={({ field, fieldState }) => (
                                     <Field data-invalid={fieldState.invalid}>
-                                        <FieldLabel>Platform Prefix</FieldLabel>
+                                        <FieldLabel>
+                                            <Typography.Small>Platform Prefix</Typography.Small>
+                                        </FieldLabel>
                                         <Select onValueChange={field.onChange} value={field.value}>
                                             <SelectTrigger className="w-full">
                                                 <SelectValue placeholder="Select a platform prefix" />
                                             </SelectTrigger>
                                             <SelectContent>
                                                 <SelectGroup>
-                                                    <SelectLabel>Platform prefixes</SelectLabel>
+                                                    <SelectLabel>
+                                                        <Typography.Small>Platform prefixes</Typography.Small>
+                                                    </SelectLabel>
                                                     {Object.entries(StaticFileUrlPlatformPrefix)
-                                                        .filter(([name]) => name !== "Default")
-                                                        .map(([name, prefix]) => (
+                                                        .filter(([platformName]) => platformName !== "Default")
+                                                        .map(([platformName, platformPrefix]) => (
                                                             <SelectItem
-                                                                key={`prefix-${prefix.toString()}`}
-                                                                value={prefix.toString()}
+                                                                key={`prefix-${platformPrefix.toString()}`}
+                                                                value={platformPrefix.toString()}
                                                             >
-                                                                {name}
+                                                                <Typography.Small>{platformName}</Typography.Small>
                                                             </SelectItem>
                                                         ))}
                                                 </SelectGroup>
@@ -118,11 +124,13 @@ const DecorationThumbnailPage: FC = () => {
                                 control={form.control}
                                 render={({ field, fieldState }) => (
                                     <Field data-invalid={fieldState.invalid}>
-                                        <FieldLabel>Image Name</FieldLabel>
+                                        <FieldLabel>
+                                            <Typography.Small>Image Name</Typography.Small>
+                                        </FieldLabel>
                                         <Input
                                             {...field}
                                             aria-invalid={fieldState.invalid}
-                                            placeholder="e.g. 1_decoration_fountain_youth_01"
+                                            placeholder="e.g. 1_building_habitat_earth_01"
                                         />
                                         {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                                     </Field>
@@ -140,7 +148,9 @@ const DecorationThumbnailPage: FC = () => {
             </Card>
             <Card>
                 <CardHeader>
-                    <CardTitle>Preview</CardTitle>
+                    <CardTitle>
+                        <Typography.H4>Preview</Typography.H4>
+                    </CardTitle>
                 </CardHeader>
                 <CardContent>
                     <div className="flex flex-col items-center gap-4 p-6">
@@ -149,11 +159,13 @@ const DecorationThumbnailPage: FC = () => {
                 </CardContent>
                 <Separator />
                 <CardFooter className="font-mono">
-                    <b>File URL:</b> <Typography.Code>{downloadUrl}</Typography.Code>
+                    <Typography.Small>
+                        <b>File URL:</b> <Typography.Code>{downloadUrl}</Typography.Code>
+                    </Typography.Small>
                 </CardFooter>
             </Card>
         </div>
     )
 }
 
-export default DecorationThumbnailPage
+export default BuildingSpritePage

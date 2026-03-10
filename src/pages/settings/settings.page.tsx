@@ -1,10 +1,11 @@
 import { type SubmitHandler, useForm, Controller } from "react-hook-form"
 import { EnlargeValue, Noise } from "bigjpg/dist/enums"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Typography } from "@/components/ui/typography"
 import { LuSave } from "react-icons/lu"
 import type { FC } from "react"
 import { toast } from "sonner"
+
+import { Typography } from "@/components/ui/typography"
 
 import {
     Select,
@@ -142,10 +143,7 @@ const SettingsPage: FC = () => {
                                         control={form.control}
                                         name="bigjpg.apiKey"
                                         render={({ field }) => (
-                                            <PasswordInput
-                                                placeholder="Enter your Bigjpg API key"
-                                                {...field}
-                                            />
+                                            <PasswordInput placeholder="Enter your Bigjpg API key" {...field} />
                                         )}
                                     />
                                     <FieldError errors={[form.formState.errors.bigjpg?.apiKey]} />
@@ -240,10 +238,7 @@ const SettingsPage: FC = () => {
                                         control={form.control}
                                         name="convertio.apiKey"
                                         render={({ field }) => (
-                                            <PasswordInput
-                                                placeholder="Enter your Convertio API key"
-                                                {...field}
-                                            />
+                                            <PasswordInput placeholder="Enter your Convertio API key" {...field} />
                                         )}
                                     />
                                     <FieldError errors={[form.formState.errors.convertio?.apiKey]} />
@@ -282,9 +277,7 @@ const SettingsPage: FC = () => {
                                     <Controller
                                         control={form.control}
                                         name="gameConfig.userId"
-                                        render={({ field }) => (
-                                            <Input placeholder="User ID" {...field} />
-                                        )}
+                                        render={({ field }) => <Input placeholder="User ID" {...field} />}
                                     />
                                     <FieldError errors={[form.formState.errors.gameConfig?.userId]} />
                                 </Field>
@@ -301,12 +294,7 @@ const SettingsPage: FC = () => {
                                     <Controller
                                         control={form.control}
                                         name="gameConfig.authToken"
-                                        render={({ field }) => (
-                                            <PasswordInput
-                                                placeholder="Auth Token"
-                                                {...field}
-                                            />
-                                        )}
+                                        render={({ field }) => <PasswordInput placeholder="Auth Token" {...field} />}
                                     />
                                     <FieldError errors={[form.formState.errors.gameConfig?.authToken]} />
                                 </Field>

@@ -19,6 +19,7 @@ import { VscIssues } from "react-icons/vsc"
 import { FaDragon } from "react-icons/fa"
 import { useState } from "react"
 import type { FC } from "react"
+import { Link } from "react-router-dom"
 
 import {
     Sidebar,
@@ -35,7 +36,6 @@ import {
 } from "@/components/ui/sidebar"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 import { Typography } from "@/components/ui/typography"
-import { Link } from "@/components/ui/link"
 import { Button } from "../../ui/button"
 import pkg from "@/../package.json"
 
@@ -198,13 +198,14 @@ const AppSidebar: FC = () => {
             <SidebarHeader>
                 <Link
                     className={`flex items-center py-2 gap-6 ${open ? "px-2" : "justify-center"} gap-2 transition-all duration-300 hover:opacity-80`}
-                    href="/"
-                    underline="none"
+                    to="/"
                 >
                     <FaDragon width={24} height={24} />
                     {open && (
                         <div>
-                            <Typography.H3 className="font-bold text-xl max-lg:text-base text-nowrap">DC Tools</Typography.H3>
+                            <Typography.H3 className="font-bold text-xl max-lg:text-base text-nowrap">
+                                DC Tools
+                            </Typography.H3>
                             <div className="text-xs flex gap-1 text-nowrap">
                                 <Typography.Small>Powered by</Typography.Small>
                                 <Typography.Small className="font-semibold">DC Highs</Typography.Small>
@@ -235,7 +236,7 @@ const AppSidebar: FC = () => {
                                     {assetItems.map((currentItem) => (
                                         <SidebarMenuItem key={currentItem.title}>
                                             <SidebarMenuButton asChild>
-                                                <Link href={currentItem.url} underline="none">
+                                                <Link to={currentItem.url}>
                                                     <currentItem.icon />
                                                     <Typography.Small>{currentItem.title}</Typography.Small>
                                                 </Link>
@@ -268,7 +269,7 @@ const AppSidebar: FC = () => {
                                     {urlToolsItems.map((currentItem) => (
                                         <SidebarMenuItem key={currentItem.title}>
                                             <SidebarMenuButton asChild>
-                                                <Link href={currentItem.url} underline="none">
+                                                <Link to={currentItem.url}>
                                                     <currentItem.icon />
                                                     <Typography.Small>{currentItem.title}</Typography.Small>
                                                 </Link>
@@ -301,7 +302,7 @@ const AppSidebar: FC = () => {
                                     {configItems.map((currentItem) => (
                                         <SidebarMenuItem key={currentItem.title}>
                                             <SidebarMenuButton asChild>
-                                                <Link href={currentItem.url} underline="none">
+                                                <Link to={currentItem.url}>
                                                     <currentItem.icon />
                                                     <Typography.Small>{currentItem.title}</Typography.Small>
                                                 </Link>
@@ -334,7 +335,7 @@ const AppSidebar: FC = () => {
                                     {animationPlayerItems.map((currentItem) => (
                                         <SidebarMenuItem key={currentItem.title}>
                                             <SidebarMenuButton asChild>
-                                                <Link href={currentItem.url} underline="none">
+                                                <Link to={currentItem.url}>
                                                     <currentItem.icon />
                                                     <Typography.Small>{currentItem.title}</Typography.Small>
                                                 </Link>
@@ -367,10 +368,17 @@ const AppSidebar: FC = () => {
                                     {gitHubItems.map((currentItem) => (
                                         <SidebarMenuItem key={currentItem.title}>
                                             <SidebarMenuButton asChild>
-                                                <Link href={currentItem.url} underline="none" showExternalIcon={false}>
-                                                    <currentItem.icon />
-                                                    <Typography.Small>{currentItem.title}</Typography.Small>
-                                                </Link>
+                                                {currentItem.url.startsWith("http") ? (
+                                                    <a href={currentItem.url} target="_blank" rel="noopener noreferrer">
+                                                        <currentItem.icon />
+                                                        <Typography.Small>{currentItem.title}</Typography.Small>
+                                                    </a>
+                                                ) : (
+                                                    <Link to={currentItem.url}>
+                                                        <currentItem.icon />
+                                                        <Typography.Small>{currentItem.title}</Typography.Small>
+                                                    </Link>
+                                                )}
                                             </SidebarMenuButton>
                                         </SidebarMenuItem>
                                     ))}
@@ -388,7 +396,7 @@ const AppSidebar: FC = () => {
                         </div>
                     )}
                     <Button asChild size="icon" variant="outline">
-                        <Link href="/settings" underline="none" showExternalIcon={false}>
+                        <Link to="/settings">
                             <LuSettings />
                         </Link>
                     </Button>

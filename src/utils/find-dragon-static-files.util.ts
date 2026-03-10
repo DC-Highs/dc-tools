@@ -109,15 +109,15 @@ const createAnimationFiles = (
         const value =
             animationType === "flash"
                 ? dcAssets.dragons.animations.flash({
-                    imageName: imageName,
-                    phase: phase,
-                    platformPrefix: platformPrefix,
-                }).url
+                      imageName: imageName,
+                      phase: phase,
+                      platformPrefix: platformPrefix,
+                  }).url
                 : dcAssets.dragons.animations.spine({
-                    imageName: imageName,
-                    phase: phase,
-                    platformPrefix: platformPrefix,
-                }).url
+                      imageName: imageName,
+                      phase: phase,
+                      platformPrefix: platformPrefix,
+                  }).url
 
         files.push({ label, value })
     })
@@ -129,17 +129,17 @@ const createAnimationFiles = (
         const value =
             animationType === "flash"
                 ? dcAssets.dragons.animations.flash({
-                    imageName: imageName,
-                    phase: phase,
-                    platformPrefix: platformPrefix,
-                    skin: adjustedSkin,
-                }).url
+                      imageName: imageName,
+                      phase: phase,
+                      platformPrefix: platformPrefix,
+                      skin: adjustedSkin,
+                  }).url
                 : dcAssets.dragons.animations.spine({
-                    imageName,
-                    phase,
-                    platformPrefix: platformPrefix,
-                    skin: adjustedSkin,
-                }).url
+                      imageName,
+                      phase,
+                      platformPrefix: platformPrefix,
+                      skin: adjustedSkin,
+                  }).url
 
         files.push({ label, value })
     })
@@ -170,7 +170,7 @@ export const findDragonStaticFileUrls = async (
             if (response.status === 200) {
                 filteredStaticFileUrls.push(staticFileUrl)
             }
-        } catch (error) { }
+        } catch (error) {}
     }
 
     return filteredStaticFileUrls

@@ -1,17 +1,14 @@
-import { StaticFileUrlPlatformPrefix } from "@dchighs/dc-core"
+import { BuildingSpriteQuality, StaticFileUrlPlatformPrefix } from "@dchighs/dc-core"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Controller, useForm } from "react-hook-form"
 import dcAssets from "@dchighs/dc-assets"
 import { useState, type FC } from "react"
 import { toast } from "sonner"
-import { useMagicDownload } from "@/hooks/use-magic-download"
-
-import { DownloadFormActions } from "@/components/composition/download-form-actions"
 
 import {
-    habitatThumbnailDownloaderFormSchema,
-    type HabitatThumbnailDownloaderFormValues,
-} from "@/schemas/habitat-thumbnail-downloader-form.schema"
+    decorationSpriteDownloaderFormSchema,
+    type DecorationSpriteDownloaderFormValues,
+} from "@/schemas/decoration-sprite-downloader-form.schema"
 import {
     Select,
     SelectContent,
@@ -22,35 +19,40 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { DownloadFormActions } from "@/components/composition/download-form-actions"
 import { Field, FieldGroup, FieldLabel, FieldError } from "@/components/ui/field"
+import { useMagicDownload } from "@/hooks/use-magic-download"
 import { Typography } from "@/components/ui/typography"
+import { emptyKey } from "@/helpers/constants.helper"
+import { cleanFormData } from "@/helpers/form.helper"
 import { Separator } from "@/components/ui/separator"
 import { Input } from "@/components/ui/input"
 
-const HabitatThumbnailPage: FC = () => {
+const DecorationSpritePage: FC = () => {
     const [isDownloading, setIsDownloading] = useState(false)
     const { isMagicDownloading, handleMagicDownload } = useMagicDownload()
 
     const form = useForm({
-        resolver: zodResolver(habitatThumbnailDownloaderFormSchema),
+        resolver: zodResolver(decorationSpriteDownloaderFormSchema),
         defaultValues: {
-            imageName: "1000_habitat_terra",
+            imageName: "1_decoration_fountain_youth_01",
+            imageQuality: emptyKey,
             platformPrefix: StaticFileUrlPlatformPrefix.iOS,
         },
         mode: "onChange",
     })
 
     const currentData = form.watch()
-    const currentDownloader = dcAssets.habitats.thumbnail(currentData as any)
+    const currentDownloader = dcAssets.decorations.sprite(cleanFormData(currentData) as any)
     const downloadUrl = currentDownloader.url
 
-    const onSubmit = async (data: HabitatThumbnailDownloaderFormValues) => {
-        const currentDownloader = dcAssets.habitats.thumbnail(data as any)
+    const onSubmit = async (data: DecorationSpriteDownloaderFormValues) => {
+        const currentDownloader = dcAssets.decorations.sprite(cleanFormData(data) as any)
         const downloadUrl = currentDownloader.url
 
         setIsDownloading(true)
 
-        const dowloadToastId = toast.info("Downloading file...")
+        const downloadToastId = toast.loading("Downloading file...")
 
         try {
             const result = await window.electronAPI.downloadFile(downloadUrl)
@@ -65,7 +67,7 @@ const HabitatThumbnailPage: FC = () => {
             toast.error("An error occurred while trying to download the file!")
         } finally {
             setIsDownloading(false)
-            toast.dismiss(dowloadToastId)
+            toast.dismiss(downloadToastId)
         }
     }
 
@@ -78,7 +80,7 @@ const HabitatThumbnailPage: FC = () => {
         <div className="space-y-2">
             <Card>
                 <CardHeader>
-                    <CardTitle>Habitat Thumbnail Downloader</CardTitle>
+                    <CardTitle>Decoration Sprite Downloader</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <form id="form-rhf-demo" onSubmit={form.handleSubmit(onSubmit)}>
@@ -122,8 +124,38 @@ const HabitatThumbnailPage: FC = () => {
                                         <Input
                                             {...field}
                                             aria-invalid={fieldState.invalid}
-                                            placeholder="e.g. 1000_habitat_terra"
+                                            placeholder="e.g. 1_decoration_fountain_youth_01"
                                         />
+                                        {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                                    </Field>
+                                )}
+                            />
+                            <Controller
+                                name="imageQuality"
+                                control={form.control}
+                                render={({ field, fieldState }) => (
+                                    <Field data-invalid={fieldState.invalid}>
+                                        <FieldLabel>Sprite Quality</FieldLabel>
+                                        <Select onValueChange={field.onChange} value={field.value as string}>
+                                            <SelectTrigger className="w-full">
+                                                <SelectValue placeholder="Select a sprite quality" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectGroup>
+                                                    <SelectLabel>Sprite qualities</SelectLabel>
+                                                    {Object.entries(BuildingSpriteQuality)
+                                                        .filter(([key]) => key !== "Default")
+                                                        .map(([name, quality]) => (
+                                                            <SelectItem
+                                                                key={`quality-${quality.toString()}`}
+                                                                value={quality.toString() || emptyKey}
+                                                            >
+                                                                {name}
+                                                            </SelectItem>
+                                                        ))}
+                                                </SelectGroup>
+                                            </SelectContent>
+                                        </Select>
                                         {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                                     </Field>
                                 )}
@@ -156,4 +188,4 @@ const HabitatThumbnailPage: FC = () => {
     )
 }
 
-export default HabitatThumbnailPage
+export default DecorationSpritePage

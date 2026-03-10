@@ -1,6 +1,8 @@
 AGENTS.md
 GEMINI.md
 
+dist-electron/
+
 # Logs
 logs
 *.log

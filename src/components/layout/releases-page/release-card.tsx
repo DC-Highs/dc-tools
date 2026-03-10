@@ -1,5 +1,6 @@
 import { Download, ChevronDown, ChevronUp, ExternalLink, Monitor, Apple, Package } from "lucide-react"
 import { useState } from "react"
+import type { FC } from "react"
 
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
@@ -9,8 +10,10 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { formatBytes } from "@/utils/format-bytes.util"
 import { getTimeAgo } from "@/utils/get-time-ago.util"
 import { formatDate } from "@/utils/format-date.util"
+import { Typography } from "@/components/ui/typography"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { Link } from "@/components/ui/link"
 
 interface ReleaseCardProps {
     release: Release
@@ -61,7 +64,7 @@ function getPlatformName(fileName: string): string {
     return "Download"
 }
 
-export function ReleaseCard({ release, isLatest }: ReleaseCardProps) {
+export const ReleaseCard: FC<ReleaseCardProps> = ({ release, isLatest }) => {
     const [isOpen, setIsOpen] = useState(isLatest || false)
 
     const downloadableAssets = release.assets.filter(
@@ -80,42 +83,55 @@ export function ReleaseCard({ release, isLatest }: ReleaseCardProps) {
                         <div className="flex items-center gap-3 min-w-0">
                             <div className="flex flex-col gap-1 min-w-0">
                                 <div className="flex items-center gap-2 flex-wrap">
-                                    <h3 className="text-lg font-semibold truncate">
+                                    <Typography.H3 className="truncate">
                                         {release.name || release.tag_name}
-                                    </h3>
+                                    </Typography.H3>
                                     <Badge variant="outline" className="font-mono text-xs shrink-0">
-                                        {release.tag_name}
+                                        <Typography.Small className="text-[10px]">
+                                            {release.tag_name}
+                                        </Typography.Small>
                                     </Badge>
                                     {isLatest && (
                                         <Badge className="bg-primary text-primary-foreground shrink-0">
-                                            Latest version
+                                            <Typography.Small className="text-[10px]">
+                                                Latest version
+                                            </Typography.Small>
                                         </Badge>
                                     )}
                                     {release.prerelease && (
                                         <Badge variant="secondary" className="shrink-0">
-                                            Pre-release
+                                            <Typography.Small className="text-[10px]">
+                                                Pre-release
+                                            </Typography.Small>
                                         </Badge>
                                     )}
                                 </div>
-                                <div className="flex items-center gap-3 text-sm text-muted-foreground">
-                                    <div className="flex items-center gap-1.5">
+                                <div className="flex items-center gap-3">
+                                    <div className="flex items-center gap-1.5 min-w-0">
                                         <Avatar className="h-5 w-5">
                                             <AvatarImage
                                                 src={release.author.avatar_url || "/placeholder.svg"}
                                                 alt={release.author.login}
                                             />
-                                            <AvatarFallback>{release.author.login[0].toUpperCase()}</AvatarFallback>
+                                            <AvatarFallback>
+                                                <Typography.Small>{release.author.login[0].toUpperCase()}</Typography.Small>
+                                            </AvatarFallback>
                                         </Avatar>
-                                        <span>{release.author.login}</span>
+                                        <Typography.Small className="text-muted-foreground truncate">
+                                            {release.author.login}
+                                        </Typography.Small>
                                     </div>
-                                    <span title={formatDate(release.published_at)}>
+                                    <Typography.Small
+                                        className="text-muted-foreground whitespace-nowrap"
+                                        title={formatDate(release.published_at)}
+                                    >
                                         {getTimeAgo(release.published_at)}
-                                    </span>
+                                    </Typography.Small>
                                     {totalDownloads > 0 && (
-                                        <span className="flex items-center gap-1">
+                                        <Typography.Small className="flex items-center gap-1 text-muted-foreground">
                                             <Download className="h-3.5 w-3.5" />
                                             {totalDownloads.toLocaleString("en-US")}
-                                        </span>
+                                        </Typography.Small>
                                     )}
                                 </div>
                             </div>
@@ -126,24 +142,30 @@ export function ReleaseCard({ release, isLatest }: ReleaseCardProps) {
                                     <DropdownMenuTrigger asChild>
                                         <Button size="sm" className="gap-2">
                                             <Download className="h-4 w-4" />
-                                            <span className="hidden sm:inline">Download</span>
+                                            <Typography.Small className="hidden sm:inline">
+                                                Download
+                                            </Typography.Small>
                                         </Button>
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent align="end" className="w-72">
                                         {downloadableAssets.map((asset) => (
                                             <DropdownMenuItem key={asset.id} asChild>
-                                                <a
+                                                <Link
                                                     href={asset.browser_download_url}
-                                                    className="flex items-center justify-between gap-2 cursor-pointer"
+                                                    className="flex items-center justify-between gap-2 cursor-pointer w-full"
+                                                    underline="none"
+                                                    showExternalIcon={false}
                                                 >
                                                     <div className="flex items-center gap-2 min-w-0">
                                                         {getPlatformIcon(asset.name)}
-                                                        <span className="truncate">{asset.name}</span>
+                                                        <Typography.Small className="truncate">
+                                                            {asset.name}
+                                                        </Typography.Small>
                                                     </div>
-                                                    <span className="text-xs text-muted-foreground shrink-0">
+                                                    <Typography.Small className="text-muted-foreground shrink-0 text-[10px]">
                                                         {formatBytes(asset.size)}
-                                                    </span>
-                                                </a>
+                                                    </Typography.Small>
+                                                </Link>
                                             </DropdownMenuItem>
                                         ))}
                                     </DropdownMenuContent>
@@ -164,55 +186,59 @@ export function ReleaseCard({ release, isLatest }: ReleaseCardProps) {
                             {release.body && (
                                 <div className="prose prose-sm prose-invert max-w-none">
                                     <div className="bg-muted/30 rounded-lg p-4 text-sm whitespace-pre-wrap font-mono text-muted-foreground leading-relaxed">
-                                        {release.body}
+                                        <Typography.Small>{release.body}</Typography.Small>
                                     </div>
                                 </div>
                             )}
                             {downloadableAssets.length > 0 && (
                                 <div className="space-y-2">
-                                    <h4 className="text-sm font-medium text-muted-foreground">
+                                    <Typography.H4 className="text-sm font-medium text-muted-foreground">
                                         Assets ({downloadableAssets.length})
-                                    </h4>
+                                    </Typography.H4>
                                     <div className="grid gap-2">
-                                        {downloadableAssets.map((asset) => (
-                                            <a
-                                                key={asset.id}
-                                                href={asset.browser_download_url}
+                                        {downloadableAssets.map((item) => (
+                                            <Link
+                                                key={item.id}
+                                                href={item.browser_download_url}
                                                 className="flex items-center justify-between gap-4 p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors group"
+                                                underline="none"
+                                                showExternalIcon={false}
                                             >
                                                 <div className="flex items-center gap-3 min-w-0">
-                                                    {getPlatformIcon(asset.name)}
+                                                    {getPlatformIcon(item.name)}
                                                     <div className="min-w-0">
-                                                        <p className="text-sm font-medium truncate group-hover:text-primary transition-colors">
-                                                            {asset.name}
-                                                        </p>
-                                                        <p className="text-xs text-muted-foreground">
-                                                            {getPlatformName(asset.name)} • {formatBytes(asset.size)}
-                                                        </p>
+                                                        <Typography.P className="text-sm font-medium truncate group-hover:text-primary transition-colors">
+                                                            {item.name}
+                                                        </Typography.P>
+                                                        <Typography.Small className="text-xs text-muted-foreground">
+                                                            {getPlatformName(item.name)} • {formatBytes(item.size)}
+                                                        </Typography.Small>
                                                     </div>
                                                 </div>
                                                 <div className="flex items-center gap-3 text-sm text-muted-foreground shrink-0">
-                                                    <span className="flex items-center gap-1">
+                                                    <Typography.Small className="flex items-center gap-1">
                                                         <Download className="h-3.5 w-3.5" />
-                                                        {asset.download_count.toLocaleString("en-US")}
-                                                    </span>
+                                                        {item.download_count.toLocaleString("en-US")}
+                                                    </Typography.Small>
                                                 </div>
-                                            </a>
+                                            </Link>
                                         ))}
                                     </div>
                                 </div>
                             )}
                             <div className="flex items-center justify-end pt-2">
                                 <Button variant="ghost" size="sm" asChild>
-                                    <a
+                                    <Link
                                         href={release.html_url}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="gap-2"
+                                        showExternalIcon={false}
+                                        underline="none"
                                     >
-                                        View on GitHub
+                                        <Typography.Small>View on GitHub</Typography.Small>
                                         <ExternalLink className="h-3.5 w-3.5" />
-                                    </a>
+                                    </Link>
                                 </Button>
                             </div>
                         </div>

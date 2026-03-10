@@ -69,7 +69,7 @@ Fetch game configuration data:
 
 ## Tech Stack
 
-- **Frontend**: React 19, React Router DOM 7, Tailwind CSS 4
+- **Frontend**: React 19, React Router DOM 6, Tailwind CSS 4
 - **Desktop**: Electron 40
 - **UI Components**: Shadcn UI, Radix UI, Lucide React
 - **Forms**: React Hook Form + Zod
