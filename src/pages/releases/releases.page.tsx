@@ -1,6 +1,6 @@
 import type { FC } from "react"
 
-import ReleasesList from "@/components/layout/releases-page/releases-list"
+import { ReleasesList } from "./components/releases-list"
 import { Typography } from "@/components/ui/typography"
 
 const ReleasesPage: FC = () => {

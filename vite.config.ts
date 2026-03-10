@@ -13,35 +13,35 @@ export default defineConfig({
         ...(process.env.VITEST
             ? []
             : [
-                electron({
-                    main: {
-                        entry: "electron/main.ts",
-                        vite: {
-                            build: {
-                                rollupOptions: {
-                                    output: {
-                                        entryFileNames: "[name].js",
-                                    },
-                                    external: (id: string) => {
-                                        const isRelative = id.startsWith(".") || path.isAbsolute(id)
-                                        return !isRelative
-                                    },
-                                },
-                            },
-                        },
-                    },
-                    preload: {
-                        input: path.join(__dirname, "electron/preload.ts"),
-                    },
-                    renderer: {},
-                }),
-            ]),
+                  electron({
+                      main: {
+                          entry: "electron/main.ts",
+                          vite: {
+                              build: {
+                                  rollupOptions: {
+                                      output: {
+                                          entryFileNames: "[name].js",
+                                      },
+                                      external: (id: string) => {
+                                          const isRelative = id.startsWith(".") || path.isAbsolute(id)
+                                          return !isRelative
+                                      },
+                                  },
+                              },
+                          },
+                      },
+                      preload: {
+                          input: path.join(__dirname, "electron/preload.ts"),
+                      },
+                      renderer: {},
+                  }),
+              ]),
     ],
     resolve: {
         alias: {
             "@": path.resolve(__dirname, "./src"),
             "node:fs": path.resolve(__dirname, "./src/shims/fs.ts"),
-            "fs": path.resolve(__dirname, "./src/shims/fs.ts"),
+            fs: path.resolve(__dirname, "./src/shims/fs.ts"),
         },
     },
     optimizeDeps: {
@@ -49,7 +49,7 @@ export default defineConfig({
         esbuildOptions: {
             alias: {
                 "node:fs": path.resolve(__dirname, "./src/shims/fs.ts"),
-                "fs": path.resolve(__dirname, "./src/shims/fs.ts"),
+                fs: path.resolve(__dirname, "./src/shims/fs.ts"),
             },
         },
     },

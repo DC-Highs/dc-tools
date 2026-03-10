@@ -1,8 +1,7 @@
 import { DragonPhase, StaticFileUrlPlatformPrefix, TextureCompressionFormat } from "@dchighs/dc-core"
-import { LuCopy, LuDownload, LuPackage } from "react-icons/lu"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Controller, useForm } from "react-hook-form"
 import dcAssets from "@dchighs/dc-assets"
+import { useForm } from "react-hook-form"
 import { useState, type FC } from "react"
 import { toast } from "sonner"
 
@@ -10,29 +9,14 @@ import {
     dragonSpineAnimationDownloaderFormSchema,
     type DragonSpineAnimationDownloaderFormValues,
 } from "@/schemas/dragon-spine-animation-downloader-form.schema"
-import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectLabel,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Field, FieldGroup, FieldLabel, FieldError } from "@/components/ui/field"
-import { Typography } from "@/components/ui/typography"
-import { Separator } from "@/components/ui/separator"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Spinner } from "@/components/ui/spinner"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { DragonSpineAnimationPreview } from "./components/dragon-spine-animation-preview"
+import { DragonSpineAnimationForm } from "./components/dragon-spine-animation-form"
 
 const DragonSpineAnimationPage: FC = () => {
     const [isDownloading, setIsDownloading] = useState(false)
 
-    const form = useForm({
-        resolver: zodResolver(dragonSpineAnimationDownloaderFormSchema),
+    const form = useForm<DragonSpineAnimationDownloaderFormValues>({
+        resolver: zodResolver(dragonSpineAnimationDownloaderFormSchema) as any,
         defaultValues: {
             imageName: "1000_dragon_nature",
             phase: DragonPhase.Baby.toString(),
@@ -79,180 +63,13 @@ const DragonSpineAnimationPage: FC = () => {
 
     return (
         <div className="space-y-2">
-            <Card>
-                <CardHeader>
-                    <CardTitle>Dragon Spine Animation Downloader</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <form id="form-rhf-demo" onSubmit={form.handleSubmit(onSubmit)}>
-                        <FieldGroup className="grid grid-cols-2">
-                            <Controller
-                                name="platformPrefix"
-                                control={form.control}
-                                render={({ field, fieldState }) => (
-                                    <Field data-invalid={fieldState.invalid}>
-                                        <FieldLabel>Platform Prefix</FieldLabel>
-                                        <Select onValueChange={field.onChange} value={field.value}>
-                                            <SelectTrigger className="w-full">
-                                                <SelectValue placeholder="Select a platform prefix" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectGroup>
-                                                    <SelectLabel>Platform prefixes</SelectLabel>
-                                                    {Object.entries(StaticFileUrlPlatformPrefix)
-                                                        .filter(([name]) => name !== "Default")
-                                                        .map(([name, prefix]) => (
-                                                            <SelectItem
-                                                                key={`prefix-${prefix.toString()}`}
-                                                                value={prefix.toString()}
-                                                            >
-                                                                {name}
-                                                            </SelectItem>
-                                                        ))}
-                                                </SelectGroup>
-                                            </SelectContent>
-                                        </Select>
-                                        {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                                    </Field>
-                                )}
-                            />
-                            <Controller
-                                name="textureCompressionFormat"
-                                control={form.control}
-                                render={({ field, fieldState }) => (
-                                    <Field data-invalid={fieldState.invalid}>
-                                        <FieldLabel>Texture Compression Format</FieldLabel>
-                                        <Select onValueChange={field.onChange} value={field.value}>
-                                            <SelectTrigger className="w-full">
-                                                <SelectValue placeholder="Select a texture compression format" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectGroup>
-                                                    <SelectLabel>Texture compression formats</SelectLabel>
-                                                    {Object.entries(TextureCompressionFormat)
-                                                        .filter(([name]) => name !== "Default")
-                                                        .map(([name, format]) => (
-                                                            <SelectItem key={format} value={format}>
-                                                                {name}
-                                                            </SelectItem>
-                                                        ))}
-                                                </SelectGroup>
-                                            </SelectContent>
-                                        </Select>
-                                        {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                                    </Field>
-                                )}
-                            />
-                            <Controller
-                                name="imageName"
-                                control={form.control}
-                                render={({ field, fieldState }) => (
-                                    <Field data-invalid={fieldState.invalid}>
-                                        <FieldLabel>Image Name</FieldLabel>
-                                        <Input
-                                            {...field}
-                                            aria-invalid={fieldState.invalid}
-                                            placeholder="e.g. 1000_dragon_nature"
-                                        />
-                                        {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                                    </Field>
-                                )}
-                            />
-                            <Controller
-                                name="phase"
-                                control={form.control}
-                                render={({ field, fieldState }) => (
-                                    <Field data-invalid={fieldState.invalid}>
-                                        <FieldLabel>Dragon Phase</FieldLabel>
-                                        <Select onValueChange={field.onChange} value={field.value}>
-                                            <SelectTrigger className="w-full">
-                                                <SelectValue placeholder="Select a dragon phase" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectGroup>
-                                                    <SelectLabel>Phases</SelectLabel>
-                                                    {Object.entries(DragonPhase)
-                                                        .filter(([key]) => isNaN(Number(key)))
-                                                        .map(([name, phase]) => (
-                                                            <SelectItem
-                                                                key={`phase-${phase.toString()}`}
-                                                                value={phase.toString()}
-                                                            >
-                                                                {name}
-                                                            </SelectItem>
-                                                        ))}
-                                                </SelectGroup>
-                                            </SelectContent>
-                                        </Select>
-                                        {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                                    </Field>
-                                )}
-                            />
-                            <Controller
-                                name="skin"
-                                control={form.control}
-                                render={({ field, fieldState }) => (
-                                    <Field data-invalid={fieldState.invalid}>
-                                        <FieldLabel>Skin Key</FieldLabel>
-                                        <Input
-                                            {...(field as any)}
-                                            aria-invalid={fieldState.invalid}
-                                            placeholder="e.g. _skin1"
-                                        />
-                                        {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                                    </Field>
-                                )}
-                            />
-                            <Controller
-                                name="useNewUrlFormat"
-                                control={form.control}
-                                render={({ field, fieldState }) => (
-                                    <Field data-invalid={fieldState.invalid}>
-                                        <div className="flex items-center gap-3">
-                                            <Checkbox checked={field.value} onCheckedChange={field.onChange} />
-                                            <FieldLabel>Use New URL Format</FieldLabel>
-                                        </div>
-                                        {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                                    </Field>
-                                )}
-                            />
-                        </FieldGroup>
-                        <div className="mt-6 space-x-2">
-                            <Button variant="secondary" type="button" onClick={handleCopyUrl}>
-                                <LuCopy />
-                                Copy file URL
-                            </Button>
-                            <Button disabled={isDownloading} type="submit">
-                                {isDownloading ? (
-                                    <>
-                                        <Spinner /> Downloading...
-                                    </>
-                                ) : (
-                                    <>
-                                        <LuDownload /> Download and save
-                                    </>
-                                )}
-                            </Button>
-                        </div>
-                    </form>
-                </CardContent>
-            </Card>
-            <Card>
-                <CardHeader>
-                    <CardTitle>Preview</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <div className="flex flex-col items-center gap-4 p-6">
-                        <div className="flex items-center gap-2 font-semibold text-lg text-primary/80">
-                            <LuPackage /> {downloadUrl.split("/").pop()}
-                        </div>
-                    </div>
-                </CardContent>
-                <Separator />
-                <CardFooter className="font-mono">
-                    <b>File URL:</b> <Typography.Code>{downloadUrl}</Typography.Code>
-                </CardFooter>
-            </Card>
+            <DragonSpineAnimationForm
+                form={form}
+                onSubmit={onSubmit}
+                isDownloading={isDownloading}
+                handleCopyUrl={handleCopyUrl}
+            />
+            <DragonSpineAnimationPreview downloadUrl={downloadUrl} />
         </div>
     )
 }

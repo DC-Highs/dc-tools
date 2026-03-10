@@ -7,25 +7,26 @@ import DragonThumbnailUrlParserPage from "@/pages/url-tools/dragon-thumbnail-url
 import DragonSpriteUrlParserPage from "@/pages/url-tools/dragon-sprite-url-parser/dragon-sprite-url-parser.page"
 import DragonSpineAnimationPage from "@/pages/assets/dragons/animations/spine/dragon-spine-animation.page"
 import DragonFlashAnimationPage from "@/pages/assets/dragons/animations/flash/dragon-flash-animation.page"
-import DragonSpineAnimationPlayerPage from "@/pages/animation-players/spine/spine.page"
-import FindAllDragonFilesPage from "@/pages/assets/dragons/all/find-all-dragon-files.page"
-import LocalizationFetcherPage from "@/pages/config/localization-fetcher/localization-fetcher.page"
 import DecorationThumbnailPage from "@/pages/assets/decorations/thumbnail/decoration-thumbnail.page"
+import LocalizationFetcherPage from "@/pages/config/localization-fetcher/localization-fetcher.page"
 import BuildingThumbnailPage from "@/pages/assets/buildings/thumbnail/building-thumbnail.page"
 import HabitatThumbnailPage from "@/pages/assets/habitats/thumbnail/habitat-thumbnail.page"
 import DecorationSpritePage from "@/pages/assets/decorations/sprite/decoration-sprite.page"
+import FindAllDragonFilesPage from "@/pages/assets/dragons/all/find-all-dragon-files.page"
 import DragonThumbnailPage from "@/pages/assets/dragons/thumbnail/dragon-thumbnail.page"
+import DragonSpineAnimationPlayerPage from "@/pages/animation-players/spine/spine.page"
 import BuildingSpritePage from "@/pages/assets/buildings/sprite/building-sprite.page"
-import ConfigFetcherPage from "@/pages/config/config-fetcher/config-fetcher.page"
 import IslandPackagePage from "@/pages/assets/islands/package/island-package.page"
 import HabitatSpritePage from "@/pages/assets/habitats/sprite/habitat-sprite.page"
-import AppSidebar from "@/components/layout/app/app-sidebar"
+import ConfigFetcherPage from "@/pages/config/config-fetcher/config-fetcher.page"
 import DragonSpritePage from "@/pages/assets/dragons/sprite/dragon-sprite.page"
+import ChestSpritePage from "@/pages/assets/chests/sprite/chest-sprite.page"
+import SoundMusicPage from "@/pages/assets/sounds/music/sound-music.page"
+import { ThemeToggle } from "@/components/common/theme-toggle"
+import AppSidebar from "@/components/layout/app/app-sidebar"
 import SettingsPage from "@/pages/settings/settings.page"
 import ReleasesPage from "@/pages/releases/releases.page"
-import ChestSpritePage from "@/pages/assets/chests/sprite/chest-sprite.page"
 import { SidebarTrigger } from "@/components/ui/sidebar"
-import SoundMusicPage from "@/pages/assets/sounds/music/sound-music.page"
 import { Toaster } from "@/components/ui/sonner"
 import HomePage from "@/pages/home/home.page"
 import Providers from "@/providers"
@@ -40,6 +41,7 @@ const App: FC = () => {
                         <SidebarTrigger />
                         <span className="text-xs">Menu</span>
                     </div>
+                    <ThemeToggle />
                 </div>
                 <div className="px-4">
                     <Routes>

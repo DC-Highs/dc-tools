@@ -16,10 +16,9 @@ import { MdAnimation, MdOutlineTranslate } from "react-icons/md"
 import { RiGitRepositoryLine } from "react-icons/ri"
 import { PiBracketsCurly } from "react-icons/pi"
 import { VscIssues } from "react-icons/vsc"
-import { FaDragon } from "react-icons/fa"
+import { Link } from "react-router-dom"
 import { useState } from "react"
 import type { FC } from "react"
-import { Link } from "react-router-dom"
 
 import {
     Sidebar,
@@ -197,13 +196,17 @@ const AppSidebar: FC = () => {
         <Sidebar collapsible="icon">
             <SidebarHeader>
                 <Link
-                    className={`flex items-center py-2 gap-6 ${open ? "px-2" : "justify-center"} gap-2 transition-all duration-300 hover:opacity-80`}
+                    className={`flex items-center py-2 ${open ? "px-2 gap-3" : "justify-center"} transition-all duration-300 hover:opacity-80`}
                     to="/"
                 >
-                    <FaDragon width={24} height={24} />
+                    <img
+                        src="/icon.png"
+                        alt="DC Tools Logo"
+                        className="w-8 h-8 rounded-lg shrink-0 object-contain invert dark:invert-0"
+                    />
                     {open && (
                         <div>
-                            <Typography.H3 className="font-bold text-xl max-lg:text-base text-nowrap">
+                            <Typography.H3 className="font-bold text-xl max-lg:text-base text-nowrap ">
                                 DC Tools
                             </Typography.H3>
                             <div className="text-xs flex gap-1 text-nowrap">

@@ -1,36 +1,22 @@
 import { Localization } from "@dchighs/dc-localization"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Controller, useForm } from "react-hook-form"
 import { useMemo, useState, type FC } from "react"
 import { ConfigLanguage } from "@dchighs/dc-core"
+import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 
-import { LuCopy, LuDatabase, LuDownload } from "react-icons/lu"
-
-import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectLabel,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select"
 import { fetchLocalizationFormSchema, type FetchLocalizationFormValues } from "@/schemas/fetch-localization-form.schema"
-import { ConfigLanguageSelect } from "@/components/composition/config-language-select"
-import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { type SettingsFormValues } from "@/schemas/settings-form.schema"
-import { Typography } from "@/components/ui/typography"
-import { Spinner } from "@/components/ui/spinner"
-import { Button } from "@/components/ui/button"
+
+import { LocalizationFetcherPreview } from "./components/localization-fetcher-preview"
+import { LocalizationFetcherForm } from "./components/localization-fetcher-form"
 
 const LocalizationFetcherPage: FC = () => {
     const [localization, setLocalization] = useState<Localization | null>(null)
     const [isFetching, setIsFetching] = useState(false)
 
-    const form = useForm({
-        resolver: zodResolver(fetchLocalizationFormSchema),
+    const form = useForm<FetchLocalizationFormValues>({
+        resolver: zodResolver(fetchLocalizationFormSchema) as any,
         defaultValues: async () => {
             const savedSettings = await window.electronAPI.store.get<SettingsFormValues>("settings")
             return {
@@ -40,15 +26,15 @@ const LocalizationFetcherPage: FC = () => {
         },
     })
 
+    const parseMode = form.watch("parseMode")
+
     const data = useMemo(() => {
         if (!localization) {
             return null
         }
 
-        const currentParseMode = form.getValues("parseMode")
-
-        return currentParseMode === "array" ? localization.toArray() : localization.toObject()
-    }, [localization, form.watch("parseMode")])
+        return parseMode === "array" ? localization.toArray() : localization.toObject()
+    }, [localization, parseMode])
 
     const onSubmit = async (data: FetchLocalizationFormValues) => {
         setIsFetching(true)
@@ -70,7 +56,7 @@ const LocalizationFetcherPage: FC = () => {
     }
 
     const handleSaveData = async () => {
-        if (!localization) {
+        if (!localization || !data) {
             toast.error("No data to save")
             return
         }
@@ -103,105 +89,26 @@ const LocalizationFetcherPage: FC = () => {
         toast.success("URL copied to clipboard")
     }
 
-    const buildPreview = () => {
-        if (!localization) {
+    const previewContent = useMemo(() => {
+        if (!localization || !data) {
             return null
         }
 
-        const currentParseMode = form.getValues("parseMode")
-
-        const data = currentParseMode === "array" ? localization.toArray() : localization.toObject()
-
-        return JSON.stringify(data).slice(0, 1000) + "..." + (currentParseMode === "array" ? "]" : "}")
-    }
+        return JSON.stringify(data).slice(0, 1000) + "..." + (parseMode === "array" ? "]" : "}")
+    }, [localization, data, parseMode])
 
     return (
         <div className="space-y-2">
-            <Card>
-                <CardHeader>
-                    <CardTitle>Localization Fetcher</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <form id="form-rhf-demo" onSubmit={form.handleSubmit(onSubmit)}>
-                        <FieldGroup className="grid grid-cols-2">
-                            <ConfigLanguageSelect
-                                name="language"
-                                control={form.control}
-                                label="Language"
-                                placeholder="Select a language"
-                            />
-                            <Controller
-                                name="parseMode"
-                                control={form.control}
-                                render={({ field, fieldState }) => (
-                                    <Field data-invalid={fieldState.invalid}>
-                                        <FieldLabel>Parse Mode</FieldLabel>
-                                        <Select onValueChange={field.onChange} value={field.value}>
-                                            <SelectTrigger className="w-full">
-                                                <SelectValue placeholder="Select a parse mode" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectGroup>
-                                                    <SelectLabel>Parse Modes</SelectLabel>
-                                                    <SelectItem value="array">Array</SelectItem>
-                                                    <SelectItem value="object">Object</SelectItem>
-                                                </SelectGroup>
-                                            </SelectContent>
-                                        </Select>
-                                        {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                                    </Field>
-                                )}
-                            />
-                        </FieldGroup>
-                        <div className="mt-6 space-x-2">
-                            <Button variant="secondary" type="button" onClick={handleCopyUrl}>
-                                <LuCopy />
-                                Copy URL
-                            </Button>
-                            <Button
-                                variant="secondary"
-                                disabled={!localization || isFetching}
-                                type="button"
-                                onClick={handleCopyData}
-                            >
-                                <LuCopy />
-                                Copy data
-                            </Button>
-                            <Button
-                                variant="outline"
-                                disabled={!localization || isFetching}
-                                type="button"
-                                onClick={handleSaveData}
-                            >
-                                <LuDownload /> Save data
-                            </Button>
-                            <Button disabled={isFetching} type="submit">
-                                {isFetching ? (
-                                    <>
-                                        <Spinner /> Fetching...
-                                    </>
-                                ) : (
-                                    <>
-                                        <LuDatabase /> Fetch data
-                                    </>
-                                )}
-                            </Button>
-                        </div>
-                    </form>
-                </CardContent>
-            </Card>
-            <Card>
-                <CardHeader>
-                    <CardTitle>Data Preview</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    {localization ? (
-                        <Typography.Code>{buildPreview()}</Typography.Code>
-                    ) : (
-                        <Typography.P className="text-center">No data</Typography.P>
-                    )}
-                </CardContent>
-            </Card>
+            <LocalizationFetcherForm
+                form={form}
+                onSubmit={onSubmit}
+                isFetching={isFetching}
+                hasData={!!localization}
+                handleCopyUrl={handleCopyUrl}
+                handleCopyData={handleCopyData}
+                handleSaveData={handleSaveData}
+            />
+            <LocalizationFetcherPreview previewContent={previewContent} />
         </div>
     )
 }

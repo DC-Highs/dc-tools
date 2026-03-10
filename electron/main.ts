@@ -1,4 +1,4 @@
-import { app, BrowserWindow, protocol, shell } from "electron"
+import { app, BrowserWindow, Menu, protocol, shell } from "electron"
 
 import path from "node:path"
 
@@ -29,10 +29,11 @@ function createWindow() {
             contextIsolation: true,
             preload: path.join(__dirname, "preload.js"),
         },
-        icon:
-            process.env.NODE_ENV === "development"
-                ? path.join(__dirname, "..", "..", "public", "icon.png")
-                : path.join(__dirname, "..", "..", "dist", "icon.png"),
+        icon: path.join(
+            app.getAppPath(),
+            process.env.NODE_ENV === "development" ? "public" : "dist",
+            "icon.png"
+        ),
     })
 
     win.maximize()
@@ -52,6 +53,7 @@ function createWindow() {
 }
 
 app.whenReady().then(() => {
+    Menu.setApplicationMenu(null)
     registerIpcHandlers()
     createWindow()
 })

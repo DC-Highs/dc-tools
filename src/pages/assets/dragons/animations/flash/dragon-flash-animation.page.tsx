@@ -1,8 +1,7 @@
 import { DragonPhase, StaticFileUrlPlatformPrefix } from "@dchighs/dc-core"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Controller, useForm } from "react-hook-form"
-import { LuCopy, LuDownload } from "react-icons/lu"
 import dcAssets from "@dchighs/dc-assets"
+import { useForm } from "react-hook-form"
 import { useState, type FC } from "react"
 import { toast } from "sonner"
 
@@ -10,29 +9,15 @@ import {
     dragonFlashAnimationDownloaderFormSchema,
     type DragonFlashAnimationDownloaderFormValues,
 } from "@/schemas/dragon-flash-animation-downloader-form.schema"
-import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectLabel,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Field, FieldGroup, FieldLabel, FieldError } from "@/components/ui/field"
-import FlashPreview from "@/components/features/flash-preview"
-import { Typography } from "@/components/ui/typography"
-import { Separator } from "@/components/ui/separator"
-import { Spinner } from "@/components/ui/spinner"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+
+import { DragonFlashAnimationPreview } from "./components/dragon-flash-animation-preview"
+import { DragonFlashAnimationForm } from "./components/dragon-flash-animation-form"
 
 const DragonFlashAnimationPage: FC = () => {
     const [isDownloading, setIsDownloading] = useState(false)
 
-    const form = useForm({
-        resolver: zodResolver(dragonFlashAnimationDownloaderFormSchema),
+    const form = useForm<DragonFlashAnimationDownloaderFormValues>({
+        resolver: zodResolver(dragonFlashAnimationDownloaderFormSchema) as any,
         defaultValues: {
             imageName: "1000_dragon_nature",
             phase: DragonPhase.Baby.toString(),
@@ -77,155 +62,13 @@ const DragonFlashAnimationPage: FC = () => {
 
     return (
         <div className="space-y-2">
-            <Card>
-                <CardHeader>
-                    <CardTitle>Dragon Flash Animation Downloader</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <form id="form-rhf-demo" onSubmit={form.handleSubmit(onSubmit)}>
-                        <FieldGroup className="grid grid-cols-2">
-                            <Controller
-                                name="platformPrefix"
-                                control={form.control}
-                                render={({ field, fieldState }) => (
-                                    <Field data-invalid={fieldState.invalid}>
-                                        <FieldLabel>
-                                            <Typography.Small>Platform Prefix</Typography.Small>
-                                        </FieldLabel>
-                                        <Select onValueChange={field.onChange} value={field.value}>
-                                            <SelectTrigger className="w-full">
-                                                <SelectValue placeholder="Select a platform prefix" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectGroup>
-                                                    <SelectLabel>
-                                                        <Typography.Small>Platform prefixes</Typography.Small>
-                                                    </SelectLabel>
-                                                    {Object.entries(StaticFileUrlPlatformPrefix)
-                                                        .filter(([currentName]) => currentName !== "Default")
-                                                        .map(([currentName, currentPrefix]) => (
-                                                            <SelectItem
-                                                                key={`prefix-${currentPrefix.toString()}`}
-                                                                value={currentPrefix.toString()}
-                                                            >
-                                                                <Typography.Small>{currentName}</Typography.Small>
-                                                            </SelectItem>
-                                                        ))}
-                                                </SelectGroup>
-                                            </SelectContent>
-                                        </Select>
-                                        {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                                    </Field>
-                                )}
-                            />
-                            <Controller
-                                name="imageName"
-                                control={form.control}
-                                render={({ field, fieldState }) => (
-                                    <Field data-invalid={fieldState.invalid}>
-                                        <FieldLabel>
-                                            <Typography.Small>Image Name</Typography.Small>
-                                        </FieldLabel>
-                                        <Input
-                                            {...field}
-                                            aria-invalid={fieldState.invalid}
-                                            placeholder="e.g. 1000_dragon_nature"
-                                        />
-                                        {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                                    </Field>
-                                )}
-                            />
-                            <Controller
-                                name="phase"
-                                control={form.control}
-                                render={({ field, fieldState }) => (
-                                    <Field data-invalid={fieldState.invalid}>
-                                        <FieldLabel>
-                                            <Typography.Small>Dragon Phase</Typography.Small>
-                                        </FieldLabel>
-                                        <Select onValueChange={field.onChange} value={field.value}>
-                                            <SelectTrigger className="w-full">
-                                                <SelectValue placeholder="Select a dragon phase" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectGroup>
-                                                    <SelectLabel>
-                                                        <Typography.Small>Phases</Typography.Small>
-                                                    </SelectLabel>
-                                                    {Object.entries(DragonPhase)
-                                                        .filter(([currentKey]) => isNaN(Number(currentKey)))
-                                                        .map(([currentName, currentPhase]) => (
-                                                            <SelectItem
-                                                                key={`phase-${currentPhase.toString()}`}
-                                                                value={currentPhase.toString()}
-                                                            >
-                                                                <Typography.Small>{currentName}</Typography.Small>
-                                                            </SelectItem>
-                                                        ))}
-                                                </SelectGroup>
-                                            </SelectContent>
-                                        </Select>
-                                        {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                                    </Field>
-                                )}
-                            />
-                            <Controller
-                                name="skin"
-                                control={form.control}
-                                render={({ field, fieldState }) => (
-                                    <Field data-invalid={fieldState.invalid}>
-                                        <FieldLabel>
-                                            <Typography.Small>Skin Key</Typography.Small>
-                                        </FieldLabel>
-                                        <Input
-                                            {...(field as any)}
-                                            aria-invalid={fieldState.invalid}
-                                            placeholder="e.g. _skin1"
-                                        />
-                                        {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                                    </Field>
-                                )}
-                            />
-                        </FieldGroup>
-                        <div className="mt-6 space-x-2">
-                            <Button variant="secondary" type="button" onClick={handleCopyUrl}>
-                                <LuCopy />
-                                <Typography.Small>Copy file URL</Typography.Small>
-                            </Button>
-                            <Button disabled={isDownloading} type="submit">
-                                {isDownloading ? (
-                                    <>
-                                        <Spinner /> <Typography.Small>Downloading...</Typography.Small>
-                                    </>
-                                ) : (
-                                    <>
-                                        <LuDownload /> <Typography.Small>Download and save</Typography.Small>
-                                    </>
-                                )}
-                            </Button>
-                        </div>
-                    </form>
-                </CardContent>
-            </Card>
-            <Card>
-                <CardHeader>
-                    <CardTitle>
-                        <Typography.H3>Preview</Typography.H3>
-                    </CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <div className="flex flex-col items-center gap-4 p-6">
-                        <FlashPreview src={downloadUrl} />
-                    </div>
-                </CardContent>
-                <Separator />
-                <CardFooter className="font-mono">
-                    <Typography.P>
-                        <Typography.Large className="inline">File URL:</Typography.Large>{" "}
-                        <Typography.Code>{downloadUrl}</Typography.Code>
-                    </Typography.P>
-                </CardFooter>
-            </Card>
+            <DragonFlashAnimationForm
+                form={form}
+                onSubmit={onSubmit}
+                isDownloading={isDownloading}
+                handleCopyUrl={handleCopyUrl}
+            />
+            <DragonFlashAnimationPreview downloadUrl={downloadUrl} />
         </div>
     )
 }

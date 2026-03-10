@@ -4,11 +4,12 @@ import { LuPackage } from "react-icons/lu"
 
 import type { Release } from "@/dto/github-releases-api-response.dto"
 import { Typography } from "@/components/ui/typography"
-import ReleasesSkeleton from "./releases-skeleton"
 import { Button } from "@/components/ui/button"
+
+import { ReleasesSkeleton } from "./releases-skeleton"
 import { ReleaseCard } from "./release-card"
 
-const ReleasesList: FC = () => {
+export const ReleasesList: FC = () => {
     const [releases, setReleases] = useState<Release[]>([])
     const [isLoading, setIsLoading] = useState(true)
     const [fetchError, setFetchError] = useState<unknown>(null)
@@ -76,5 +77,3 @@ const ReleasesList: FC = () => {
         </div>
     )
 }
-
-export default ReleasesList

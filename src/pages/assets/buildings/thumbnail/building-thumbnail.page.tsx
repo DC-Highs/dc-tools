@@ -5,8 +5,6 @@ import dcAssets from "@dchighs/dc-assets"
 import { useState, type FC } from "react"
 import { toast } from "sonner"
 
-import { useMagicDownload } from "@/hooks/use-magic-download"
-
 import {
     buildingThumbnailDownloaderFormSchema,
     type BuildingThumbnailDownloaderFormValues,
@@ -21,8 +19,9 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { DownloadFormActions } from "@/components/composition/download-form-actions"
 import { Field, FieldGroup, FieldLabel, FieldError } from "@/components/ui/field"
+import { DownloadFormActions } from "@/components/common/download-form-actions"
+import { useMagicDownload } from "@/hooks/use-magic-download"
 import { Typography } from "@/components/ui/typography"
 import { Separator } from "@/components/ui/separator"
 import { Input } from "@/components/ui/input"
