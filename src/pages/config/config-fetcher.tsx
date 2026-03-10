@@ -15,8 +15,10 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import { fetchConfigFormSchema, type FetchConfigFormValues } from "@/schemas/fetch-config-form.schema"
+import { ConfigLanguageSelect } from "@/components/composition/config-language-select"
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { type SettingsFormValues } from "@/schemas/settings-form.schema"
 import { PasswordInput } from "@/components/ui/password-input"
 import { MultiSelect } from "@/components/ui/multi-select"
 import { Typography } from "@/components/ui/typography"
@@ -29,13 +31,17 @@ const ConfigFetcherPage: FC = () => {
 
     const form = useForm({
         resolver: zodResolver(fetchConfigFormSchema),
-        defaultValues: {
-            authToken: "",
-            filter: [],
-            language: ConfigLanguage.English,
-            platform: ConfigPlatform.iOS,
-            url: "",
-            userId: "",
+        defaultValues: async () => {
+            const savedSettings = await window.electronAPI.store.get<SettingsFormValues>("settings")
+
+            return {
+                authToken: savedSettings?.gameConfig?.authToken || "",
+                filter: [],
+                language: (savedSettings?.gameConfig?.language as ConfigLanguage) || ConfigLanguage.English,
+                platform: ConfigPlatform.iOS,
+                url: savedSettings?.gameConfig?.url || "",
+                userId: savedSettings?.gameConfig?.userId || "",
+            }
         },
     })
 
@@ -131,35 +137,11 @@ const ConfigFetcherPage: FC = () => {
                                     </Field>
                                 )}
                             />
-                            <Controller
+                            <ConfigLanguageSelect
                                 name="language"
                                 control={form.control}
-                                render={({ field, fieldState }) => (
-                                    <Field data-invalid={fieldState.invalid}>
-                                        <FieldLabel>Language</FieldLabel>
-                                        <Select onValueChange={field.onChange} value={field.value}>
-                                            <SelectTrigger className="w-full">
-                                                <SelectValue placeholder="Select a language" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectGroup>
-                                                    <SelectLabel>Languages</SelectLabel>
-                                                    {Object.entries(ConfigLanguage)
-                                                        .filter(([name]) => name !== "Default")
-                                                        .map(([name, prefix]) => (
-                                                            <SelectItem
-                                                                key={`language-${prefix.toString()}`}
-                                                                value={prefix.toString()}
-                                                            >
-                                                                {name.split(/(?=[A-Z])/).join(" ")}
-                                                            </SelectItem>
-                                                        ))}
-                                                </SelectGroup>
-                                            </SelectContent>
-                                        </Select>
-                                        {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                                    </Field>
-                                )}
+                                label="Language"
+                                placeholder="Select a language"
                             />
                             <Controller
                                 name="filter"

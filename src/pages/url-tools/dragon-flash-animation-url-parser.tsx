@@ -3,10 +3,10 @@ import { LuCopy, LuRegex } from "react-icons/lu"
 import { useState, type FC } from "react"
 import { toast } from "sonner"
 
+import { Field, FieldGroup, FieldLabel } from "@/components/ui/field"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Typography } from "@/components/ui/typography"
 import { Button } from "@/components/ui/button"
-import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 
 const DragonFlashAnimationUrlParserPage: FC = () => {
@@ -77,30 +77,38 @@ const DragonFlashAnimationUrlParserPage: FC = () => {
                     <CardTitle>Dragon Flash Animation URL Parser</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <div className="flex flex-col space-y-4">
-                        <Label>Image URL</Label>
-                        <div className="flex items-center gap-2">
-                            <Input
-                                value={url}
-                                onChange={(e) => setUrl(e.target.value)}
-                                placeholder="e.g. https://dci-static-s1.socialpointgames.com/static/dragoncity/assets/sprites/1000_dragon_nature_1.swf"
-                            />
-                        </div>
-                    </div>
+                    <FieldGroup>
+                        <Field>
+                            <FieldLabel>
+                                <Typography.Small>Image URL</Typography.Small>
+                            </FieldLabel>
+                            <div className="flex items-center gap-2">
+                                <Input
+                                    value={url}
+                                    onChange={(event) => setUrl(event.target.value)}
+                                    placeholder="e.g. https://dci-static-s1.socialpointgames.com/static/dragoncity/assets/sprites/1000_dragon_nature_1.swf"
+                                />
+                            </div>
+                        </Field>
+                    </FieldGroup>
                     <Button onClick={handleParseUrl} className="mt-6">
-                        <LuRegex /> Parse URL
+                        <LuRegex /> <Typography.Small>Parse URL</Typography.Small>
                     </Button>
                 </CardContent>
             </Card>
             <Card>
                 <CardHeader>
-                    <CardTitle>Parsing result</CardTitle>
+                    <CardTitle>
+                        <Typography.H3>Parsing result</Typography.H3>
+                    </CardTitle>
                 </CardHeader>
                 <CardContent>
                     {parsedData ? (
                         <div className="grid grid-cols-2 gap-x-2 gap-y-6">
                             <div className="space-y-4">
-                                <Label>Platform Prefix</Label>
+                                <FieldLabel>
+                                    <Typography.Small>Platform Prefix</Typography.Small>
+                                </FieldLabel>
                                 <div className="flex items-center gap-2">
                                     <Typography.Muted className="text-sm">
                                         {parsedData.platformPrefix ? (
@@ -108,14 +116,15 @@ const DragonFlashAnimationUrlParserPage: FC = () => {
                                                 {parsedData.platformPrefix} (
                                                 {
                                                     Object.entries(StaticFileUrlPlatformPrefix).find(
-                                                        ([key, value]) =>
-                                                            key !== "Default" && value === parsedData.platformPrefix,
+                                                        ([currentName, currentValue]) =>
+                                                            currentName !== "Default" &&
+                                                            currentValue === parsedData.platformPrefix,
                                                     )?.[0]
                                                 }
                                                 )
                                             </>
                                         ) : (
-                                            <span className="text-red-500">-</span>
+                                            <Typography.P className="text-red-500">-</Typography.P>
                                         )}
                                     </Typography.Muted>
                                     <Button size="xs" variant="ghost" onClick={handleCopyPlatformPrefix}>
@@ -124,7 +133,9 @@ const DragonFlashAnimationUrlParserPage: FC = () => {
                                 </div>
                             </div>
                             <div className="space-y-4">
-                                <Label>Dragon ID</Label>
+                                <FieldLabel>
+                                    <Typography.Small>Dragon ID</Typography.Small>
+                                </FieldLabel>
                                 <div className="flex items-center gap-2">
                                     <Typography.Muted className="text-sm">{parsedData.id}</Typography.Muted>
                                     <Button size="xs" variant="ghost" onClick={handleCopyDragonId}>
@@ -133,7 +144,9 @@ const DragonFlashAnimationUrlParserPage: FC = () => {
                                 </div>
                             </div>
                             <div className="space-y-4">
-                                <Label>Image Name</Label>
+                                <FieldLabel>
+                                    <Typography.Small>Image Name</Typography.Small>
+                                </FieldLabel>
                                 <div className="flex items-center gap-2">
                                     <Typography.Muted className="text-sm">{parsedData.imageName}</Typography.Muted>
                                     <Button size="xs" variant="ghost" onClick={handleCopyImageName}>
@@ -142,7 +155,9 @@ const DragonFlashAnimationUrlParserPage: FC = () => {
                                 </div>
                             </div>
                             <div className="space-y-4">
-                                <Label>Phase</Label>
+                                <FieldLabel>
+                                    <Typography.Small>Phase</Typography.Small>
+                                </FieldLabel>
                                 <div className="flex items-center gap-2">
                                     <Typography.Muted className="text-sm">
                                         {parsedData.phase !== null ? (
@@ -150,13 +165,14 @@ const DragonFlashAnimationUrlParserPage: FC = () => {
                                                 {parsedData.phase} (
                                                 {
                                                     Object.entries(DragonPhase).find(
-                                                        ([_, value]) => value === parsedData.phase,
+                                                        ([_currentName, currentValue]) =>
+                                                            currentValue === parsedData.phase,
                                                     )?.[0]
                                                 }
                                                 )
                                             </>
                                         ) : (
-                                            "-"
+                                            <Typography.Small>-</Typography.Small>
                                         )}
                                     </Typography.Muted>
                                     <Button size="xs" variant="ghost" onClick={handleCopyPhase}>

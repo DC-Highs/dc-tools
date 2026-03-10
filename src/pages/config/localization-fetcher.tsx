@@ -17,8 +17,10 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import { fetchLocalizationFormSchema, type FetchLocalizationFormValues } from "@/schemas/fetch-localization-form.schema"
+import { ConfigLanguageSelect } from "../../components/composition/config-language-select"
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { type SettingsFormValues } from "@/schemas/settings-form.schema"
 import { Typography } from "@/components/ui/typography"
 import { Spinner } from "@/components/ui/spinner"
 import { Button } from "@/components/ui/button"
@@ -29,9 +31,12 @@ const LocalizationFetcherPage: FC = () => {
 
     const form = useForm({
         resolver: zodResolver(fetchLocalizationFormSchema),
-        defaultValues: {
-            language: ConfigLanguage.English,
-            parseMode: "array" as const,
+        defaultValues: async () => {
+            const savedSettings = await window.electronAPI.store.get<SettingsFormValues>("settings")
+            return {
+                language: (savedSettings?.localization?.language as ConfigLanguage) || ConfigLanguage.English,
+                parseMode: "array" as const,
+            }
         },
     })
 
@@ -119,35 +124,11 @@ const LocalizationFetcherPage: FC = () => {
                 <CardContent>
                     <form id="form-rhf-demo" onSubmit={form.handleSubmit(onSubmit)}>
                         <FieldGroup className="grid grid-cols-2">
-                            <Controller
+                            <ConfigLanguageSelect
                                 name="language"
                                 control={form.control}
-                                render={({ field, fieldState }) => (
-                                    <Field data-invalid={fieldState.invalid}>
-                                        <FieldLabel>Language</FieldLabel>
-                                        <Select onValueChange={field.onChange} value={field.value}>
-                                            <SelectTrigger className="w-full">
-                                                <SelectValue placeholder="Select a language" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectGroup>
-                                                    <SelectLabel>Languages</SelectLabel>
-                                                    {Object.entries(ConfigLanguage)
-                                                        .filter(([name]) => name !== "Default")
-                                                        .map(([name, prefix]) => (
-                                                            <SelectItem
-                                                                key={`language-${prefix.toString()}`}
-                                                                value={prefix.toString()}
-                                                            >
-                                                                {name.split(/(?=[A-Z])/).join(" ")}
-                                                            </SelectItem>
-                                                        ))}
-                                                </SelectGroup>
-                                            </SelectContent>
-                                        </Select>
-                                        {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                                    </Field>
-                                )}
+                                label="Language"
+                                placeholder="Select a language"
                             />
                             <Controller
                                 name="parseMode"

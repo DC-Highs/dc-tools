@@ -17,7 +17,6 @@ import { RiGitRepositoryLine } from "react-icons/ri"
 import { PiBracketsCurly } from "react-icons/pi"
 import { VscIssues } from "react-icons/vsc"
 import { FaDragon } from "react-icons/fa"
-import { Link } from "react-router-dom"
 import { useState } from "react"
 import type { FC } from "react"
 
@@ -35,9 +34,18 @@ import {
     useSidebar,
 } from "@/components/ui/sidebar"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
+import { Typography } from "@/components/ui/typography"
+import { Link } from "@/components/ui/link"
+import { Button } from "../../ui/button"
 import pkg from "@/../package.json"
 
-const assetItems = [
+interface SidebarItem {
+    title: string
+    url: string
+    icon: any
+}
+
+const assetItems: SidebarItem[] = [
     {
         title: "Dragon Sprite",
         url: "/assets/dragons/sprite",
@@ -110,7 +118,7 @@ const assetItems = [
     },
 ]
 
-const configItems = [
+const configItems: SidebarItem[] = [
     {
         title: "Config Fetcher",
         url: "/config/config-fetcher",
@@ -123,7 +131,7 @@ const configItems = [
     },
 ]
 
-const urlToolsItems = [
+const urlToolsItems: SidebarItem[] = [
     {
         title: "D. Sprite File URL Parser",
         url: "/url-tools/dragon-sprite-url-parser",
@@ -146,7 +154,7 @@ const urlToolsItems = [
     },
 ]
 
-const animationPlayerItems = [
+const animationPlayerItems: SidebarItem[] = [
     {
         title: "Spine Player",
         url: "/animation-players/spine",
@@ -154,7 +162,7 @@ const animationPlayerItems = [
     },
 ]
 
-const gitHubItems = [
+const gitHubItems: SidebarItem[] = [
     {
         title: "Repository",
         url: "https://github.com/dc-highs/dc-tools",
@@ -190,15 +198,16 @@ const AppSidebar: FC = () => {
             <SidebarHeader>
                 <Link
                     className={`flex items-center py-2 gap-6 ${open ? "px-2" : "justify-center"} gap-2 transition-all duration-300 hover:opacity-80`}
-                    to="/"
+                    href="/"
+                    underline="none"
                 >
                     <FaDragon width={24} height={24} />
                     {open && (
                         <div>
-                            <div className="font-bold text-xl max-lg:text-base text-nowrap">DC Tools</div>
+                            <Typography.H3 className="font-bold text-xl max-lg:text-base text-nowrap">DC Tools</Typography.H3>
                             <div className="text-xs flex gap-1 text-nowrap">
-                                <span>Powered by</span>
-                                <span className="font-semibold">DC Highs</span>
+                                <Typography.Small>Powered by</Typography.Small>
+                                <Typography.Small className="font-semibold">DC Highs</Typography.Small>
                             </div>
                         </div>
                     )}
@@ -211,7 +220,7 @@ const AppSidebar: FC = () => {
                             <CollapsibleTrigger className="flex w-full items-center justify-between">
                                 <div className="flex gap-2 items-center">
                                     <LuFolder />
-                                    <span>Assets Downloader</span>
+                                    <Typography.Small>Assets Downloader</Typography.Small>
                                 </div>
                                 {assetsOpen ? (
                                     <LuChevronDown className="h-4 w-4" />
@@ -223,12 +232,12 @@ const AppSidebar: FC = () => {
                         <CollapsibleContent>
                             <SidebarGroupContent>
                                 <SidebarMenu>
-                                    {assetItems.map((item) => (
-                                        <SidebarMenuItem key={item.title}>
+                                    {assetItems.map((currentItem) => (
+                                        <SidebarMenuItem key={currentItem.title}>
                                             <SidebarMenuButton asChild>
-                                                <Link to={item.url}>
-                                                    <item.icon />
-                                                    <span>{item.title}</span>
+                                                <Link href={currentItem.url} underline="none">
+                                                    <currentItem.icon />
+                                                    <Typography.Small>{currentItem.title}</Typography.Small>
                                                 </Link>
                                             </SidebarMenuButton>
                                         </SidebarMenuItem>
@@ -244,7 +253,7 @@ const AppSidebar: FC = () => {
                             <CollapsibleTrigger className="flex w-full items-center justify-between">
                                 <div className="flex gap-2 items-center">
                                     <LuRegex />
-                                    <span>URL Tools</span>
+                                    <Typography.Small>URL Tools</Typography.Small>
                                 </div>
                                 {urlToolsOpen ? (
                                     <LuChevronDown className="h-4 w-4" />
@@ -256,12 +265,12 @@ const AppSidebar: FC = () => {
                         <CollapsibleContent>
                             <SidebarGroupContent>
                                 <SidebarMenu>
-                                    {urlToolsItems.map((item) => (
-                                        <SidebarMenuItem key={item.title}>
+                                    {urlToolsItems.map((currentItem) => (
+                                        <SidebarMenuItem key={currentItem.title}>
                                             <SidebarMenuButton asChild>
-                                                <Link to={item.url}>
-                                                    <item.icon />
-                                                    <span>{item.title}</span>
+                                                <Link href={currentItem.url} underline="none">
+                                                    <currentItem.icon />
+                                                    <Typography.Small>{currentItem.title}</Typography.Small>
                                                 </Link>
                                             </SidebarMenuButton>
                                         </SidebarMenuItem>
@@ -277,7 +286,7 @@ const AppSidebar: FC = () => {
                             <CollapsibleTrigger className="flex w-full items-center justify-between">
                                 <div className="flex gap-2 items-center">
                                     <LuSettings />
-                                    <span>Game Config</span>
+                                    <Typography.Small>Game Config</Typography.Small>
                                 </div>
                                 {configOpen ? (
                                     <LuChevronDown className="h-4 w-4" />
@@ -289,12 +298,12 @@ const AppSidebar: FC = () => {
                         <CollapsibleContent>
                             <SidebarGroupContent>
                                 <SidebarMenu>
-                                    {configItems.map((item) => (
-                                        <SidebarMenuItem key={item.title}>
+                                    {configItems.map((currentItem) => (
+                                        <SidebarMenuItem key={currentItem.title}>
                                             <SidebarMenuButton asChild>
-                                                <Link to={item.url}>
-                                                    <item.icon />
-                                                    <span>{item.title}</span>
+                                                <Link href={currentItem.url} underline="none">
+                                                    <currentItem.icon />
+                                                    <Typography.Small>{currentItem.title}</Typography.Small>
                                                 </Link>
                                             </SidebarMenuButton>
                                         </SidebarMenuItem>
@@ -310,7 +319,7 @@ const AppSidebar: FC = () => {
                             <CollapsibleTrigger className="flex w-full items-center justify-between">
                                 <div className="flex gap-2 items-center">
                                     <LuPlay />
-                                    <span>Animation Players</span>
+                                    <Typography.Small>Animation Players</Typography.Small>
                                 </div>
                                 {animationPlayerOpen ? (
                                     <LuChevronDown className="h-4 w-4" />
@@ -322,12 +331,12 @@ const AppSidebar: FC = () => {
                         <CollapsibleContent>
                             <SidebarGroupContent>
                                 <SidebarMenu>
-                                    {animationPlayerItems.map((item) => (
-                                        <SidebarMenuItem key={item.title}>
+                                    {animationPlayerItems.map((currentItem) => (
+                                        <SidebarMenuItem key={currentItem.title}>
                                             <SidebarMenuButton asChild>
-                                                <Link to={item.url}>
-                                                    <item.icon />
-                                                    <span>{item.title}</span>
+                                                <Link href={currentItem.url} underline="none">
+                                                    <currentItem.icon />
+                                                    <Typography.Small>{currentItem.title}</Typography.Small>
                                                 </Link>
                                             </SidebarMenuButton>
                                         </SidebarMenuItem>
@@ -343,7 +352,7 @@ const AppSidebar: FC = () => {
                             <CollapsibleTrigger className="flex w-full items-center justify-between">
                                 <div className="flex gap-2 items-center">
                                     <LuGithub />
-                                    <span>GitHub</span>
+                                    <Typography.Small>GitHub</Typography.Small>
                                 </div>
                                 {gitHubOpen ? (
                                     <LuChevronDown className="h-4 w-4" />
@@ -355,20 +364,13 @@ const AppSidebar: FC = () => {
                         <CollapsibleContent>
                             <SidebarGroupContent>
                                 <SidebarMenu>
-                                    {gitHubItems.map((item) => (
-                                        <SidebarMenuItem key={item.title}>
+                                    {gitHubItems.map((currentItem) => (
+                                        <SidebarMenuItem key={currentItem.title}>
                                             <SidebarMenuButton asChild>
-                                                {item.url.startsWith("http") ? (
-                                                    <a href={item.url} target="_blank">
-                                                        <item.icon />
-                                                        <span>{item.title}</span>
-                                                    </a>
-                                                ) : (
-                                                    <Link to={item.url}>
-                                                        <item.icon />
-                                                        <span>{item.title}</span>
-                                                    </Link>
-                                                )}
+                                                <Link href={currentItem.url} underline="none" showExternalIcon={false}>
+                                                    <currentItem.icon />
+                                                    <Typography.Small>{currentItem.title}</Typography.Small>
+                                                </Link>
                                             </SidebarMenuButton>
                                         </SidebarMenuItem>
                                     ))}
@@ -379,11 +381,18 @@ const AppSidebar: FC = () => {
                 </Collapsible>
             </SidebarContent>
             <SidebarFooter>
-                {open && (
-                    <div className="flex items-center justify-center gap-2 text-xs font-mono overflow-x-hidden text-nowrap">
-                        <span>App version: v{pkg.version}</span>
-                    </div>
-                )}
+                <div className={`flex items-center gap-3 ${open ? "justify-between px-4" : "justify-center"}`}>
+                    {open && (
+                        <div className="flex items-center justify-center gap-2 text-xs font-mono overflow-x-hidden text-nowrap">
+                            <Typography.Small>v{pkg.version}</Typography.Small>
+                        </div>
+                    )}
+                    <Button asChild size="icon" variant="outline">
+                        <Link href="/settings" underline="none" showExternalIcon={false}>
+                            <LuSettings />
+                        </Link>
+                    </Button>
+                </div>
             </SidebarFooter>
         </Sidebar>
     )

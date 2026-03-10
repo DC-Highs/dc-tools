@@ -1,34 +1,36 @@
 import { Routes, Route } from "react-router-dom"
+import type { FC } from "react"
 
-import DragonSpineAnimationUrlParserPage from "./pages/url-tools/dragon-spine-animation-url-parser"
-import DragonFlashAnimationUrlParserPage from "./pages/url-tools/dragon-flash-animation-url-parser"
-import DragonThumbnailUrlParserPage from "./pages/url-tools/dragon-thumbnail-url-parser"
-import DragonSpriteUrlParserPage from "./pages/url-tools/dragon-sprite-url-parser"
-import DragonSpineAnimationPage from "./pages/assets/dragon-spine-animation"
-import DragonFlashAnimationPage from "./pages/assets/dragon-flash-animation"
-import DragonSpineAnimationPlayerPage from "./pages/animation-players/spine"
-import FindAllDragonFilesPage from "./pages/assets/find-all-dragon-files"
-import LocalizationFetcherPage from "./pages/config/localization-fetcher"
-import DecorationThumbnailPage from "./pages/assets/decoration-thumbnail"
-import BuildingThumbnailPage from "./pages/assets/building-thumbnail"
-import HabitatThumbnailPage from "./pages/assets/habitat-thumbnail"
-import DecorationSpritePage from "./pages/assets/decoration-sprite"
-import DragonThumbnailPage from "./pages/assets/dragon-thumbnail"
-import BuildingSpritePage from "./pages/assets/building-sprite"
-import ConfigFetcherPage from "./pages/config/config-fetcher"
-import IslandPackagePage from "./pages/assets/island-package"
-import HabitatSpritePage from "./pages/assets/habitat-sprite"
-import AppSidebar from "./components/layout/app/app-sidebar"
-import DragonSpritePage from "./pages/assets/dragon-sprite"
-import ChestSpritePage from "./pages/assets/chest-sprite"
-import { SidebarTrigger } from "./components/ui/sidebar"
-import SoundMusicPage from "./pages/assets/sound-music"
-import { Toaster } from "./components/ui/sonner"
-import ReleasesPage from "./pages/releases"
-import HomePage from "./pages/home"
-import Providers from "./providers"
+import DragonSpineAnimationUrlParserPage from "@/pages/url-tools/dragon-spine-animation-url-parser"
+import DragonFlashAnimationUrlParserPage from "@/pages/url-tools/dragon-flash-animation-url-parser"
+import DragonThumbnailUrlParserPage from "@/pages/url-tools/dragon-thumbnail-url-parser"
+import DragonSpriteUrlParserPage from "@/pages/url-tools/dragon-sprite-url-parser"
+import DragonSpineAnimationPage from "@/pages/assets/dragon-spine-animation"
+import DragonFlashAnimationPage from "@/pages/assets/dragon-flash-animation"
+import DragonSpineAnimationPlayerPage from "@/pages/animation-players/spine"
+import FindAllDragonFilesPage from "@/pages/assets/find-all-dragon-files"
+import LocalizationFetcherPage from "@/pages/config/localization-fetcher"
+import DecorationThumbnailPage from "@/pages/assets/decoration-thumbnail"
+import BuildingThumbnailPage from "@/pages/assets/building-thumbnail"
+import HabitatThumbnailPage from "@/pages/assets/habitat-thumbnail"
+import DecorationSpritePage from "@/pages/assets/decoration-sprite"
+import DragonThumbnailPage from "@/pages/assets/dragon-thumbnail"
+import BuildingSpritePage from "@/pages/assets/building-sprite"
+import ConfigFetcherPage from "@/pages/config/config-fetcher"
+import IslandPackagePage from "@/pages/assets/island-package"
+import HabitatSpritePage from "@/pages/assets/habitat-sprite"
+import AppSidebar from "@/components/layout/app/app-sidebar"
+import DragonSpritePage from "@/pages/assets/dragon-sprite"
+import ChestSpritePage from "@/pages/assets/chest-sprite"
+import { SidebarTrigger } from "@/components/ui/sidebar"
+import SoundMusicPage from "@/pages/assets/sound-music"
+import { Toaster } from "@/components/ui/sonner"
+import SettingsPage from "@/pages/settings/settings.page"
+import ReleasesPage from "@/pages/releases/releases.page"
+import HomePage from "@/pages/home/home.page"
+import Providers from "@/providers"
 
-function App() {
+const App: FC = () => {
     return (
         <Providers>
             <AppSidebar />
@@ -73,6 +75,7 @@ function App() {
                         <Route path="/config/config-fetcher" element={<ConfigFetcherPage />} />
                         <Route path="/config/localization-fetcher" element={<LocalizationFetcherPage />} />
                         <Route path="/animation-players/spine" element={<DragonSpineAnimationPlayerPage />} />
+                        <Route path="/settings" element={<SettingsPage />} />
                     </Routes>
                 </div>
             </main>
@@ -82,3 +85,4 @@ function App() {
 }
 
 export default App
+

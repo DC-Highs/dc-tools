@@ -1,10 +1,12 @@
 import { ChestSpriteQuality, StaticFileUrlPlatformPrefix } from "@dchighs/dc-core"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Controller, useForm } from "react-hook-form"
-import { LuCopy, LuDownload } from "react-icons/lu"
 import dcAssets from "@dchighs/dc-assets"
 import { useState, type FC } from "react"
 import { toast } from "sonner"
+import { useMagicDownload } from "@/hooks/use-magic-download"
+
+import { DownloadFormActions } from "@/components/composition/download-form-actions"
 
 import {
     Select,
@@ -25,18 +27,16 @@ import { Checkbox } from "../../components/ui/checkbox"
 import { Typography } from "@/components/ui/typography"
 import { emptyKey } from "@/helpers/constants.helper"
 import { Separator } from "@/components/ui/separator"
-import { Spinner } from "@/components/ui/spinner"
-import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
 const ChestSpritePage: FC = () => {
     const [isDownloading, setIsDownloading] = useState(false)
-    const [useAlternativeUrl, setUseAlternativeUrl] = useState(false)
+    const { isMagicDownloading, handleMagicDownload } = useMagicDownload()
 
     const form = useForm({
         resolver: zodResolver(chestSpriteDownloaderFormSchema),
         defaultValues: {
-            imageName: "149_chest_minibreedingragnarok_b",
+            imageName: "1001_chest_bronze_c",
             imageQuality: emptyKey,
             platformPrefix: StaticFileUrlPlatformPrefix.iOS,
         },
@@ -45,14 +45,11 @@ const ChestSpritePage: FC = () => {
 
     const currentData = form.watch()
     const currentDownloader = dcAssets.chests.sprite(currentData as any)
-    const downloadUrl = (useAlternativeUrl ? currentDownloader.basicUrl : currentDownloader.url).replace(emptyKey, "")
+    const downloadUrl = currentDownloader.url
 
     const onSubmit = async (data: ChestSpriteDownloaderFormValues) => {
         const currentDownloader = dcAssets.chests.sprite(data as any)
-        const downloadUrl = (useAlternativeUrl ? currentDownloader.basicUrl : currentDownloader.url).replace(
-            emptyKey,
-            "",
-        )
+        const downloadUrl = currentDownloader.url
 
         setIsDownloading(true)
 
@@ -128,7 +125,7 @@ const ChestSpritePage: FC = () => {
                                         <Input
                                             {...field}
                                             aria-invalid={fieldState.invalid}
-                                            placeholder="e.g. 149_chest_minibreedingragnarok_b"
+                                            placeholder="e.g. 1001_chest_bronze_c"
                                         />
                                         {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                                     </Field>
@@ -164,33 +161,13 @@ const ChestSpritePage: FC = () => {
                                     </Field>
                                 )}
                             />
-                            <Field>
-                                <div className="flex items-center gap-3">
-                                    <Checkbox
-                                        checked={useAlternativeUrl}
-                                        onCheckedChange={(checked) => setUseAlternativeUrl(!!checked)}
-                                    />
-                                    <FieldLabel>Use Alternative URL</FieldLabel>
-                                </div>
-                            </Field>
                         </FieldGroup>
-                        <div className="mt-6 space-x-2">
-                            <Button variant="secondary" type="button" onClick={handleCopyUrl}>
-                                <LuCopy />
-                                Copy file URL
-                            </Button>
-                            <Button disabled={isDownloading} type="submit">
-                                {isDownloading ? (
-                                    <>
-                                        <Spinner /> Downloading...
-                                    </>
-                                ) : (
-                                    <>
-                                        <LuDownload /> Download and save
-                                    </>
-                                )}
-                            </Button>
-                        </div>
+                        <DownloadFormActions
+                            isDownloading={isDownloading}
+                            onCopyUrl={handleCopyUrl}
+                            onMagicDownload={() => handleMagicDownload(downloadUrl)}
+                            isMagicDownloading={isMagicDownloading}
+                        />
                     </form>
                 </CardContent>
             </Card>

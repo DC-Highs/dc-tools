@@ -1,10 +1,12 @@
 import { DragonPhase, DragonSpriteQuality, StaticFileUrlPlatformPrefix } from "@dchighs/dc-core"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Controller, useForm } from "react-hook-form"
-import { LuCopy, LuDownload } from "react-icons/lu"
 import dcAssets from "@dchighs/dc-assets"
 import { useState, type FC } from "react"
 import { toast } from "sonner"
+import { useMagicDownload } from "@/hooks/use-magic-download"
+
+import { DownloadFormActions } from "@/components/composition/download-form-actions"
 
 import {
     Select,
@@ -24,19 +26,19 @@ import { Field, FieldGroup, FieldLabel, FieldError } from "@/components/ui/field
 import { Typography } from "@/components/ui/typography"
 import { emptyKey } from "@/helpers/constants.helper"
 import { Separator } from "@/components/ui/separator"
-import { Spinner } from "@/components/ui/spinner"
-import { Button } from "@/components/ui/button"
+
 import { Input } from "@/components/ui/input"
 
 const DragonSpritePage: FC = () => {
     const [isDownloading, setIsDownloading] = useState(false)
+    const { isMagicDownloading, handleMagicDownload } = useMagicDownload()
 
     const form = useForm({
         resolver: zodResolver(dragonSpriteDownloaderFormSchema),
         defaultValues: {
             imageName: "1000_dragon_nature",
             imageQuality: emptyKey,
-            phase: DragonPhase.Baby.toString(),
+            phase: DragonPhase.Adult.toString(),
             platformPrefix: StaticFileUrlPlatformPrefix.iOS,
         },
         mode: "onChange",
@@ -44,11 +46,11 @@ const DragonSpritePage: FC = () => {
 
     const currentData = form.watch()
     const currentDownloader = dcAssets.dragons.sprite(currentData as any)
-    const downloadUrl = currentDownloader.url.replace(emptyKey, "")
+    const downloadUrl = currentDownloader.url
 
     const onSubmit = async (data: DragonSpriteDownloaderFormValues) => {
         const currentDownloader = dcAssets.dragons.sprite(data as any)
-        const downloadUrl = currentDownloader.url.replace(emptyKey, "")
+        const downloadUrl = currentDownloader.url
 
         setIsDownloading(true)
 
@@ -136,15 +138,15 @@ const DragonSpritePage: FC = () => {
                                 render={({ field, fieldState }) => (
                                     <Field data-invalid={fieldState.invalid}>
                                         <FieldLabel>Dragon Phase</FieldLabel>
-                                        <Select onValueChange={field.onChange} value={field.value}>
+                                        <Select onValueChange={field.onChange} value={field.value as string}>
                                             <SelectTrigger className="w-full">
                                                 <SelectValue placeholder="Select a dragon phase" />
                                             </SelectTrigger>
                                             <SelectContent>
                                                 <SelectGroup>
-                                                    <SelectLabel>Phases</SelectLabel>
+                                                    <SelectLabel>Dragon phases</SelectLabel>
                                                     {Object.entries(DragonPhase)
-                                                        .filter(([key]) => isNaN(Number(key)))
+                                                        .filter(([name]) => name !== "Default")
                                                         .map(([name, phase]) => (
                                                             <SelectItem
                                                                 key={`phase-${phase.toString()}`}
@@ -206,23 +208,12 @@ const DragonSpritePage: FC = () => {
                                 )}
                             />
                         </FieldGroup>
-                        <div className="mt-6 space-x-2">
-                            <Button variant="secondary" type="button" onClick={handleCopyUrl}>
-                                <LuCopy />
-                                Copy file URL
-                            </Button>
-                            <Button disabled={isDownloading} type="submit">
-                                {isDownloading ? (
-                                    <>
-                                        <Spinner /> Downloading...
-                                    </>
-                                ) : (
-                                    <>
-                                        <LuDownload /> Download and save
-                                    </>
-                                )}
-                            </Button>
-                        </div>
+                        <DownloadFormActions
+                            isDownloading={isDownloading}
+                            onCopyUrl={handleCopyUrl}
+                            onMagicDownload={() => handleMagicDownload(downloadUrl)}
+                            isMagicDownloading={isMagicDownloading}
+                        />
                     </form>
                 </CardContent>
             </Card>

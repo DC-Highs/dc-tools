@@ -1,10 +1,10 @@
 import { StaticFileUrlPlatformPrefix } from "@dchighs/dc-core"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Controller, useForm } from "react-hook-form"
-import { LuCopy, LuDownload } from "react-icons/lu"
 import dcAssets from "@dchighs/dc-assets"
 import { useState, type FC } from "react"
 import { toast } from "sonner"
+import { useMagicDownload } from "@/hooks/use-magic-download"
 
 import {
     buildingThumbnailDownloaderFormSchema,
@@ -20,20 +20,20 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { DownloadFormActions } from "@/components/composition/download-form-actions"
 import { Field, FieldGroup, FieldLabel, FieldError } from "@/components/ui/field"
 import { Typography } from "@/components/ui/typography"
 import { Separator } from "@/components/ui/separator"
-import { Spinner } from "@/components/ui/spinner"
-import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
 const BuildingThumbnailPage: FC = () => {
     const [isDownloading, setIsDownloading] = useState(false)
+    const { isMagicDownloading, handleMagicDownload } = useMagicDownload()
 
     const form = useForm({
         resolver: zodResolver(buildingThumbnailDownloaderFormSchema),
         defaultValues: {
-            imageName: "10552_hatchery6reskinart_building",
+            imageName: "1_building_habitat_earth_01",
             platformPrefix: StaticFileUrlPlatformPrefix.iOS,
         },
         mode: "onChange",
@@ -121,30 +121,19 @@ const BuildingThumbnailPage: FC = () => {
                                         <Input
                                             {...field}
                                             aria-invalid={fieldState.invalid}
-                                            placeholder="e.g. 1000_building_nature"
+                                            placeholder="e.g. 1_building_habitat_earth_01"
                                         />
                                         {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                                     </Field>
                                 )}
                             />
                         </FieldGroup>
-                        <div className="mt-6 space-x-2">
-                            <Button variant="secondary" type="button" onClick={handleCopyUrl}>
-                                <LuCopy />
-                                Copy file URL
-                            </Button>
-                            <Button disabled={isDownloading} type="submit">
-                                {isDownloading ? (
-                                    <>
-                                        <Spinner /> Downloading...
-                                    </>
-                                ) : (
-                                    <>
-                                        <LuDownload /> Download and save
-                                    </>
-                                )}
-                            </Button>
-                        </div>
+                        <DownloadFormActions
+                            isDownloading={isDownloading}
+                            onCopyUrl={handleCopyUrl}
+                            onMagicDownload={() => handleMagicDownload(downloadUrl)}
+                            isMagicDownloading={isMagicDownloading}
+                        />
                     </form>
                 </CardContent>
             </Card>

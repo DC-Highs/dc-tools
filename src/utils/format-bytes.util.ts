@@ -1,7 +1,8 @@
-export function formatBytes(bytes: number): string {
+export const formatBytes = (bytes: number, decimalPlaces = 2) => {
     if (bytes === 0) return "0 Bytes"
-    const k = 1024
-    const sizes = ["Bytes", "KB", "MB", "GB"]
-    const i = Math.floor(Math.log(bytes) / Math.log(k))
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i]
+    const kilo = 1024
+    const sizes = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"]
+    const index = Math.floor(Math.log(bytes) / Math.log(kilo))
+
+    return parseFloat((bytes / Math.pow(kilo, index)).toFixed(decimalPlaces)) + " " + sizes[index]
 }

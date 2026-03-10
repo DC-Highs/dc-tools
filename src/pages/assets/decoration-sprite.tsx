@@ -1,11 +1,12 @@
 import { BuildingSpriteQuality, StaticFileUrlPlatformPrefix } from "@dchighs/dc-core"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Controller, useForm } from "react-hook-form"
-import { LuCopy, LuDownload } from "react-icons/lu"
 import dcAssets from "@dchighs/dc-assets"
 import { useState, type FC } from "react"
 import { toast } from "sonner"
 
+import { useMagicDownload } from "@/hooks/use-magic-download"
+import { DownloadFormActions } from "@/components/composition/download-form-actions"
 import {
     decorationSpriteDownloaderFormSchema,
     type DecorationSpriteDownloaderFormValues,
@@ -24,17 +25,16 @@ import { Field, FieldGroup, FieldLabel, FieldError } from "@/components/ui/field
 import { Typography } from "@/components/ui/typography"
 import { emptyKey } from "@/helpers/constants.helper"
 import { Separator } from "@/components/ui/separator"
-import { Spinner } from "@/components/ui/spinner"
-import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
 const DecorationSpritePage: FC = () => {
     const [isDownloading, setIsDownloading] = useState(false)
+    const { isMagicDownloading, handleMagicDownload } = useMagicDownload()
 
     const form = useForm({
         resolver: zodResolver(decorationSpriteDownloaderFormSchema),
         defaultValues: {
-            imageName: "11643_deco_spookyscarecrow",
+            imageName: "1_decoration_fountain_youth_01",
             imageQuality: emptyKey,
             platformPrefix: StaticFileUrlPlatformPrefix.iOS,
         },
@@ -43,11 +43,11 @@ const DecorationSpritePage: FC = () => {
 
     const currentData = form.watch()
     const currentDownloader = dcAssets.decorations.sprite(currentData as any)
-    const downloadUrl = currentDownloader.url.replace(emptyKey, "")
+    const downloadUrl = currentDownloader.url
 
     const onSubmit = async (data: DecorationSpriteDownloaderFormValues) => {
         const currentDownloader = dcAssets.decorations.sprite(data as any)
-        const downloadUrl = currentDownloader.url.replace(emptyKey, "")
+        const downloadUrl = currentDownloader.url
 
         setIsDownloading(true)
 
@@ -123,7 +123,7 @@ const DecorationSpritePage: FC = () => {
                                         <Input
                                             {...field}
                                             aria-invalid={fieldState.invalid}
-                                            placeholder="e.g. 11643_deco_spookyscarecrow"
+                                            placeholder="e.g. 1_decoration_fountain_youth_01"
                                         />
                                         {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                                     </Field>
@@ -160,23 +160,12 @@ const DecorationSpritePage: FC = () => {
                                 )}
                             />
                         </FieldGroup>
-                        <div className="mt-6 space-x-2">
-                            <Button variant="secondary" type="button" onClick={handleCopyUrl}>
-                                <LuCopy />
-                                Copy file URL
-                            </Button>
-                            <Button disabled={isDownloading} type="submit">
-                                {isDownloading ? (
-                                    <>
-                                        <Spinner /> Downloading...
-                                    </>
-                                ) : (
-                                    <>
-                                        <LuDownload /> Download and save
-                                    </>
-                                )}
-                            </Button>
-                        </div>
+                        <DownloadFormActions
+                            isDownloading={isDownloading}
+                            onCopyUrl={handleCopyUrl}
+                            onMagicDownload={() => handleMagicDownload(downloadUrl)}
+                            isMagicDownloading={isMagicDownloading}
+                        />
                     </form>
                 </CardContent>
             </Card>

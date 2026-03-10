@@ -89,22 +89,26 @@ const DragonFlashAnimationPage: FC = () => {
                                 control={form.control}
                                 render={({ field, fieldState }) => (
                                     <Field data-invalid={fieldState.invalid}>
-                                        <FieldLabel>Platform Prefix</FieldLabel>
+                                        <FieldLabel>
+                                            <Typography.Small>Platform Prefix</Typography.Small>
+                                        </FieldLabel>
                                         <Select onValueChange={field.onChange} value={field.value}>
                                             <SelectTrigger className="w-full">
                                                 <SelectValue placeholder="Select a platform prefix" />
                                             </SelectTrigger>
                                             <SelectContent>
                                                 <SelectGroup>
-                                                    <SelectLabel>Platform prefixes</SelectLabel>
+                                                    <SelectLabel>
+                                                        <Typography.Small>Platform prefixes</Typography.Small>
+                                                    </SelectLabel>
                                                     {Object.entries(StaticFileUrlPlatformPrefix)
-                                                        .filter(([name]) => name !== "Default")
-                                                        .map(([name, prefix]) => (
+                                                        .filter(([currentName]) => currentName !== "Default")
+                                                        .map(([currentName, currentPrefix]) => (
                                                             <SelectItem
-                                                                key={`prefix-${prefix.toString()}`}
-                                                                value={prefix.toString()}
+                                                                key={`prefix-${currentPrefix.toString()}`}
+                                                                value={currentPrefix.toString()}
                                                             >
-                                                                {name}
+                                                                <Typography.Small>{currentName}</Typography.Small>
                                                             </SelectItem>
                                                         ))}
                                                 </SelectGroup>
@@ -119,7 +123,9 @@ const DragonFlashAnimationPage: FC = () => {
                                 control={form.control}
                                 render={({ field, fieldState }) => (
                                     <Field data-invalid={fieldState.invalid}>
-                                        <FieldLabel>Image Name</FieldLabel>
+                                        <FieldLabel>
+                                            <Typography.Small>Image Name</Typography.Small>
+                                        </FieldLabel>
                                         <Input
                                             {...field}
                                             aria-invalid={fieldState.invalid}
@@ -134,22 +140,26 @@ const DragonFlashAnimationPage: FC = () => {
                                 control={form.control}
                                 render={({ field, fieldState }) => (
                                     <Field data-invalid={fieldState.invalid}>
-                                        <FieldLabel>Dragon Phase</FieldLabel>
+                                        <FieldLabel>
+                                            <Typography.Small>Dragon Phase</Typography.Small>
+                                        </FieldLabel>
                                         <Select onValueChange={field.onChange} value={field.value}>
                                             <SelectTrigger className="w-full">
                                                 <SelectValue placeholder="Select a dragon phase" />
                                             </SelectTrigger>
                                             <SelectContent>
                                                 <SelectGroup>
-                                                    <SelectLabel>Phases</SelectLabel>
+                                                    <SelectLabel>
+                                                        <Typography.Small>Phases</Typography.Small>
+                                                    </SelectLabel>
                                                     {Object.entries(DragonPhase)
-                                                        .filter(([key]) => isNaN(Number(key)))
-                                                        .map(([name, phase]) => (
+                                                        .filter(([currentKey]) => isNaN(Number(currentKey)))
+                                                        .map(([currentName, currentPhase]) => (
                                                             <SelectItem
-                                                                key={`phase-${phase.toString()}`}
-                                                                value={phase.toString()}
+                                                                key={`phase-${currentPhase.toString()}`}
+                                                                value={currentPhase.toString()}
                                                             >
-                                                                {name}
+                                                                <Typography.Small>{currentName}</Typography.Small>
                                                             </SelectItem>
                                                         ))}
                                                 </SelectGroup>
@@ -164,7 +174,9 @@ const DragonFlashAnimationPage: FC = () => {
                                 control={form.control}
                                 render={({ field, fieldState }) => (
                                     <Field data-invalid={fieldState.invalid}>
-                                        <FieldLabel>Skin Key</FieldLabel>
+                                        <FieldLabel>
+                                            <Typography.Small>Skin Key</Typography.Small>
+                                        </FieldLabel>
                                         <Input
                                             {...(field as any)}
                                             aria-invalid={fieldState.invalid}
@@ -178,16 +190,16 @@ const DragonFlashAnimationPage: FC = () => {
                         <div className="mt-6 space-x-2">
                             <Button variant="secondary" type="button" onClick={handleCopyUrl}>
                                 <LuCopy />
-                                Copy file URL
+                                <Typography.Small>Copy file URL</Typography.Small>
                             </Button>
                             <Button disabled={isDownloading} type="submit">
                                 {isDownloading ? (
                                     <>
-                                        <Spinner /> Downloading...
+                                        <Spinner /> <Typography.Small>Downloading...</Typography.Small>
                                     </>
                                 ) : (
                                     <>
-                                        <LuDownload /> Download and save
+                                        <LuDownload /> <Typography.Small>Download and save</Typography.Small>
                                     </>
                                 )}
                             </Button>
@@ -197,7 +209,9 @@ const DragonFlashAnimationPage: FC = () => {
             </Card>
             <Card>
                 <CardHeader>
-                    <CardTitle>Preview</CardTitle>
+                    <CardTitle>
+                        <Typography.H3>Preview</Typography.H3>
+                    </CardTitle>
                 </CardHeader>
                 <CardContent>
                     <div className="flex flex-col items-center gap-4 p-6">
@@ -206,7 +220,10 @@ const DragonFlashAnimationPage: FC = () => {
                 </CardContent>
                 <Separator />
                 <CardFooter className="font-mono">
-                    <b>File URL:</b> <Typography.Code>{downloadUrl}</Typography.Code>
+                    <Typography.P>
+                        <Typography.Large className="inline">File URL:</Typography.Large>{" "}
+                        <Typography.Code>{downloadUrl}</Typography.Code>
+                    </Typography.P>
                 </CardFooter>
             </Card>
         </div>
