@@ -52,4 +52,23 @@ contextBridge.exposeInMainWorld("electronAPI", {
     zip: {
         list: (url: string) => ipcRenderer.invoke("zip:list", url),
     },
+    clientState: {
+        getPath: () => ipcRenderer.invoke("client-state:get-path"),
+        getPreferences: () => ipcRenderer.invoke("client-state:get-preferences"),
+        getUserId: () => ipcRenderer.invoke("client-state:get-user-id"),
+        setMusicDisabled: (disabled: boolean) => ipcRenderer.invoke("client-state:set-music-disabled", disabled),
+        setSoundDisabled: (disabled: boolean) => ipcRenderer.invoke("client-state:set-sound-disabled", disabled),
+        setAllFarmCrops: (cropId: number) => ipcRenderer.invoke("client-state:set-all-farm-crops", cropId),
+        deleteAllFarmCrops: () => ipcRenderer.invoke("client-state:delete-all-farm-crops"),
+        getTutorials: () => ipcRenderer.invoke("client-state:get-tutorials"),
+        setTutorialsShown: (shown: boolean) => ipcRenderer.invoke("client-state:set-tutorials-shown", shown),
+        getUserDefaultValue: (key: string) => ipcRenderer.invoke("client-state:get-user-default-value", key),
+        setUserDefaultValue: (key: string, value: any) =>
+            ipcRenderer.invoke("client-state:set-user-default-value", key, value),
+        listAssets: (types?: any[]) => ipcRenderer.invoke("client-state:list-assets", types),
+        setAsset: (assetName: string, filePath: string) =>
+            ipcRenderer.invoke("client-state:set-asset", assetName, filePath),
+        deleteAsset: (assetName: string) => ipcRenderer.invoke("client-state:delete-asset", assetName),
+        clearAssets: () => ipcRenderer.invoke("client-state:clear-assets"),
+    },
 })

@@ -1,13 +1,11 @@
 import { LuFile, LuFolder, LuRefreshCw, LuPackage, LuSearch } from "react-icons/lu"
 import { useState, useEffect, useMemo, type FC } from "react"
 
-import { Badge } from "@/components/ui/badge"
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Typography } from "@/components/ui/typography"
 import { formatBytes } from "@/utils/format-bytes.util"
 import { Spinner } from "@/components/ui/spinner"
 import { Input } from "@/components/ui/input"
+import { Badge } from "@/components/ui/badge"
 
 interface ZipEntry {
     name: string

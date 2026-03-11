@@ -11,6 +11,7 @@ import { registerSelectImageHandler } from "./handlers/select-image.handler"
 import { registerStoreHandlers } from "./handlers/store.handler"
 import { registerCacheHandler } from "./handlers/cache.handler"
 import { registerZipHandler } from "./handlers/zip.handler"
+import { registerClientStateHandler } from "./handlers/client-state.handler"
 import "./lib/static-server"
 
 function registerIpcHandlers() {
@@ -23,6 +24,7 @@ function registerIpcHandlers() {
     registerStoreHandlers()
     registerCacheHandler()
     registerZipHandler()
+    registerClientStateHandler()
 }
 
 function createWindow() {

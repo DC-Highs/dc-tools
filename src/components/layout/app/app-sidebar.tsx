@@ -11,6 +11,7 @@ import {
     LuRegex,
     LuBox,
     LuPlay,
+    LuDatabase,
 } from "react-icons/lu"
 import { MdAnimation, MdOutlineTranslate } from "react-icons/md"
 import { RiGitRepositoryLine } from "react-icons/ri"
@@ -161,6 +162,24 @@ const animationPlayerItems: SidebarItem[] = [
     },
 ]
 
+const clientStateItems: SidebarItem[] = [
+    {
+        title: "Preferences",
+        url: "/client-state/preferences",
+        icon: LuSettings,
+    },
+    {
+        title: "UserDefault (Raw)",
+        url: "/client-state/user-default",
+        icon: LuDatabase,
+    },
+    {
+        title: "Assets Manager",
+        url: "/client-state/assets",
+        icon: LuBox,
+    },
+]
+
 const gitHubItems: SidebarItem[] = [
     {
         title: "Repository",
@@ -188,6 +207,7 @@ const AppSidebar: FC = () => {
     const [assetsOpen, setAssetsOpen] = useState(true)
     const [configOpen, setConfigOpen] = useState(false)
     const [urlToolsOpen, setUrlToolsOpen] = useState(false)
+    const [clientStateOpen, setClientStateOpen] = useState(false)
     const [gitHubOpen, setGitHubOpen] = useState(true)
     const [animationPlayerOpen, setAnimationPlayerOpen] = useState(false)
     const { open } = useSidebar()
@@ -336,6 +356,39 @@ const AppSidebar: FC = () => {
                             <SidebarGroupContent>
                                 <SidebarMenu>
                                     {animationPlayerItems.map((currentItem) => (
+                                        <SidebarMenuItem key={currentItem.title}>
+                                            <SidebarMenuButton asChild>
+                                                <Link to={currentItem.url}>
+                                                    <currentItem.icon />
+                                                    <Typography.Small>{currentItem.title}</Typography.Small>
+                                                </Link>
+                                            </SidebarMenuButton>
+                                        </SidebarMenuItem>
+                                    ))}
+                                </SidebarMenu>
+                            </SidebarGroupContent>
+                        </CollapsibleContent>
+                    </SidebarGroup>
+                </Collapsible>
+                <Collapsible open={clientStateOpen} onOpenChange={setClientStateOpen}>
+                    <SidebarGroup>
+                        <SidebarGroupLabel asChild>
+                            <CollapsibleTrigger className="flex w-full items-center justify-between">
+                                <div className="flex gap-2 items-center">
+                                    <LuSettings />
+                                    <Typography.Small>Client State</Typography.Small>
+                                </div>
+                                {clientStateOpen ? (
+                                    <LuChevronDown className="h-4 w-4" />
+                                ) : (
+                                    <LuChevronUp className="h-4 w-4" />
+                                )}
+                            </CollapsibleTrigger>
+                        </SidebarGroupLabel>
+                        <CollapsibleContent>
+                            <SidebarGroupContent>
+                                <SidebarMenu>
+                                    {clientStateItems.map((currentItem) => (
                                         <SidebarMenuItem key={currentItem.title}>
                                             <SidebarMenuButton asChild>
                                                 <Link to={currentItem.url}>

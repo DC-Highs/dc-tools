@@ -16,12 +16,15 @@ import FindAllDragonFilesPage from "@/pages/assets/dragons/all/find-all-dragon-f
 import DragonThumbnailPage from "@/pages/assets/dragons/thumbnail/dragon-thumbnail.page"
 import DragonSpineAnimationPlayerPage from "@/pages/animation-players/spine/spine.page"
 import BuildingSpritePage from "@/pages/assets/buildings/sprite/building-sprite.page"
+import ClientPreferencesPage from "@/pages/client-state/preferences/preferences.page"
 import IslandPackagePage from "@/pages/assets/islands/package/island-package.page"
 import HabitatSpritePage from "@/pages/assets/habitats/sprite/habitat-sprite.page"
+import UserDefaultPage from "@/pages/client-state/user-default/user-default.page"
 import ConfigFetcherPage from "@/pages/config/config-fetcher/config-fetcher.page"
 import DragonSpritePage from "@/pages/assets/dragons/sprite/dragon-sprite.page"
 import ChestSpritePage from "@/pages/assets/chests/sprite/chest-sprite.page"
 import SoundMusicPage from "@/pages/assets/sounds/music/sound-music.page"
+import AssetsPage from "@/pages/client-state/assets/assets.page"
 import { ThemeToggle } from "@/components/common/theme-toggle"
 import AppSidebar from "@/components/layout/app/app-sidebar"
 import SettingsPage from "@/pages/settings/settings.page"
@@ -77,6 +80,9 @@ const App: FC = () => {
                         <Route path="/config/config-fetcher" element={<ConfigFetcherPage />} />
                         <Route path="/config/localization-fetcher" element={<LocalizationFetcherPage />} />
                         <Route path="/animation-players/spine" element={<DragonSpineAnimationPlayerPage />} />
+                        <Route path="/client-state/preferences" element={<ClientPreferencesPage />} />
+                        <Route path="/client-state/user-default" element={<UserDefaultPage />} />
+                        <Route path="/client-state/assets" element={<AssetsPage />} />
                         <Route path="/settings" element={<SettingsPage />} />
                     </Routes>
                 </div>

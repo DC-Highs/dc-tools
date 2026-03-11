@@ -37,6 +37,28 @@ interface ElectronAPI {
     zip: {
         list: (url: string) => Promise<Array<{ name: string; size: number; isDirectory: boolean }>>
     }
+    clientState: {
+        getPath: () => Promise<string | null>
+        getPreferences: () => Promise<{
+            userId: number | undefined
+            musicDisabled: boolean
+            soundDisabled: boolean
+            lastExecution: Date | undefined
+        } | null>
+        getUserId: () => Promise<number | undefined>
+        setMusicDisabled: (disabled: boolean) => Promise<boolean>
+        setSoundDisabled: (disabled: boolean) => Promise<boolean>
+        setAllFarmCrops: (cropId: number) => Promise<boolean>
+        deleteAllFarmCrops: () => Promise<boolean>
+        getTutorials: () => Promise<any[]>
+        setTutorialsShown: (shown: boolean) => Promise<boolean>
+        getUserDefaultValue: (key: string) => Promise<any>
+        setUserDefaultValue: (key: string, value: any) => Promise<boolean>
+        listAssets: (types?: any[]) => Promise<string[]>
+        setAsset: (assetName: string, filePath: string) => Promise<boolean>
+        deleteAsset: (assetName: string) => Promise<boolean>
+        clearAssets: () => Promise<boolean>
+    }
 }
 
 declare global {
