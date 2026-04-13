@@ -32,7 +32,7 @@
         "@dchighs/dc-assets": "^0.4.3",
         "@dchighs/dc-client-state": "^0.1.0",
         "@dchighs/dc-config": "^0.0.3",
-        "@dchighs/dc-core": "^0.3.0",
+        "@dchighs/dc-core": "^0.4.1",
         "@dchighs/dc-localization": "^0.0.6",
         "@fontsource-variable/outfit": "^5.2.8",
         "@hookform/resolvers": "^5.2.2",
