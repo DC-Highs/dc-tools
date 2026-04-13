@@ -59,7 +59,13 @@ Fetch game configuration data:
 
 ### Animation Players
 
-- **Spine Player**: View and preview Spine animations directly in the app
+- **Spine Player**: View and preview Spine animations directly in the app with advanced controls:
+    - Animation selection and playback
+    - Scale and position adjustment
+    - Speed control (0.1x - 3x)
+    - Background options (transparent, color, image)
+    - Take snapshots (PNG)
+    - Record animations (WebM, GIF)
 
 ### Settings
 
@@ -112,26 +118,26 @@ npm run lint:fix
 
 ```bash
 npm run test           # Run all tests
-npm run test:watch    # Watch mode
-npm run test:coverage # With coverage report
+npm run test:watch     # Watch mode
+npm run test:coverage  # With coverage report
 ```
 
 ## Project Structure
 
 ```
 dc-tools/
-├── electron/               # Electron main process
+├── electron/              # Electron main process
 │   ├── handlers/          # IPC handlers
-│   ├── lib/              # Utilities
-│   ├── main.ts           # Entry point
-│   └── preload.ts        # Context bridge
+│   ├── lib/               # Utilities
+│   ├── main.ts            # Entry point
+│   └── preload.ts         # Context bridge
 ├── src/                   # React frontend
-│   ├── components/       # UI components
-│   ├── pages/            # Route pages
-│   ├── hooks/            # Custom hooks
-│   ├── schemas/          # Zod schemas
-│   └── utils/            # Utilities
-└── vite.config.ts        # Vite configuration
+│   ├── components/        # UI components
+│   ├── pages/             # Route pages
+│   ├── hooks/             # Custom hooks
+│   ├── schemas/           # Zod schemas
+│   └── utils/             # Utilities
+└── vite.config.ts         # Vite configuration
 ```
 
 ## Contributing
