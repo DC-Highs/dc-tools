@@ -170,7 +170,9 @@ export const findDragonStaticFileUrls = async (
             if (response.status === 200) {
                 filteredStaticFileUrls.push(staticFileUrl)
             }
-        } catch (error) {}
+        } catch {
+            // Ignore URLs that cannot be reached
+        }
     }
 
     return filteredStaticFileUrls

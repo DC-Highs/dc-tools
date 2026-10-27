@@ -51,7 +51,9 @@ async function getDirSize(dirPath: string): Promise<number> {
             } else if (stats.isDirectory()) {
                 size += await getDirSize(filePath)
             }
-        } catch {}
+        } catch {
+            // Ignore entries that cannot be read
+        }
     }
 
     return size

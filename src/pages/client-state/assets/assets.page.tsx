@@ -3,8 +3,6 @@ import { useEffect, useMemo, useState } from "react"
 import type { FC } from "react"
 import { toast } from "sonner"
 
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import {
     Pagination,
     PaginationContent,
@@ -14,6 +12,8 @@ import {
     PaginationNext,
     PaginationPrevious,
 } from "@/components/ui/pagination"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Typography } from "@/components/ui/typography"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -43,10 +43,6 @@ const AssetsPage: FC = () => {
     const [loading, setLoading] = useState(true)
     const [page, setPage] = useState(1)
 
-    useEffect(() => {
-        loadData()
-    }, [])
-
     const loadData = async () => {
         setLoading(true)
         try {
@@ -58,6 +54,10 @@ const AssetsPage: FC = () => {
             setLoading(false)
         }
     }
+
+    useEffect(() => {
+        loadData()
+    }, [])
 
     const handleClearAssets = async () => {
         if (
@@ -185,7 +185,10 @@ const AssetsPage: FC = () => {
                                     ) : filteredAssets.length > 0 ? (
                                         pageAssets.map((asset) => (
                                             <TableRow key={asset} className="hover:bg-primary/5 transition-colors">
-                                                <TableCell className="font-mono text-[11px] truncate max-w-[400px]" title={asset}>
+                                                <TableCell
+                                                    className="font-mono text-[11px] truncate max-w-[400px]"
+                                                    title={asset}
+                                                >
                                                     {getFilename(asset)}
                                                 </TableCell>
                                                 <TableCell className="text-right">
@@ -272,7 +275,9 @@ const AssetsPage: FC = () => {
                                         <PaginationNext
                                             href="#"
                                             aria-disabled={currentPage === totalPages}
-                                            className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""}
+                                            className={
+                                                currentPage === totalPages ? "pointer-events-none opacity-50" : ""
+                                            }
                                             onClick={(event) => goToPage(event, currentPage + 1)}
                                         />
                                     </PaginationItem>

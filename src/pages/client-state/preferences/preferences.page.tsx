@@ -14,10 +14,6 @@ const ClientPreferencesPage: FC = () => {
     const [preferences, setPreferences] = useState<any>(null)
     const [loading, setLoading] = useState(true)
 
-    useEffect(() => {
-        loadData()
-    }, [])
-
     const loadData = async () => {
         setLoading(true)
         try {
@@ -29,6 +25,10 @@ const ClientPreferencesPage: FC = () => {
             setLoading(false)
         }
     }
+
+    useEffect(() => {
+        loadData()
+    }, [])
 
     const handleToggleMusic = async (checked: boolean) => {
         const success = await window.electronAPI.clientState.setMusicDisabled(checked)
