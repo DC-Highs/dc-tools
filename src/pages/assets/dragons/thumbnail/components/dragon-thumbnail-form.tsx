@@ -103,7 +103,7 @@ export const DragonThumbnailForm: FC<DragonThumbnailFormProps> = ({
                                             <SelectGroup>
                                                 <SelectLabel>Dragon phases</SelectLabel>
                                                 {Object.entries(DragonPhase)
-                                                    .filter(([name]) => name !== "Default")
+                                                    .filter(([name]) => isNaN(Number(name)))
                                                     .map(([name, phase]) => (
                                                         <SelectItem
                                                             key={`phase-${phase.toString()}`}
