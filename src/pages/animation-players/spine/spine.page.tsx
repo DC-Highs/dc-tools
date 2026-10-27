@@ -8,7 +8,7 @@ import {
     type RefObject,
     type SetStateAction,
 } from "react"
-import { LuUpload, LuPlay, LuPause, LuCamera, LuImage } from "react-icons/lu"
+import { LuUpload, LuPlay, LuPause, LuCamera, LuImage, LuRefreshCcw, LuTriangleAlert } from "react-icons/lu"
 import { PiRecordDuotone, PiRecordFill } from "react-icons/pi"
 import { toast } from "sonner"
 
@@ -350,6 +350,9 @@ const DragonSpineAnimationPlayerPage: FC = () => {
     const [recordAnimationResolution, setRecordAnimationResolution] = useState<Resolution>({ width: 1280, height: 720 })
     const [speed, setSpeed] = useState<number>(1)
     const [isPlaying, setIsPlaying] = useState<boolean>(false)
+    const [isLoadingPlayer, setIsLoadingPlayer] = useState<boolean>(false)
+    const [playerError, setPlayerError] = useState<string | null>(null)
+    const [reloadKey, setReloadKey] = useState<number>(0)
 
     const fileNameWithoutExtension = useMemo(() => {
         if (!convertedAnimation) return "file"
@@ -388,52 +391,76 @@ const DragonSpineAnimationPlayerPage: FC = () => {
         if (playerRef.current) return
         if (!convertedAnimation) return
 
-        const player = new window.spine.SpinePlayer(containerRef.current, {
-            skelUrl: convertedAnimation.skel,
-            atlasUrl: convertedAnimation.atlas,
-            alpha: true,
-            showControls: false,
-            preserveDrawingBuffer: true,
-            ...(background.color
-                ? {
-                      backgroundColor: background.color === "transparent" ? "#00000000" : background.color,
-                  }
-                : {
-                      backgroundImage: {
-                          url: background.url,
-                      },
-                  }),
-            viewport: {
-                x: 0,
-                y: 0,
-                width: recordAnimationResolution.width,
-                height: recordAnimationResolution.height,
-                padLeft: 0,
-                padRight: 0,
-                padTop: 0,
-                padBottom: 0,
-            },
-            success: (player: any) => {
-                const animations = player.skeleton.data.animations.map((animation: any) => animation.name)
+        const container = containerRef.current
 
-                setDragonAnimations(animations)
+        container.innerHTML = ""
+        setPlayerError(null)
+        setIsLoadingPlayer(true)
 
-                if (!currentDragonAnimation) {
-                    setCurrentDragonAnimation(animations[0])
-                }
+        const handleLoadError = (reason?: unknown) => {
+            console.error(reason)
+            setIsLoadingPlayer(false)
+            setIsPlaying(false)
+            setPlayerError(reason instanceof Error ? reason.message : typeof reason === "string" ? reason : null)
+            container.innerHTML = ""
+            toast.error("Failed to load animation!")
+        }
 
-                player.setAnimation(currentDragonAnimation ?? animations[0], true)
+        let player: any
 
-                player.autoFit = false
-                player.autoResizeCanvas = false
-                player.autoResizeViewport = false
+        try {
+            player = new window.spine.SpinePlayer(container, {
+                skelUrl: convertedAnimation.skel,
+                atlasUrl: convertedAnimation.atlas,
+                alpha: true,
+                showControls: false,
+                preserveDrawingBuffer: true,
+                ...(background.color
+                    ? {
+                          backgroundColor: background.color === "transparent" ? "#00000000" : background.color,
+                      }
+                    : {
+                          backgroundImage: {
+                              url: background.url,
+                          },
+                      }),
+                viewport: {
+                    x: 0,
+                    y: 0,
+                    width: recordAnimationResolution.width,
+                    height: recordAnimationResolution.height,
+                    padLeft: 0,
+                    padRight: 0,
+                    padTop: 0,
+                    padBottom: 0,
+                },
+                success: (player: any) => {
+                    const animations = player.skeleton.data.animations.map((animation: any) => animation.name)
 
-                Object.defineProperty(player.canvas, "clientWidth", { value: recordAnimationResolution.width })
-                Object.defineProperty(player.canvas, "clientHeight", { value: recordAnimationResolution.height })
+                    setDragonAnimations(animations)
 
-                setIsPlaying(true)
-            },
-        })
+                    if (!currentDragonAnimation) {
+                        setCurrentDragonAnimation(animations[0])
+                    }
+
+                    player.setAnimation(currentDragonAnimation ?? animations[0], true)
+
+                    player.autoFit = false
+                    player.autoResizeCanvas = false
+                    player.autoResizeViewport = false
+
+                    Object.defineProperty(player.canvas, "clientWidth", { value: recordAnimationResolution.width })
+                    Object.defineProperty(player.canvas, "clientHeight", { value: recordAnimationResolution.height })
+
+                    setIsLoadingPlayer(false)
+                    setIsPlaying(true)
+                },
+                error: (_: any, reason: string) => handleLoadError(reason),
+            })
+        } catch (error) {
+            handleLoadError(error)
+            return
+        }
 
         playerRef.current = player
 
@@ -445,7 +472,7 @@ const DragonSpineAnimationPlayerPage: FC = () => {
 
             playerRef.current = null
         }
-    }, [background, convertedAnimation, recordAnimationResolution])
+    }, [background, convertedAnimation, recordAnimationResolution, reloadKey])
 
     useEffect(() => {
         if (!playerRef.current || !playerRef.current.skeleton) return
@@ -501,6 +528,25 @@ const DragonSpineAnimationPlayerPage: FC = () => {
                             <CardTitle>Preview</CardTitle>
                         </CardHeader>
                         <CardContent>
+                            {isLoadingPlayer && (
+                                <div className="flex items-center justify-center gap-2 py-10 text-muted-foreground">
+                                    <Spinner /> Loading animation...
+                                </div>
+                            )}
+                            {playerError !== null && (
+                                <div className="flex flex-col items-center justify-center gap-3 py-10 text-center">
+                                    <LuTriangleAlert className="w-8 h-8 text-destructive" />
+                                    <Typography.P className="text-destructive">Failed to load animation.</Typography.P>
+                                    {playerError && (
+                                        <Typography.Small className="text-muted-foreground">
+                                            {playerError}
+                                        </Typography.Small>
+                                    )}
+                                    <Button variant="outline" onClick={() => setReloadKey((key) => key + 1)}>
+                                        <LuRefreshCcw /> Try again
+                                    </Button>
+                                </div>
+                            )}
                             <div ref={containerRef} />
                             <SpinePlayerControls
                                 playerRef={playerRef}
