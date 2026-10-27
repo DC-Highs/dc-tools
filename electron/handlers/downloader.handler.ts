@@ -62,7 +62,7 @@ export function registerDownloaderHandler() {
                 })
 
                 writeStream.on("error", (err) => {
-                    fs.unlink(filePath, () => { })
+                    fs.unlink(filePath, () => {})
                     event.sender.send("file:download-error", err.message)
                     reject(err)
                 })

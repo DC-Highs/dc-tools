@@ -1,7 +1,8 @@
 import { ipcMain } from "electron"
-import fs from "node:fs"
-import path from "node:path"
+
 import { tempDir } from "../lib/constants"
+import path from "node:path"
+import fs from "node:fs"
 
 export function registerCacheHandler() {
     ipcMain.handle("cache:get-size", async () => {

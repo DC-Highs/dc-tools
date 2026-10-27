@@ -3,15 +3,15 @@ import { app, BrowserWindow, Menu, protocol, shell } from "electron"
 import path from "node:path"
 
 import { registerAnimationConversorHandler } from "./handlers/animation-conversor.handler"
-import { registerBigjpgHandler } from "./handlers/bigjpg.handler"
 import { registerConfigFetcherHandler } from "./handlers/config-fetcher.handler"
-import { registerDownloaderHandler } from "./handlers/downloader.handler"
-import { registerHttpRequestHandler } from "./handlers/http-request.handler"
 import { registerSelectImageHandler } from "./handlers/select-image.handler"
+import { registerHttpRequestHandler } from "./handlers/http-request.handler"
+import { registerClientStateHandler } from "./handlers/client-state.handler"
+import { registerDownloaderHandler } from "./handlers/downloader.handler"
+import { registerBigjpgHandler } from "./handlers/bigjpg.handler"
 import { registerStoreHandlers } from "./handlers/store.handler"
 import { registerCacheHandler } from "./handlers/cache.handler"
 import { registerZipHandler } from "./handlers/zip.handler"
-import { registerClientStateHandler } from "./handlers/client-state.handler"
 import "./lib/static-server"
 
 function registerIpcHandlers() {
@@ -35,11 +35,7 @@ function createWindow() {
             contextIsolation: true,
             preload: path.join(__dirname, "preload.js"),
         },
-        icon: path.join(
-            app.getAppPath(),
-            process.env.NODE_ENV === "development" ? "public" : "dist",
-            "icon.png"
-        ),
+        icon: path.join(app.getAppPath(), process.env.NODE_ENV === "development" ? "public" : "dist", "icon.png"),
     })
 
     win.maximize()

@@ -1,5 +1,5 @@
-import { ipcMain } from "electron"
 import { ClientState, AssetType, Preferences } from "@dchighs/dc-client-state"
+import { ipcMain } from "electron"
 
 export function registerClientStateHandler() {
     const client = new ClientState()

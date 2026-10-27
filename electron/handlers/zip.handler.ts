@@ -17,7 +17,7 @@ export function registerZipHandler() {
                     try {
                         const buffer = Buffer.concat(chunks)
                         const zip = new AdmZip(buffer)
-                        
+
                         const entries = zip.getEntries().map((entry) => ({
                             name: entry.entryName,
                             size: entry.header.size,
