@@ -1,6 +1,6 @@
-import { LuCopy, LuDownload, LuPackage } from "react-icons/lu"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Controller, useForm } from "react-hook-form"
+import { LuCopy, LuDownload } from "react-icons/lu"
 import { IslandType } from "@dchighs/dc-core"
 import dcAssets from "@dchighs/dc-assets"
 import { useState, type FC } from "react"

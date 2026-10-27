@@ -1,4 +1,3 @@
-import { LuPackage } from "react-icons/lu"
 import { type FC } from "react"
 
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
