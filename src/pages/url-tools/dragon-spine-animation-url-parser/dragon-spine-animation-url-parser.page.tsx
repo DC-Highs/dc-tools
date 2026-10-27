@@ -5,7 +5,6 @@ import { toast } from "sonner"
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field"
-import { ZipPreview } from "@/components/common/zip-preview"
 import { Typography } from "@/components/ui/typography"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -104,14 +103,6 @@ const DragonSpineAnimationUrlParserPage: FC = () => {
                     <Button onClick={handleParseUrl} className="mt-6">
                         <LuRegex /> Parse URL
                     </Button>
-                </CardContent>
-            </Card>
-            <Card>
-                <CardHeader>
-                    <CardTitle>ZIP Contents</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <ZipPreview url={url} />
                 </CardContent>
             </Card>
             <Card>
