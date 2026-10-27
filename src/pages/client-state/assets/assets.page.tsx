@@ -1,18 +1,47 @@
 import { LuSearch, LuTrash, LuRefreshCcw, LuBox, LuArrowLeftRight } from "react-icons/lu"
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import type { FC } from "react"
 import { toast } from "sonner"
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+    Pagination,
+    PaginationContent,
+    PaginationEllipsis,
+    PaginationItem,
+    PaginationLink,
+    PaginationNext,
+    PaginationPrevious,
+} from "@/components/ui/pagination"
 import { Typography } from "@/components/ui/typography"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+
+const PAGE_SIZE = 50
+
+const getFilename = (assetPath: string) => assetPath.split(/[\/]/).pop() || assetPath
+
+function getPageNumbers(current: number, total: number): (number | "ellipsis-start" | "ellipsis-end")[] {
+    if (total <= 7) return Array.from({ length: total }, (_, index) => index + 1)
+
+    const pages: (number | "ellipsis-start" | "ellipsis-end")[] = [1]
+    const start = Math.max(2, current - 1)
+    const end = Math.min(total - 1, current + 1)
+
+    if (start > 2) pages.push("ellipsis-start")
+    for (let page = start; page <= end; page++) pages.push(page)
+    if (end < total - 1) pages.push("ellipsis-end")
+
+    pages.push(total)
+    return pages
+}
 
 const AssetsPage: FC = () => {
     const [assets, setAssets] = useState<string[]>([])
     const [search, setSearch] = useState("")
     const [loading, setLoading] = useState(true)
+    const [page, setPage] = useState(1)
 
     useEffect(() => {
         loadData()
@@ -62,7 +91,20 @@ const AssetsPage: FC = () => {
         }
     }
 
-    const filteredAssets = assets.filter((a) => a.toLowerCase().includes(search.toLowerCase()))
+    const filteredAssets = useMemo(
+        () => assets.filter((a) => a.toLowerCase().includes(search.toLowerCase())),
+        [assets, search],
+    )
+
+    const totalPages = Math.max(1, Math.ceil(filteredAssets.length / PAGE_SIZE))
+    const currentPage = Math.min(page, totalPages)
+    const pageAssets = filteredAssets.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)
+
+    const goToPage = (event: { preventDefault: () => void }, target: number) => {
+        event.preventDefault()
+        if (target < 1 || target > totalPages || target === currentPage) return
+        setPage(target)
+    }
 
     return (
         <div className="space-y-6 pb-10">
@@ -100,7 +142,10 @@ const AssetsPage: FC = () => {
                             placeholder="Search assets..."
                             className="pl-10"
                             value={search}
-                            onChange={(event) => setSearch(event.target.value)}
+                            onChange={(event) => {
+                                setSearch(event.target.value)
+                                setPage(1)
+                            }}
                         />
                     </div>
 
@@ -122,10 +167,10 @@ const AssetsPage: FC = () => {
                                             </TableCell>
                                         </TableRow>
                                     ) : filteredAssets.length > 0 ? (
-                                        filteredAssets.slice(0, 100).map((asset) => (
+                                        pageAssets.map((asset) => (
                                             <TableRow key={asset} className="hover:bg-primary/5 transition-colors">
-                                                <TableCell className="font-mono text-[11px] truncate max-w-[400px]">
-                                                    {asset}
+                                                <TableCell className="font-mono text-[11px] truncate max-w-[400px]" title={asset}>
+                                                    {getFilename(asset)}
                                                 </TableCell>
                                                 <TableCell className="text-right">
                                                     <div className="flex justify-end gap-2">
@@ -161,10 +206,47 @@ const AssetsPage: FC = () => {
                             </Table>
                         </div>
                     </div>
-                    {filteredAssets.length > 100 && (
-                        <div className="flex justify-center p-4 bg-secondary/30 rounded-lg">
-                            <Typography.Small className="text-muted-foreground">
-                                Showing first 100 of {filteredAssets.length} assets. Use search to find specific files.
+                    {filteredAssets.length > PAGE_SIZE && (
+                        <div className="space-y-2">
+                            <Pagination>
+                                <PaginationContent>
+                                    <PaginationItem>
+                                        <PaginationPrevious
+                                            href="#"
+                                            aria-disabled={currentPage === 1}
+                                            className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
+                                            onClick={(event) => goToPage(event, currentPage - 1)}
+                                        />
+                                    </PaginationItem>
+                                    {getPageNumbers(currentPage, totalPages).map((item) => (
+                                        <PaginationItem key={item}>
+                                            {typeof item === "number" ? (
+                                                <PaginationLink
+                                                    href="#"
+                                                    isActive={item === currentPage}
+                                                    onClick={(event) => goToPage(event, item)}
+                                                >
+                                                    {item}
+                                                </PaginationLink>
+                                            ) : (
+                                                <PaginationEllipsis />
+                                            )}
+                                        </PaginationItem>
+                                    ))}
+                                    <PaginationItem>
+                                        <PaginationNext
+                                            href="#"
+                                            aria-disabled={currentPage === totalPages}
+                                            className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""}
+                                            onClick={(event) => goToPage(event, currentPage + 1)}
+                                        />
+                                    </PaginationItem>
+                                </PaginationContent>
+                            </Pagination>
+                            <Typography.Small className="block text-center text-muted-foreground">
+                                Showing {(currentPage - 1) * PAGE_SIZE + 1}-
+                                {Math.min(currentPage * PAGE_SIZE, filteredAssets.length)} of {filteredAssets.length}{" "}
+                                assets.
                             </Typography.Small>
                         </div>
                     )}
