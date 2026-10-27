@@ -447,7 +447,7 @@ const AppSidebar: FC = () => {
             <SidebarFooter>
                 <div className={`flex items-center gap-3 ${open ? "justify-between px-4" : "justify-center"}`}>
                     {open && (
-                        <div className="flex items-center justify-center gap-2 text-xs font-mono overflow-x-hidden text-nowrap">
+                        <div className="flex items-center justify-center gap-2 text-xs font-mono overflow-hidden text-nowrap">
                             <Typography.Small>v{pkg.version}</Typography.Small>
                         </div>
                     )}
