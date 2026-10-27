@@ -33,7 +33,6 @@ export default defineConfig({
                       preload: {
                           input: path.join(__dirname, "electron/preload.ts"),
                       },
-                      renderer: {},
                   }),
               ]),
     ],
@@ -46,10 +45,12 @@ export default defineConfig({
     },
     optimizeDeps: {
         include: ["@dchighs/dc-assets"],
-        esbuildOptions: {
-            alias: {
-                "node:fs": path.resolve(__dirname, "./src/shims/fs.ts"),
-                fs: path.resolve(__dirname, "./src/shims/fs.ts"),
+        rolldownOptions: {
+            resolve: {
+                alias: {
+                    "node:fs": path.resolve(__dirname, "./src/shims/fs.ts"),
+                    fs: path.resolve(__dirname, "./src/shims/fs.ts"),
+                },
             },
         },
     },

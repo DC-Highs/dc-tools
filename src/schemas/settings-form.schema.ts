@@ -1,13 +1,10 @@
-import { EnlargeValue, Noise } from "bigjpg/dist/enums"
-
 import { z } from "zod"
 
 export const settingsFormSchema = z.object({
     bigjpg: z
         .object({
-            apiKey: z.string(),
-            noise: z.enum(Noise),
-            enlarge: z.enum(EnlargeValue),
+            noise: z.enum(["-1", "0", "1", "2", "3"]),
+            enlarge: z.enum(["1", "2", "3", "4"]),
         })
         .optional(),
     gameConfig: z

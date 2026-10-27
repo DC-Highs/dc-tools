@@ -1,5 +1,4 @@
 import { type SubmitHandler, useForm, Controller } from "react-hook-form"
-import { EnlargeValue, Noise } from "bigjpg/dist/enums"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { LuSave } from "react-icons/lu"
 import type { FC } from "react"
@@ -35,9 +34,8 @@ const SettingsPage: FC = () => {
             return {
                 conversionTool: savedSettings?.conversionTool || ("local" as const),
                 bigjpg: {
-                    apiKey: savedSettings?.bigjpg?.apiKey || "",
-                    noise: savedSettings?.bigjpg?.noise || Noise.None,
-                    enlarge: savedSettings?.bigjpg?.enlarge || EnlargeValue["2x"],
+                    noise: savedSettings?.bigjpg?.noise || ("-1" as const),
+                    enlarge: "1" as const,
                 },
                 convertio: savedSettings?.convertio || { apiKey: "" },
                 gameConfig: savedSettings?.gameConfig || {
@@ -109,25 +107,11 @@ const SettingsPage: FC = () => {
                         <CardHeader>
                             <CardTitle>Bigjpg</CardTitle>
                             <CardDescription>
-                                Configuration for Bigjpg integration. Enlarge images with AI. Get your API key at{" "}
-                                <Link href="https://bigjpg.com/" target="_blank">
-                                    https://bigjpg.com/
-                                </Link>
+                                Configuration for Bigjpg integration. Enlarge images with AI, no API key required.
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
                             <FieldGroup className="grid gap-4 sm:grid-cols-2">
-                                <Field className="sm:col-span-2">
-                                    <FieldLabel>API Key</FieldLabel>
-                                    <Controller
-                                        control={form.control}
-                                        name="bigjpg.apiKey"
-                                        render={({ field }) => (
-                                            <PasswordInput placeholder="Enter your Bigjpg API key" {...field} />
-                                        )}
-                                    />
-                                    <FieldError errors={[form.formState.errors.bigjpg?.apiKey]} />
-                                </Field>
                                 <Field>
                                     <FieldLabel>Noise Reduction</FieldLabel>
                                     <Controller
@@ -161,9 +145,6 @@ const SettingsPage: FC = () => {
                                                 </SelectTrigger>
                                                 <SelectContent>
                                                     <SelectItem value="1">2x</SelectItem>
-                                                    <SelectItem value="2">4x</SelectItem>
-                                                    <SelectItem value="3">8x</SelectItem>
-                                                    <SelectItem value="4">16x</SelectItem>
                                                 </SelectContent>
                                             </Select>
                                         )}
