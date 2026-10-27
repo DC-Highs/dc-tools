@@ -20,7 +20,7 @@ import { Input } from "@/components/ui/input"
 
 const PAGE_SIZE = 50
 
-const getFilename = (assetPath: string) => assetPath.split(/[\/]/).pop() || assetPath
+const getFilename = (assetPath: string) => assetPath.split(/[\\/]/).pop() || assetPath
 
 function getPageNumbers(current: number, total: number): (number | "ellipsis-start" | "ellipsis-end")[] {
     if (total <= 7) return Array.from({ length: total }, (_, index) => index + 1)
