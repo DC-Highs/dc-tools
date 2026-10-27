@@ -69,6 +69,8 @@ contextBridge.exposeInMainWorld("electronAPI", {
         setAsset: (assetName: string, filePath: string) =>
             ipcRenderer.invoke("client-state:set-asset", assetName, filePath),
         deleteAsset: (assetName: string) => ipcRenderer.invoke("client-state:delete-asset", assetName),
+        copyAssetPath: (assetName: string) => ipcRenderer.invoke("client-state:copy-asset-path", assetName),
+        openAssetWith: (assetName: string) => ipcRenderer.invoke("client-state:open-asset-with", assetName),
         clearAssets: () => ipcRenderer.invoke("client-state:clear-assets"),
     },
 })

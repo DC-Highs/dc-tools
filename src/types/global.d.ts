@@ -57,6 +57,8 @@ interface ElectronAPI {
         listAssets: (types?: any[]) => Promise<string[]>
         setAsset: (assetName: string, filePath: string) => Promise<boolean>
         deleteAsset: (assetName: string) => Promise<boolean>
+        copyAssetPath: (assetName: string) => Promise<boolean>
+        openAssetWith: (assetName: string) => Promise<boolean>
         clearAssets: () => Promise<boolean>
     }
 }

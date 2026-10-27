@@ -1,4 +1,4 @@
-import { LuSearch, LuTrash, LuRefreshCcw, LuBox, LuArrowLeftRight } from "react-icons/lu"
+import { LuSearch, LuTrash, LuRefreshCcw, LuBox, LuArrowLeftRight, LuCopy, LuExternalLink } from "react-icons/lu"
 import { useEffect, useMemo, useState } from "react"
 import type { FC } from "react"
 import { toast } from "sonner"
@@ -78,6 +78,22 @@ const AssetsPage: FC = () => {
         if (success) {
             toast.success(`Asset ${assetName} deleted`)
             setAssets((prev) => prev.filter((a) => a !== assetName))
+        }
+    }
+
+    const handleCopyPath = async (assetName: string) => {
+        const success = await window.electronAPI.clientState.copyAssetPath(assetName)
+        if (success) {
+            toast.success("File path copied to clipboard")
+        } else {
+            toast.error("Failed to copy file path")
+        }
+    }
+
+    const handleOpenWith = async (assetName: string) => {
+        const success = await window.electronAPI.clientState.openAssetWith(assetName)
+        if (!success) {
+            toast.error("Failed to open file")
         }
     }
 
@@ -174,6 +190,25 @@ const AssetsPage: FC = () => {
                                                 </TableCell>
                                                 <TableCell className="text-right">
                                                     <div className="flex justify-end gap-2">
+                                                        <Button
+                                                            variant="outline"
+                                                            size="icon"
+                                                            className="h-8 w-8"
+                                                            title="Copy file path"
+                                                            aria-label="Copy file path"
+                                                            onClick={() => handleCopyPath(asset)}
+                                                        >
+                                                            <LuCopy className="w-4 h-4" />
+                                                        </Button>
+                                                        <Button
+                                                            variant="outline"
+                                                            size="sm"
+                                                            className="h-8"
+                                                            onClick={() => handleOpenWith(asset)}
+                                                        >
+                                                            <LuExternalLink className="w-3 h-3 mr-2" />
+                                                            Open with
+                                                        </Button>
                                                         <Button
                                                             variant="outline"
                                                             size="sm"

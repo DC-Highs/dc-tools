@@ -1,5 +1,7 @@
 import { ClientState, AssetType, Preferences } from "@dchighs/dc-client-state"
-import { ipcMain } from "electron"
+import { clipboard, ipcMain, shell } from "electron"
+import { spawn } from "node:child_process"
+import path from "node:path"
 
 export function registerClientStateHandler() {
     const client = new ClientState()
@@ -166,6 +168,35 @@ export function registerClientStateHandler() {
             return true
         } catch (error) {
             console.error("Failed to clear assets:", error)
+            return false
+        }
+    })
+
+    ipcMain.handle("client-state:copy-asset-path", async (_, assetName: string) => {
+        try {
+            clipboard.writeText(client.assets.getFilePath(path.basename(assetName)))
+            return true
+        } catch (error) {
+            console.error(`Failed to copy path of asset ${assetName}:`, error)
+            return false
+        }
+    })
+
+    ipcMain.handle("client-state:open-asset-with", async (_, assetName: string) => {
+        try {
+            const filePath = client.assets.getFilePath(path.basename(assetName))
+
+            if (process.platform === "win32") {
+                spawn("rundll32.exe", ["shell32.dll,OpenAs_RunDLL", filePath], {
+                    detached: true,
+                    stdio: "ignore",
+                }).unref()
+                return true
+            }
+
+            return (await shell.openPath(filePath)) === ""
+        } catch (error) {
+            console.error(`Failed to open asset ${assetName}:`, error)
             return false
         }
     })
