@@ -28,6 +28,16 @@ import { Separator } from "@/components/ui/separator"
 import { cleanFormData } from "@/helpers/form.helper"
 import { Input } from "@/components/ui/input"
 
+// dc-assets interpolates the raw imageQuality argument into the URL, so a missing quality becomes "undefined".
+// The default quality must be passed explicitly as an empty string.
+const createChestSpriteDownloader = (
+    data: Pick<ChestSpriteDownloaderFormValues, "imageName" | "platformPrefix"> & { imageQuality?: unknown },
+) =>
+    dcAssets.chests.sprite({
+        ...cleanFormData(data),
+        imageQuality: data.imageQuality === emptyKey ? ChestSpriteQuality.Default : data.imageQuality,
+    } as any)
+
 const ChestSpritePage: FC = () => {
     const [isDownloading, setIsDownloading] = useState(false)
     const { isMagicDownloading, handleMagicDownload } = useMagicDownload()
@@ -43,11 +53,11 @@ const ChestSpritePage: FC = () => {
     })
 
     const currentData = form.watch()
-    const currentDownloader = dcAssets.chests.sprite(cleanFormData(currentData) as any)
+    const currentDownloader = createChestSpriteDownloader(currentData)
     const downloadUrl = currentDownloader.url
 
     const onSubmit = async (data: ChestSpriteDownloaderFormValues) => {
-        const currentDownloader = dcAssets.chests.sprite(cleanFormData(data) as any)
+        const currentDownloader = createChestSpriteDownloader(data)
         const downloadUrl = currentDownloader.url
 
         setIsDownloading(true)
