@@ -3,6 +3,7 @@ import {
     useMemo,
     useRef,
     useState,
+    type DragEvent,
     type Dispatch,
     type FC,
     type RefObject,
@@ -353,6 +354,8 @@ const DragonSpineAnimationPlayerPage: FC = () => {
     const [isLoadingPlayer, setIsLoadingPlayer] = useState<boolean>(false)
     const [playerError, setPlayerError] = useState<string | null>(null)
     const [reloadKey, setReloadKey] = useState<number>(0)
+    const [playerVersion, setPlayerVersion] = useState<number>(0)
+    const [isDragging, setIsDragging] = useState<boolean>(false)
 
     const fileNameWithoutExtension = useMemo(() => {
         if (!convertedAnimation) return "file"
@@ -362,13 +365,13 @@ const DragonSpineAnimationPlayerPage: FC = () => {
         return fileName.replace(".skel", "")
     }, [convertedAnimation])
 
-    const handleSelectFile = async () => {
+    const handleSelectFile = async (droppedFilePath?: string) => {
         setIsConverting(true)
 
         const convertingToastId = toast.loading("Converting animation...")
 
         try {
-            const result = await window.electronAPI.convertAnimation()
+            const result = await window.electronAPI.convertAnimation(droppedFilePath)
 
             if (!result) {
                 toast.warning("File selection canceled!")
@@ -383,6 +386,34 @@ const DragonSpineAnimationPlayerPage: FC = () => {
             setIsConverting(false)
             toast.dismiss(convertingToastId)
         }
+    }
+
+    const handleDragOver = (event: DragEvent<HTMLDivElement>) => {
+        event.preventDefault()
+        if (!isConverting) setIsDragging(true)
+    }
+
+    const handleDragLeave = (event: DragEvent<HTMLDivElement>) => {
+        if (event.currentTarget.contains(event.relatedTarget as Node | null)) return
+        setIsDragging(false)
+    }
+
+    const handleDrop = (event: DragEvent<HTMLDivElement>) => {
+        event.preventDefault()
+        setIsDragging(false)
+
+        if (isConverting) return
+
+        const file = event.dataTransfer.files[0]
+
+        if (!file) return
+
+        if (!file.name.toLowerCase().endsWith(".zip")) {
+            toast.error("Only ZIP files are supported!")
+            return
+        }
+
+        handleSelectFile(window.electronAPI.getPathForFile(file))
     }
 
     useEffect(() => {
@@ -454,6 +485,7 @@ const DragonSpineAnimationPlayerPage: FC = () => {
 
                     setIsLoadingPlayer(false)
                     setIsPlaying(true)
+                    setPlayerVersion((version) => version + 1)
                 },
                 error: (_: any, reason: string) => handleLoadError(reason),
             })
@@ -478,28 +510,28 @@ const DragonSpineAnimationPlayerPage: FC = () => {
         if (!playerRef.current || !playerRef.current.skeleton) return
         playerRef.current.skeleton.x = position.x
         playerRef.current.skeleton.y = -position.y
-    }, [playerRef.current, position.x, position.y])
+    }, [playerVersion, position.x, position.y])
 
     useEffect(() => {
         if (!playerRef.current || !currentDragonAnimation) return
         playerRef.current.setAnimation(currentDragonAnimation, true)
-    }, [currentDragonAnimation])
+    }, [playerVersion, currentDragonAnimation])
 
     useEffect(() => {
         if (!playerRef.current || !playerRef.current.skeleton) return
         playerRef.current.skeleton.scaleX = scale * 5
         playerRef.current.skeleton.scaleY = scale * 5
-    }, [playerRef.current, scale, currentDragonAnimation])
+    }, [playerVersion, scale, currentDragonAnimation])
 
     useEffect(() => {
         if (!playerRef.current) return
         playerRef.current.paused = !isPlaying
-    }, [isPlaying, playerRef.current])
+    }, [isPlaying, playerVersion])
 
     useEffect(() => {
         if (!playerRef.current) return
         playerRef.current.speed = speed
-    }, [speed, playerRef.current])
+    }, [speed, playerVersion])
 
     return (
         <div className="space-y-2">
@@ -508,17 +540,30 @@ const DragonSpineAnimationPlayerPage: FC = () => {
                     <CardTitle>Dragon Spine Animation Player</CardTitle>
                 </CardHeader>
                 <CardContent>
-                    <Button onClick={handleSelectFile} className="mt-6" disabled={isConverting}>
-                        {isConverting ? (
-                            <>
-                                <Spinner /> Converting animation...
-                            </>
-                        ) : (
-                            <>
-                                <LuUpload /> Select file
-                            </>
-                        )}
-                    </Button>
+                    <div
+                        onDragOver={handleDragOver}
+                        onDragLeave={handleDragLeave}
+                        onDrop={handleDrop}
+                        className={`mt-6 flex flex-col items-center justify-center gap-3 rounded-lg border-2 border-dashed px-6 py-10 text-center transition-colors ${
+                            isDragging ? "border-primary bg-primary/10" : "border-border"
+                        }`}
+                    >
+                        <LuUpload className="w-8 h-8 text-muted-foreground" />
+                        <Typography.Small className="text-muted-foreground">
+                            {isDragging ? "Drop the ZIP file here" : "Drag and drop a ZIP file here, or"}
+                        </Typography.Small>
+                        <Button onClick={() => handleSelectFile()} disabled={isConverting}>
+                            {isConverting ? (
+                                <>
+                                    <Spinner /> Converting animation...
+                                </>
+                            ) : (
+                                <>
+                                    <LuUpload /> Select file
+                                </>
+                            )}
+                        </Button>
+                    </div>
                 </CardContent>
             </Card>
             {convertedAnimation && (

@@ -21,7 +21,8 @@ interface ElectronAPI {
     onDownloadComplete: (callback: (filePath: string) => void) => () => void
     onDownloadError: (callback: (error: string) => void) => () => void
     request: <T = any>(options: HttpRequestOptions) => Promise<HttpResponse<T>>
-    convertAnimation: () => Promise<ConvertAnimationResult | null>
+    convertAnimation: (filePath?: string) => Promise<ConvertAnimationResult | null>
+    getPathForFile: (file: File) => string
     bigjpgEnlarge: (url: string) => Promise<string>
     fetchConfig: (options: FetchOptions) => Promise<GameConfigDto>
     selectImage: () => Promise<string | null>

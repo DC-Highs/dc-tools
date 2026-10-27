@@ -9,21 +9,25 @@ import { toAppUrl } from "../lib/to-app-url.util"
 import { tempDir } from "../lib/constants"
 
 export function registerAnimationConversorHandler() {
-    ipcMain.handle("animation:convert", async () => {
-        const result = dialog.showOpenDialogSync({
-            title: "Select animation file",
-            defaultPath: path.join(app.getPath("downloads")),
-            filters: [
-                { name: "ZIP", extensions: ["zip"] },
-                { name: "All Files", extensions: ["*"] },
-            ],
-        })
+    ipcMain.handle("animation:convert", async (_, droppedFilePath?: string) => {
+        let filePath = droppedFilePath
 
-        if (!result) {
-            return null
+        if (!filePath) {
+            const result = dialog.showOpenDialogSync({
+                title: "Select animation file",
+                defaultPath: path.join(app.getPath("downloads")),
+                filters: [
+                    { name: "ZIP", extensions: ["zip"] },
+                    { name: "All Files", extensions: ["*"] },
+                ],
+            })
+
+            if (!result) {
+                return null
+            }
+
+            filePath = result[0]
         }
-
-        const filePath = result[0]
 
         const zip = new AdmZip(filePath)
         const outDirName = path.basename(filePath, ".zip")

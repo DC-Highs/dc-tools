@@ -1,4 +1,4 @@
-import { contextBridge, ipcRenderer } from "electron"
+import { contextBridge, ipcRenderer, webUtils } from "electron"
 
 import { FetchOptions, GameConfigDto } from "@dchighs/dc-config"
 
@@ -31,7 +31,8 @@ contextBridge.exposeInMainWorld("electronAPI", {
     request: <T = any>(options: HttpRequestOptions): Promise<HttpResponse<T>> =>
         ipcRenderer.invoke("http:request", options),
 
-    convertAnimation: () => ipcRenderer.invoke("animation:convert"),
+    convertAnimation: (filePath?: string) => ipcRenderer.invoke("animation:convert", filePath),
+    getPathForFile: (file: File): string => webUtils.getPathForFile(file),
 
     bigjpgEnlarge: (url: string) => ipcRenderer.invoke("bigjpg:enlarge", url),
 
