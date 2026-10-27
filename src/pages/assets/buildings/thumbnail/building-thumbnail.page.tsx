@@ -94,9 +94,7 @@ const BuildingThumbnailPage: FC = () => {
                                             </SelectTrigger>
                                             <SelectContent>
                                                 <SelectGroup>
-                                                    <SelectLabel>
-                                                        <Typography.Small>Platform prefixes</Typography.Small>
-                                                    </SelectLabel>
+                                                    <SelectLabel>Platform prefixes</SelectLabel>
                                                     {Object.entries(StaticFileUrlPlatformPrefix)
                                                         .filter(([platformName]) => platformName !== "Default")
                                                         .map(([platformName, platformPrefix]) => (

@@ -87,18 +87,14 @@ const BuildingSpritePage: FC = () => {
                                 control={form.control}
                                 render={({ field, fieldState }) => (
                                     <Field data-invalid={fieldState.invalid}>
-                                        <FieldLabel>
-                                            <Typography.Small>Platform Prefix</Typography.Small>
-                                        </FieldLabel>
+                                        <FieldLabel>Platform Prefix</FieldLabel>
                                         <Select onValueChange={field.onChange} value={field.value}>
                                             <SelectTrigger className="w-full">
                                                 <SelectValue placeholder="Select a platform prefix" />
                                             </SelectTrigger>
                                             <SelectContent>
                                                 <SelectGroup>
-                                                    <SelectLabel>
-                                                        <Typography.Small>Platform prefixes</Typography.Small>
-                                                    </SelectLabel>
+                                                    <SelectLabel>Platform prefixes</SelectLabel>
                                                     {Object.entries(StaticFileUrlPlatformPrefix)
                                                         .filter(([platformName]) => platformName !== "Default")
                                                         .map(([platformName, platformPrefix]) => (
@@ -106,7 +102,7 @@ const BuildingSpritePage: FC = () => {
                                                                 key={`prefix-${platformPrefix.toString()}`}
                                                                 value={platformPrefix.toString()}
                                                             >
-                                                                <Typography.Small>{platformName}</Typography.Small>
+                                                                {platformName}
                                                             </SelectItem>
                                                         ))}
                                                 </SelectGroup>
@@ -121,9 +117,7 @@ const BuildingSpritePage: FC = () => {
                                 control={form.control}
                                 render={({ field, fieldState }) => (
                                     <Field data-invalid={fieldState.invalid}>
-                                        <FieldLabel>
-                                            <Typography.Small>Image Name</Typography.Small>
-                                        </FieldLabel>
+                                        <FieldLabel>Image Name</FieldLabel>
                                         <Input
                                             {...field}
                                             aria-invalid={fieldState.invalid}

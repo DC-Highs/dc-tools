@@ -46,18 +46,14 @@ export const DragonFlashAnimationForm: FC<DragonFlashAnimationFormProps> = ({
                             control={form.control}
                             render={({ field, fieldState }) => (
                                 <Field data-invalid={fieldState.invalid}>
-                                    <FieldLabel>
-                                        <Typography.Small>Platform Prefix</Typography.Small>
-                                    </FieldLabel>
+                                    <FieldLabel>Platform Prefix</FieldLabel>
                                     <Select onValueChange={field.onChange} value={field.value}>
                                         <SelectTrigger className="w-full">
                                             <SelectValue placeholder="Select a platform prefix" />
                                         </SelectTrigger>
                                         <SelectContent>
                                             <SelectGroup>
-                                                <SelectLabel>
-                                                    <Typography.Small>Platform prefixes</Typography.Small>
-                                                </SelectLabel>
+                                                <SelectLabel>Platform prefixes</SelectLabel>
                                                 {Object.entries(StaticFileUrlPlatformPrefix)
                                                     .filter(([currentName]) => currentName !== "Default")
                                                     .map(([currentName, currentPrefix]) => (
@@ -65,7 +61,7 @@ export const DragonFlashAnimationForm: FC<DragonFlashAnimationFormProps> = ({
                                                             key={`prefix-${currentPrefix.toString()}`}
                                                             value={currentPrefix.toString()}
                                                         >
-                                                            <Typography.Small>{currentName}</Typography.Small>
+                                                            {currentName}
                                                         </SelectItem>
                                                     ))}
                                             </SelectGroup>
@@ -80,9 +76,7 @@ export const DragonFlashAnimationForm: FC<DragonFlashAnimationFormProps> = ({
                             control={form.control}
                             render={({ field, fieldState }) => (
                                 <Field data-invalid={fieldState.invalid}>
-                                    <FieldLabel>
-                                        <Typography.Small>Image Name</Typography.Small>
-                                    </FieldLabel>
+                                    <FieldLabel>Image Name</FieldLabel>
                                     <Input
                                         {...field}
                                         aria-invalid={fieldState.invalid}
@@ -97,18 +91,14 @@ export const DragonFlashAnimationForm: FC<DragonFlashAnimationFormProps> = ({
                             control={form.control}
                             render={({ field, fieldState }) => (
                                 <Field data-invalid={fieldState.invalid}>
-                                    <FieldLabel>
-                                        <Typography.Small>Dragon Phase</Typography.Small>
-                                    </FieldLabel>
+                                    <FieldLabel>Dragon Phase</FieldLabel>
                                     <Select onValueChange={field.onChange} value={field.value}>
                                         <SelectTrigger className="w-full">
                                             <SelectValue placeholder="Select a dragon phase" />
                                         </SelectTrigger>
                                         <SelectContent>
                                             <SelectGroup>
-                                                <SelectLabel>
-                                                    <Typography.Small>Phases</Typography.Small>
-                                                </SelectLabel>
+                                                <SelectLabel>Phases</SelectLabel>
                                                 {Object.entries(DragonPhase)
                                                     .filter(([currentKey]) => isNaN(Number(currentKey)))
                                                     .map(([currentName, currentPhase]) => (
@@ -116,7 +106,7 @@ export const DragonFlashAnimationForm: FC<DragonFlashAnimationFormProps> = ({
                                                             key={`phase-${currentPhase.toString()}`}
                                                             value={currentPhase.toString()}
                                                         >
-                                                            <Typography.Small>{currentName}</Typography.Small>
+                                                            {currentName}
                                                         </SelectItem>
                                                     ))}
                                             </SelectGroup>
@@ -131,9 +121,7 @@ export const DragonFlashAnimationForm: FC<DragonFlashAnimationFormProps> = ({
                             control={form.control}
                             render={({ field, fieldState }) => (
                                 <Field data-invalid={fieldState.invalid}>
-                                    <FieldLabel>
-                                        <Typography.Small>Skin Key</Typography.Small>
-                                    </FieldLabel>
+                                    <FieldLabel>Skin Key</FieldLabel>
                                     <Input
                                         {...(field as any)}
                                         aria-invalid={fieldState.invalid}
