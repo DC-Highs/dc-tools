@@ -1,0 +1,1 @@
+instruções em GEMINI.md

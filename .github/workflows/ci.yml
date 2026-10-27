@@ -1,0 +1,45 @@
+name: CI
+
+on:
+    push:
+        branches: [main, master, dev]
+    pull_request:
+        branches: [main, master, dev]
+
+jobs:
+    lint-and-format:
+        name: Lint, Format and Fix
+        runs-on: ubuntu-latest
+
+        permissions:
+            contents: write
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+              with:
+                  ref: ${{ github.head_ref }}
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: "20"
+                  cache: "npm"
+
+            - name: Install dependencies
+              run: npm install --legacy-peer-deps
+
+            - name: Run Lint Fix
+              run: npm run lint:fix
+
+            - name: Run Format
+              run: npm run format
+
+            - name: Commit changes
+              uses: stefanzweifel/git-auto-commit-action@v5
+              with:
+                  commit_message: "chore: auto-format and lint fix [skip ci]"
+                  commit_author: "github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>"
+                  commit_user_name: "github-actions[bot]"
+                  commit_user_email: "github-actions[bot]@users.noreply.github.com>"
+                  commit_options: "--no-verify"
