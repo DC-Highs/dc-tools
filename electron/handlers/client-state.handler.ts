@@ -1,5 +1,6 @@
 import { ClientState, AssetType, Preferences } from "@dchighs/dc-client-state"
 import { clipboard, ipcMain, shell } from "electron"
+
 import { spawn } from "node:child_process"
 import path from "node:path"
 
@@ -144,7 +145,7 @@ export function registerClientStateHandler() {
 
     ipcMain.handle("client-state:set-asset", async (_, assetName: string, filePath: string) => {
         try {
-            await client.assets.set(assetName, filePath)
+            await client.assets.set(path.basename(assetName), filePath)
             return true
         } catch (error) {
             console.error(`Failed to set asset ${assetName}:`, error)
@@ -154,7 +155,7 @@ export function registerClientStateHandler() {
 
     ipcMain.handle("client-state:delete-asset", async (_, assetName: string) => {
         try {
-            await client.assets.delete(assetName)
+            await client.assets.delete(path.basename(assetName))
             return true
         } catch (error) {
             console.error(`Failed to delete asset ${assetName}:`, error)
